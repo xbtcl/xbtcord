@@ -1,14 +1,14 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { TextButton } from "@components/Button";
-import { RenderModalProps } from "@endcord/discord-types";
 import { SessionInfo } from "@plugins/betterSessions/types";
 import { getDefaultName, savedSessionsCache, saveSessionsToDataStore } from "@plugins/betterSessions/utils";
 import { Forms, Modal,React, TextInput } from "@webpack/common";
+import { RenderModalProps } from "@xbtcord/discord-types";
 import { KeyboardEvent } from "react";
 
 export function RenameModal({ props, session, state }: { props: RenderModalProps, session: SessionInfo["session"], state: [string, React.Dispatch<React.SetStateAction<string>>]; }) {

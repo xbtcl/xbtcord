@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { ApplicationCommandOptionType, findOption } from "@api/Commands";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 // stable per name-pair so the same couple always gets the same score
@@ -26,7 +26,7 @@ const opt = (name: string) => ({
 export default definePlugin({
     name: "ShipCalc",
     description: "/ship rates the love between two people.",
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     dependencies: ["CommandsAPI"],
     commands: [
         {

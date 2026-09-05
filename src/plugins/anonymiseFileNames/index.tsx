@@ -1,16 +1,16 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
-import { CloudUpload } from "@endcord/discord-types";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByCodeLazy } from "@webpack";
 import { useState } from "@webpack/common";
+import { CloudUpload } from "@xbtcord/discord-types";
 
 const ActionBarIcon = findByCodeLazy("Children.map", "isValidElement", "dangerous:");
 

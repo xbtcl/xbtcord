@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -37,7 +37,7 @@ const NO_ERROR = {};
 const ErrorBoundary = LazyComponent(() => {
     // This component is used in a lot of files which end up importing other Webpack commons and causing circular imports.
     // For this reason, use a non import access here.
-    return class ErrorBoundary extends Endcord.Webpack.Common.React.PureComponent<React.PropsWithChildren<Props>> {
+    return class ErrorBoundary extends Xbtcord.Webpack.Common.React.PureComponent<React.PropsWithChildren<Props>> {
         state = {
             error: NO_ERROR as any,
             stack: "",

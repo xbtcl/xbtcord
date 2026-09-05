@@ -1,15 +1,15 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2023 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { definePluginSettings } from "@api/Settings";
-import { MessageJSON } from "@endcord/discord-types";
-import { ChannelType } from "@endcord/discord-types/enums";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { ChannelStore, ReadStateStore, UserStore } from "@webpack/common";
+import { MessageJSON } from "@xbtcord/discord-types";
+import { ChannelType } from "@xbtcord/discord-types/enums";
 
 const settings = definePluginSettings({
     channelToAffect: {

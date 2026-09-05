@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -17,14 +17,14 @@ export default definePlugin({
             find: '?"BACK_FORWARD_NAVIGATION":',
             replacement: {
                 match: /(?<="HELP"===.{0,75}\{\}\))(?=\])/,
-                replace: ",...Endcord.Api.HeaderBar._addHeaderBarButtons()"
+                replace: ",...Xbtcord.Api.HeaderBar._addHeaderBarButtons()"
             }
         },
         {
             find: "Missing channel in Channel.renderHeaderToolbar",
             replacement: {
                 match: /(?<=renderHeaderToolbar"\);let (\i)=\[\];)/,
-                replace: "Endcord.Api.HeaderBar._addChannelToolbarButtons($1);"
+                replace: "Xbtcord.Api.HeaderBar._addChannelToolbarButtons($1);"
             }
         }
     ]

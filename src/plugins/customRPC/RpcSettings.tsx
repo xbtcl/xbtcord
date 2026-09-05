@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,10 +10,10 @@ import { isPluginEnabled } from "@api/PluginManager";
 import { Divider } from "@components/Divider";
 import { Heading } from "@components/Heading";
 import { resolveError } from "@components/settings/tabs/plugins/components/Common";
-import { ActivityType } from "@endcord/discord-types/enums";
 import { debounce } from "@shared/debounce";
 import { classNameFactory } from "@utils/css";
 import { Select, Text, TextInput, useState } from "@webpack/common";
+import { ActivityType } from "@xbtcord/discord-types/enums";
 
 import CustomRPCPlugin, { setRpc, settings, TimestampMode } from ".";
 

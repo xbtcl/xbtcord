@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -11,7 +11,6 @@ import { hasAnyVisibleSettings, isSettingHidden } from "@api/PluginManager";
 import { useSettings } from "@api/Settings";
 import { BaseText } from "@components/BaseText";
 import ErrorBoundary from "@components/ErrorBoundary";
-import { RenderModalProps, User } from "@endcord/discord-types";
 import { debounce } from "@shared/debounce";
 import { classNameFactory } from "@utils/css";
 import { proxyLazy } from "@utils/lazy";
@@ -20,6 +19,7 @@ import { classes } from "@utils/misc";
 import { OptionType, Plugin, PluginTag } from "@utils/types";
 import { findCssClassesLazy } from "@webpack";
 import { Clickable, FluxDispatcher, Forms, Modal,openModal, React, Text, Tooltip, useEffect, useMemo, UserStore, UserSummaryItem, UserUtils, useState } from "@webpack/common";
+import { RenderModalProps, User } from "@xbtcord/discord-types";
 import { Constructor } from "type-fest";
 
 import { PluginMeta } from "~plugins";
@@ -171,7 +171,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                         <div className="vc-settings-modal-links">
                             <WebsiteButton
                                 text="View more info"
-                                href={`https://endcord.dev/plugins/${plugin.name}`}
+                                href={`https://vencord.dev/plugins/${plugin.name}`}
                             />
                         </div>
                     )}

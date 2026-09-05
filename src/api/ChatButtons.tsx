@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -7,12 +7,12 @@
 import "./ChatButton.css";
 
 import ErrorBoundary from "@components/ErrorBoundary";
-import { Channel } from "@endcord/discord-types";
 import { Logger } from "@utils/Logger";
 import { classes } from "@utils/misc";
 import { IconComponent } from "@utils/types";
 import { findCssClassesLazy } from "@webpack";
 import { Clickable, Menu, Tooltip } from "@webpack/common";
+import { Channel } from "@xbtcord/discord-types";
 import { HTMLProps, JSX, MouseEventHandler, ReactNode } from "react";
 
 import { addContextMenuPatch, findGroupChildrenByChildId } from "./ContextMenu";
@@ -95,7 +95,7 @@ export type ChatBarButtonData = {
 export const ChatBarButtonMap = new Map<string, ChatBarButtonData>();
 const logger = new Logger("ChatButtons");
 
-function EndcordChatBarButtons(props: ChatBarProps) {
+function XbtcordChatBarButtons(props: ChatBarProps) {
     const { chatBarButtons } = useSettings(["uiElements.chatBarButtons.*"]).uiElements;
 
     const { analyticsName } = props.type;
@@ -115,7 +115,7 @@ function EndcordChatBarButtons(props: ChatBarProps) {
 export function _injectButtons(buttons: ReactNode[], props: ChatBarProps) {
     if (props.disabled || buttons.length === 0) return;
 
-    buttons.unshift(<EndcordChatBarButtons key="endcord-chat-buttons" {...props} />);
+    buttons.unshift(<XbtcordChatBarButtons key="xbtcord-chat-buttons" {...props} />);
 }
 
 /**
@@ -172,7 +172,7 @@ addContextMenuPatch("textarea-context", (children, args) => {
     if (idx === -1) return;
 
     group.splice(idx, 0,
-        <Menu.MenuItem id="vc-chat-buttons" key="endcord-chat-buttons" label="Endcord Buttons">
+        <Menu.MenuItem id="vc-chat-buttons" key="xbtcord-chat-buttons" label="Xbtcord Buttons">
             {buttons.map(([id]) => (
                 <Menu.MenuCheckboxItem
                     label={id}

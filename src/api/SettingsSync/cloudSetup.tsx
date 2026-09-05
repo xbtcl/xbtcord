@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -22,11 +22,11 @@ export async function checkCloudUrlCsp() {
     const { host } = getCloudUrl();
     if (host === "api.vencord.dev") return true;
 
-    if (await EndcordNative.csp.isDomainAllowed(Settings.cloud.url, ["connect-src"])) {
+    if (await XbtcordNative.csp.isDomainAllowed(Settings.cloud.url, ["connect-src"])) {
         return true;
     }
 
-    const res = await EndcordNative.csp.requestAddOverride(Settings.cloud.url, ["connect-src"], "Cloud Sync");
+    const res = await XbtcordNative.csp.requestAddOverride(Settings.cloud.url, ["connect-src"], "Cloud Sync");
     if (res === "ok") {
         openModal(props => (
             <ConfirmModal
@@ -50,13 +50,13 @@ const getUserId = () => {
 };
 
 export async function getAuthorization() {
-    const secrets = await DataStore.get<Record<string, string>>("Endcord_cloudSecret") ?? {};
+    const secrets = await DataStore.get<Record<string, string>>("Xbtcord_cloudSecret") ?? {};
 
     const origin = getCloudUrlOrigin();
 
     // we need to migrate from the old format here
     if (secrets[origin]) {
-        await DataStore.update<Record<string, string>>("Endcord_cloudSecret", secrets => {
+        await DataStore.update<Record<string, string>>("Xbtcord_cloudSecret", secrets => {
             secrets ??= {};
             // use the current user ID
             secrets[`${origin}:${getUserId()}`] = secrets[origin];
@@ -72,7 +72,7 @@ export async function getAuthorization() {
 }
 
 async function setAuthorization(secret: string) {
-    await DataStore.update<Record<string, string>>("Endcord_cloudSecret", secrets => {
+    await DataStore.update<Record<string, string>>("Xbtcord_cloudSecret", secrets => {
         secrets ??= {};
         secrets[`${getCloudUrlOrigin()}:${getUserId()}`] = secret;
         return secrets;
@@ -80,7 +80,7 @@ async function setAuthorization(secret: string) {
 }
 
 export async function deauthorizeCloud() {
-    await DataStore.update<Record<string, string>>("Endcord_cloudSecret", secrets => {
+    await DataStore.update<Record<string, string>>("Xbtcord_cloudSecret", secrets => {
         secrets ??= {};
         delete secrets[`${getCloudUrlOrigin()}:${getUserId()}`];
         return secrets;

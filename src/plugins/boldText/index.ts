@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { findOption, RequiredMessageOption } from "@api/Commands";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 function toBold(text: string) {
@@ -21,7 +21,7 @@ function toBold(text: string) {
 export default definePlugin({
     name: "BoldText",
     description: "/bold turns your message into 𝐮𝐧𝐢𝐜𝐨𝐝𝐞 bold (works where markdown can't).",
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     dependencies: ["CommandsAPI"],
     commands: [
         {

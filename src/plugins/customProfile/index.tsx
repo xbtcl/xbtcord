@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,7 +10,7 @@ import { BadgePosition, ProfileBadge } from "@api/Badges";
 import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
 import { addHeaderBarButton, HeaderBarButton, removeHeaderBarButton } from "@api/HeaderBar";
 import { DataStore } from "@api/index";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import {
     ModalCloseButton as ModalCloseButton_,
     ModalContent as ModalContent_,
@@ -213,12 +213,12 @@ interface SavedPreset {
 
 const DS_PRESETS = "customProfile_presets";
 
-const LS_KEY_DATA = "EndcordCP_data";
-const LS_KEY_ENABLED = "EndcordCP_enabled";
+const LS_KEY_DATA = "XbtcordCP_data";
+const LS_KEY_ENABLED = "XbtcordCP_enabled";
 const DS_ALL_DATA = "customProfile_allData";
 const DS_ALL_ENABLED = "customProfile_allEnabled";
-const LS_ALL_DATA = "EndcordCP_allData";
-const LS_ALL_ENABLED = "EndcordCP_allEnabled";
+const LS_ALL_DATA = "XbtcordCP_allData";
+const LS_ALL_ENABLED = "XbtcordCP_allEnabled";
 
 let storedData: CustomProfileData = {};
 let isEnabled = false;
@@ -234,7 +234,7 @@ let allAccountsEnabled: Record<string, boolean> = {};
 // presets: keyed by accountId → array of saved presets
 let allPresetsData: Record<string, SavedPreset[]> = {};
 
-const LS_PRESETS = "EndcordCP_presets";
+const LS_PRESETS = "XbtcordCP_presets";
 
 const fetchedProfiles = new Map<string, any>();
 const pendingFetches = new Set<string>();
@@ -410,7 +410,7 @@ let _avatarPatchApplied = false;
 function applyAvatarPatchEarly() {
     if (_avatarPatchApplied) return;
     try {
-        const IU = (window as any).Endcord?.Webpack?.findByProps?.("getUserAvatarURL");
+        const IU = (window as any).Xbtcord?.Webpack?.findByProps?.("getUserAvatarURL");
         if (!IU?.getUserAvatarURL) return;
         const orig = IU.getUserAvatarURL;
         IU.getUserAvatarURL = function (user: any, ...args: any[]) {
@@ -1025,7 +1025,7 @@ function BadgePicker({ selected, onChange, nitroType, onNitroType, boostLevel, o
 
 function forceAccountPanelRerender() {
     try {
-        const WP = (Endcord as any).Webpack;
+        const WP = (Xbtcord as any).Webpack;
         const UserStore = WP?.findByStoreName("UserStore");
         if (UserStore && UserStore.emitChange) UserStore.emitChange();
 
@@ -1053,13 +1053,13 @@ function CustomProfileModal({ rootProps }: { rootProps: any; }) {
     const oldName = data.oldName ?? "";
     const accounts = React.useMemo(() => {
         try {
-            const MAS = (window as any).Endcord?.Webpack?.findByProps?.("getUsers", "getValidUsers");
+            const MAS = (window as any).Xbtcord?.Webpack?.findByProps?.("getUsers", "getValidUsers");
             if (MAS?.getUsers) {
                 const users = MAS.getUsers();
                 if (Array.isArray(users) && users.length > 0) return users;
             }
 
-            const internalStore = (window as any).Endcord?.Webpack?.findStore?.("MultiAccountStore");
+            const internalStore = (window as any).Xbtcord?.Webpack?.findStore?.("MultiAccountStore");
             if (internalStore?.getUsers) {
                 const users = internalStore.getUsers();
                 if (Array.isArray(users) && users.length > 0) return users;
@@ -1345,7 +1345,7 @@ function mkBadge(id: string, name: string, icon: string, rarity?: string, subtit
         return { id, description: name, iconSrc: icon, position: BadgePosition.START, props: { style: badgeStyle } };
     }
 
-    const Tooltip = (Endcord as any).Webpack.Common?.Tooltip;
+    const Tooltip = (Xbtcord as any).Webpack.Common?.Tooltip;
     if (!Tooltip) {
         return { id, description: subtitle ? `${name}\n${subtitle}` : name, iconSrc: icon, position: BadgePosition.START, props: { style: badgeStyle } };
     }
@@ -1369,7 +1369,7 @@ export default definePlugin({
     name: "CustomProfile",
     enabledByDefault: true,
     description: t("Visually customize your Discord profile (username, PFP, banner, badges, bio...) — persistent, only visible to you."),
-    authors: [EndcordDevs.pepsify],
+    authors: [XbtcordDevs.pepsify],
     dependencies: ["HeaderBarAPI", "ContextMenuAPI"],
 
     patches: [
@@ -1862,7 +1862,7 @@ export default definePlugin({
         FluxDispatcher.subscribe("CONNECTION_OPEN", onAccountSwitch);
 
         try {
-            const US = (Endcord as any).Webpack?.findByProps?.("getCurrentUser", "getUser");
+            const US = (Xbtcord as any).Webpack?.findByProps?.("getCurrentUser", "getUser");
             if (US && !US._cp_perfect_hook) {
                 const origCurrent = US.getCurrentUser.bind(US);
 
@@ -1903,7 +1903,7 @@ export default definePlugin({
         } catch { }
 
         try {
-            const UPS = (Endcord as any).Webpack?.findByProps?.("getUserProfile", "getGuildMemberProfile");
+            const UPS = (Xbtcord as any).Webpack?.findByProps?.("getUserProfile", "getGuildMemberProfile");
             if (UPS && !UPS._cp_profile_hook) {
                 const origGetProfile = UPS.getUserProfile.bind(UPS);
                 UPS.getUserProfile = (userId: string) => {
@@ -1940,7 +1940,7 @@ export default definePlugin({
         } catch { }
 
         try {
-            const WP = (Endcord as any).Webpack;
+            const WP = (Xbtcord as any).Webpack;
             const MAS = WP?.findByProps?.("getUsers", "getValidUsers", "getHasLoggedInAccounts");
             if (MAS && !MAS._cp_perfect_hook) {
                 function patchAccountUser(u: any) {
@@ -2002,7 +2002,7 @@ export default definePlugin({
         });
 
         try {
-            const decoMod = (Endcord as any).Webpack?.findByProps?.("getAvatarDecorationURL");
+            const decoMod = (Xbtcord as any).Webpack?.findByProps?.("getAvatarDecorationURL");
             if (decoMod?.getAvatarDecorationURL) {
                 const origDeco = decoMod.getAvatarDecorationURL.bind(decoMod);
                 decoMod.getAvatarDecorationURL = (opts: any) => {

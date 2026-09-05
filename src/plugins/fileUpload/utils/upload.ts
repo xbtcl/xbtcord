@@ -1,18 +1,18 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { normalizeCorsProxyUrl, toProxiedUrl } from "@endcordplugins/fileUpload/constants";
-import { settings } from "@endcordplugins/fileUpload/settings";
-import { fallbackServiceOrder, serviceLabels, ServiceType, ShareXUploaderConfig, UploadResponse } from "@endcordplugins/fileUpload/types";
 import { copyToClipboard } from "@utils/clipboard";
 import { insertTextIntoChatInputBox } from "@utils/discord";
 import { Logger } from "@utils/Logger";
 import { PluginNative } from "@utils/types";
 import { chooseFile } from "@utils/web";
 import { showToast, Toasts } from "@webpack/common";
+import { normalizeCorsProxyUrl, toProxiedUrl } from "@xbtcordplugins/fileUpload/constants";
+import { settings } from "@xbtcordplugins/fileUpload/settings";
+import { fallbackServiceOrder, serviceLabels, ServiceType, ShareXUploaderConfig, UploadResponse } from "@xbtcordplugins/fileUpload/types";
 
 import { convertApngToGif } from "./apngToGif";
 import { getExtensionFromBytes, getExtensionFromMime, getMimeFromExtension, getUrlExtension } from "./getMediaUrl";
@@ -20,7 +20,7 @@ import { isS3Configured, uploadToS3 } from "./s3";
 import { parseShareXConfig, resolveShareXTemplate } from "./sharex";
 
 const Native = IS_DISCORD_DESKTOP
-    ? EndcordNative.pluginHelpers.FileUpload as PluginNative<typeof import("../native")>
+    ? XbtcordNative.pluginHelpers.FileUpload as PluginNative<typeof import("../native")>
     : null;
 
 export const logger = new Logger("FileUpload", "#7cb7ff");

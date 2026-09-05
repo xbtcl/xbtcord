@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -33,9 +33,9 @@ declare global {
     export var VERSION: string;
     export var BUILD_TIMESTAMP: number;
 
-    export var EndcordNative: typeof import("./EndcordNative").default;
-    export var Endcord: typeof import("./Endcord");
-    export var EndcordStyles: Map<string, Style>;
+    export var XbtcordNative: typeof import("./XbtcordNative").default;
+    export var Xbtcord: typeof import("./Xbtcord");
+    export var XbtcordStyles: Map<string, Style>;
     export var appSettings: {
         set(setting: string, v: any): void;
     };

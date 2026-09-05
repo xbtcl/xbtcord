@@ -1,4 +1,4 @@
-# Contributing to Endcord
+# Contributing to Xbtcord
 
 > [!NOTE]
 > **AI Usage Notice**
@@ -6,9 +6,9 @@
 > Your contribution must be majority human written! Some AI assistance like inline suggestions is acceptable, but "vibecoded" contributions are not welcome.
 > Also **do not** use AI to generate your pull request description, README.md or in communication. Ignoring this rule will lead to a permanent block.
 
-Endcord is a community project and welcomes any kind of contribution from anyone!
+Xbtcord is a community project and welcomes any kind of contribution from anyone!
 
-We have development documentation for new contributors, which can be found at <https://docs.endcord.dev>.
+We have development documentation for new contributors, which can be found at <https://github.com/rootpoii/endcord>.
 
 All contributions should be made in accordance with our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
@@ -46,9 +46,9 @@ Before starting your plugin:
 - No plugins that require the user to enter their own API key
 - Do not introduce new dependencies unless absolutely necessary and warranted
 
-## Improve Endcord itself
+## Improve Xbtcord itself
 
-If you have any ideas on how to improve Endcord itself, or want to propose a new plugin API, feel free to open a feature request so we can discuss.
+If you have any ideas on how to improve Xbtcord itself, or want to propose a new plugin API, feel free to open a feature request so we can discuss.
 
 Or if you notice any bugs or typos, feel free to fix them!
 
@@ -61,5 +61,5 @@ If you think a new page should be added, feel free to suggest it via an issue an
 
 ## Help out users in our Discord community
 
-We have an open support channel in our [Discord community](https://endcord.dev/discord).
+We have an open support channel in our [Discord community](https://github.com/rootpoii/endcord).
 Helping out users there is always appreciated! The more, the merrier.

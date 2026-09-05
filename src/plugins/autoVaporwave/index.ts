@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { addMessagePreSendListener, removeMessagePreSendListener } from "@api/MessageEvents";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 function toFullwidth(text: string) {
@@ -17,7 +17,7 @@ function toFullwidth(text: string) {
 export default definePlugin({
     name: "AutoVaporwave",
     description: "Turn every message you send into ｆｕｌｌｗｉｄｔｈ text automatically.",
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     start() {
         this.pre = addMessagePreSendListener((_, msg) => {
             if (msg.content) msg.content = toFullwidth(msg.content);

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -23,8 +23,8 @@ const unconfigurable = ["arguments", "caller", "prototype"];
 
 const handler: ProxyHandler<any> = {};
 
-export const SYM_LAZY_GET = Symbol.for("endcord.lazy.get");
-export const SYM_LAZY_CACHED = Symbol.for("endcord.lazy.cached");
+export const SYM_LAZY_GET = Symbol.for("xbtcord.lazy.get");
+export const SYM_LAZY_CACHED = Symbol.for("xbtcord.lazy.cached");
 
 for (const method of [
     "apply",

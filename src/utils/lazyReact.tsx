@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2023 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,7 +10,7 @@ import { makeLazy } from "./lazy";
 
 const NoopComponent = () => null;
 
-export type LazyComponentWrapper<ComponentType> = ComponentType & { $$endcordGetWrappedComponent(): ComponentType; };
+export type LazyComponentWrapper<ComponentType> = ComponentType & { $$xbtcordGetWrappedComponent(): ComponentType; };
 
 /**
  * A lazy component. The factory method is called on first render.
@@ -25,7 +25,7 @@ export function LazyComponent<T extends object = any>(factory: () => ComponentTy
         return <Component {...props} />;
     };
 
-    LazyComponent.$$endcordGetWrappedComponent = get;
+    LazyComponent.$$xbtcordGetWrappedComponent = get;
 
     return LazyComponent;
 }

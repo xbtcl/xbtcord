@@ -49,7 +49,7 @@ let defaultGetStoreFunc: UseStore | undefined;
 
 function defaultGetStore() {
     if (!defaultGetStoreFunc) {
-        defaultGetStoreFunc = createStore(!IS_REPORTER ? "EndcordData" : "EndcordDataReporter", "EndcordStore");
+        defaultGetStoreFunc = createStore(!IS_REPORTER ? "XbtcordData" : "XbtcordDataReporter", "XbtcordStore");
     }
     return defaultGetStoreFunc;
 }

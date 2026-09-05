@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { ChatBarButton, ChatBarButtonFactory } from "@api/ChatButtons";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin, { IconComponent } from "@utils/types";
 import { findByPropsLazy } from "@webpack";
 import { MediaEngineStore, React, useState, useStateFromStores } from "@webpack/common";
@@ -95,7 +95,7 @@ const FakeMuteButton: ChatBarButtonFactory = ({ isAnyChat }) => {
 export default definePlugin({
     name: "FakeMute",
     description: "Appear muted to others in voice channels while keeping your microphone active. Toggle from the chat bar (only shows when in a VC).",
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     tags: ["Voice", "Utility"],
     dependencies: ["ChatInputButtonAPI"],
 

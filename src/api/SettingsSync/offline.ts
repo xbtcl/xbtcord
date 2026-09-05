@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -52,20 +52,20 @@ export async function importSettings(data: string) {
 
     if ("settings" in parsed && "quickCss" in parsed) {
         Object.assign(PlainSettings, parsed.settings);
-        await EndcordNative.settings.set(parsed.settings);
-        await EndcordNative.quickCss.set(parsed.quickCss);
+        await XbtcordNative.settings.set(parsed.settings);
+        await XbtcordNative.quickCss.set(parsed.quickCss);
     } else
-        throw new Error("Invalid Settings. Is this even a Endcord Settings file?");
+        throw new Error("Invalid Settings. Is this even a Xbtcord Settings file?");
 }
 
 export async function exportSettings({ minify }: { minify?: boolean; } = {}) {
-    const settings = EndcordNative.settings.get();
-    const quickCss = await EndcordNative.quickCss.get();
+    const settings = XbtcordNative.settings.get();
+    const quickCss = await XbtcordNative.quickCss.get();
     return JSON.stringify({ settings, quickCss }, null, minify ? undefined : 4);
 }
 
 export async function downloadSettingsBackup() {
-    const filename = `endcord-settings-backup-${moment().format("YYYY-MM-DD")}.json`;
+    const filename = `xbtcord-settings-backup-${moment().format("YYYY-MM-DD")}.json`;
     const backup = await exportSettings();
     const data = new TextEncoder().encode(backup);
 
@@ -80,7 +80,7 @@ export async function uploadSettingsBackup(showToast = true): Promise<void> {
     if (IS_DISCORD_DESKTOP) {
         const [file] = await DiscordNative.fileManager.openFiles({
             filters: [
-                { name: "Endcord Settings Backup", extensions: ["json"] },
+                { name: "Xbtcord Settings Backup", extensions: ["json"] },
                 { name: "all", extensions: ["*"] }
             ]
         });

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -12,7 +12,7 @@ import { canBlockReviewAuthor, canDeleteReview, canReportReview, cl, showToast }
 import { openUserProfile } from "@utils/discord";
 import { classes } from "@utils/misc";
 import { findCssClassesLazy } from "@webpack";
-import { ConfirmModal, IconUtils, openModal as openEndcordModal, Parser, Timestamp, useEffect, useState } from "@webpack/common";
+import { ConfirmModal, IconUtils, openModal as openXbtcordModal, Parser, Timestamp, useEffect, useState } from "@webpack/common";
 
 import { openBlockModal } from "./BlockedUserModal";
 import { BlockButton, DeleteButton, ReportButton } from "./MessageButton";
@@ -42,7 +42,7 @@ export default function ReviewComponent({ review, refetch, profileId }: { review
     }
 
     function delReview() {
-        openEndcordModal(props => (
+        openXbtcordModal(props => (
             <ConfirmModal
                 {...props}
                 title="Are you sure?"
@@ -61,7 +61,7 @@ export default function ReviewComponent({ review, refetch, profileId }: { review
     }
 
     function reportRev() {
-        openEndcordModal(props => (
+        openXbtcordModal(props => (
             <ConfirmModal
                 {...props}
                 title="Are you sure?"
@@ -84,7 +84,7 @@ export default function ReviewComponent({ review, refetch, profileId }: { review
         if (isAuthorBlocked)
             return unblockUser(review.sender.discordID);
 
-        openEndcordModal(props => (
+        openXbtcordModal(props => (
             <ConfirmModal
                 {...props}
                 title="Are you sure?"

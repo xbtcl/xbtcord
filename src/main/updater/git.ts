@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -12,7 +12,7 @@ import { promisify } from "util";
 
 import { serializeErrors } from "./common";
 
-const ENDCORD_SRC_DIR = join(__dirname, "..");
+const XBTCORD_SRC_DIR = join(__dirname, "..");
 
 const execFile = promisify(cpExecFile);
 
@@ -21,7 +21,7 @@ const isFlatpak = process.platform === "linux" && !!process.env.FLATPAK_ID;
 if (process.platform === "darwin") process.env.PATH = `/usr/local/bin:${process.env.PATH}`;
 
 function git(...args: string[]) {
-    const opts = { cwd: ENDCORD_SRC_DIR };
+    const opts = { cwd: XBTCORD_SRC_DIR };
 
     if (isFlatpak) return execFile("flatpak-spawn", ["--host", "git", ...args], opts);
     else return execFile("git", args, opts);
@@ -60,7 +60,7 @@ async function pull() {
 }
 
 async function build() {
-    const opts = { cwd: ENDCORD_SRC_DIR };
+    const opts = { cwd: XBTCORD_SRC_DIR };
 
     const command = isFlatpak ? "flatpak-spawn" : "node";
     const args = isFlatpak ? ["--host", "node", "scripts/build/build.mjs"] : ["scripts/build/build.mjs"];

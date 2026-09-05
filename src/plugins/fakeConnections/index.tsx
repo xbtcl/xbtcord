@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,7 +10,7 @@ import { get as dsGet, set as dsSet } from "@api/DataStore";
 import { definePluginSettings } from "@api/Settings";
 import { Button } from "@components/Button";
 import ErrorBoundary from "@components/ErrorBoundary";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByCodeLazy, findByPropsLazy, findComponentByCodeLazy } from "@webpack";
 import { React, SearchableSelect, showToast, TextInput, Toasts, UserStore } from "@webpack/common";
@@ -317,7 +317,7 @@ const settings = definePluginSettings({
 export default definePlugin({
     name: "FakeConnections",
     description: "Add fake connections to your own profile, visible only to you. Supports custom display names, optional clickable links, and per-theme text color. Manage in plugin settings.",
-    authors: [EndcordDevs.lastclipped],
+    authors: [XbtcordDevs.lastclipped],
     tags: ["Appearance", "Customisation"],
     dependencies: ["ProfileSectionsAPI"],
     settings,

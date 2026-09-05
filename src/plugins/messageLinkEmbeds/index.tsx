@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -8,7 +8,6 @@ import { addMessageAccessory, removeMessageAccessory } from "@api/MessageAccesso
 import { updateMessage } from "@api/MessageUpdater";
 import { definePluginSettings } from "@api/Settings";
 import { getUserSettingLazy } from "@api/UserSettings";
-import { Channel, Message } from "@endcord/discord-types";
 import { Devs } from "@utils/constants.js";
 import { classes } from "@utils/misc";
 import { Queue } from "@utils/Queue";
@@ -28,6 +27,7 @@ import {
     Text,
     UserStore
 } from "@webpack/common";
+import { Channel, Message } from "@xbtcord/discord-types";
 import { ComponentType, JSX } from "react";
 
 const messageCache = new Map<string, {
@@ -206,7 +206,7 @@ function computeWidthAndHeight(width: number, height: number) {
 function withEmbeddedBy(message: Message, embeddedBy: string[]) {
     return new Proxy(message, {
         get(_, prop) {
-            if (prop === "endcordEmbeddedBy") return embeddedBy;
+            if (prop === "xbtcordEmbeddedBy") return embeddedBy;
             // @ts-expect-error ts so bad
             return Reflect.get(...arguments);
         }
@@ -216,7 +216,7 @@ function withEmbeddedBy(message: Message, embeddedBy: string[]) {
 
 function MessageEmbedAccessory({ message }: { message: Message; }) {
     // @ts-expect-error
-    const embeddedBy: string[] = message.endcordEmbeddedBy ?? [];
+    const embeddedBy: string[] = message.xbtcordEmbeddedBy ?? [];
 
     const accessories = [] as (JSX.Element | null)[];
 

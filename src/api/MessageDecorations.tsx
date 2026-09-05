@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import ErrorBoundary from "@components/ErrorBoundary";
-import { Channel, Message } from "@endcord/discord-types";
+import { Channel, Message } from "@xbtcord/discord-types";
 import { JSX } from "react";
 
 export interface MessageDecorationProps {

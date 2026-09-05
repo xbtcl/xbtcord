@@ -1,14 +1,14 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2023 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { Link } from "@components/Link";
-import { RenderModalProps } from "@endcord/discord-types";
 import { settings } from "@plugins/decor/settings";
 import { DecorationModalClasses, requireAvatarDecorationModal } from "@plugins/decor/ui";
 import { ConfirmModal, Forms, openModal } from "@webpack/common";
+import { RenderModalProps } from "@xbtcord/discord-types";
 
 import { openCreateDecorationModal } from "./CreateDecorationModal";
 

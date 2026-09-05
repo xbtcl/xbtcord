@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -32,8 +32,8 @@ function VesktopSection() {
     return (
         <Flex className={Margins.bottom20} flexDirection="column" gap="1em">
             <Card variant="info">
-                <HeadingSecondary>Vesktop & Endcord</HeadingSecondary>
-                <Paragraph>Vesktop and Endcord are two separate things. This updater is for Endcord.</Paragraph>
+                <HeadingSecondary>Vesktop & Xbtcord</HeadingSecondary>
+                <Paragraph>Vesktop and Xbtcord are two separate things. This updater is for Xbtcord.</Paragraph>
                 <Paragraph className={Margins.top8}>
                     You receive separate popups for Vesktop updates. You can also manually update by installing the <Link href="https://vesktop.dev/install">latest version</Link>.
                 </Paragraph>
@@ -71,13 +71,13 @@ function Updater() {
 
             <FormSwitch
                 title="Automatically update"
-                description="Automatically update Endcord without confirmation prompt"
+                description="Automatically update Xbtcord without confirmation prompt"
                 value={settings.autoUpdate}
                 onChange={(v: boolean) => settings.autoUpdate = v}
             />
             <FormSwitch
                 title="Get notified when an automatic update completes"
-                description="Show a notification when Endcord automatically updates"
+                description="Show a notification when Xbtcord automatically updates"
                 value={settings.autoUpdateNotification}
                 onChange={(v: boolean) => settings.autoUpdateNotification = v}
                 disabled={!settings.autoUpdate}

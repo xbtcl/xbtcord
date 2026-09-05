@@ -1,15 +1,15 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { ChatBarButton, ChatBarButtonFactory } from "@api/ChatButtons";
 import { TooltipContainer } from "@components/TooltipContainer";
-import { RenderModalProps } from "@endcord/discord-types";
 import { classes } from "@utils/misc";
 import { IconComponent } from "@utils/types";
 import { ConfirmModal,openModal, useEffect, useState } from "@webpack/common";
+import { RenderModalProps } from "@xbtcord/discord-types";
 
 import { settings } from "./settings";
 import { openTranslateModal } from "./TranslateModal";
@@ -36,7 +36,7 @@ function AutoTranslateConfirmModal(props: RenderModalProps) {
     return (
         <ConfirmModal
             {...props}
-            title="Endcord Auto-Translate Enabled"
+            title="Xbtcord Auto-Translate Enabled"
             subtitle="You just enabled Auto Translate! Any message will automatically be translated before being sent."
             confirmText="Disable Auto-Translate"
             onConfirm={() => settings.store.autoTranslate = false}

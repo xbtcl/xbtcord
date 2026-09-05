@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -7,7 +7,7 @@
 import { isPluginEnabled } from "@api/PluginManager";
 import { definePluginSettings } from "@api/Settings";
 import { UserAreaButton, UserAreaRenderProps } from "@api/UserArea";
-import endcordToolbox from "@plugins/endcordToolbox";
+import xbtcordToolbox from "@plugins/xbtcordToolbox";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { Constants, Menu, RestAPI, useEffect, useState } from "@webpack/common";
@@ -48,7 +48,7 @@ function SpotifyActivityToggleButton({ iconForeground, hideTooltips, nameplate }
         return () => { forceUpdate = null; };
     }, []);
 
-    if (!isLoaded || !spotifyId || location !== "PANEL" && isPluginEnabled(endcordToolbox.name)) return null;
+    if (!isLoaded || !spotifyId || location !== "PANEL" && isPluginEnabled(xbtcordToolbox.name)) return null;
 
     return (
         <UserAreaButton
@@ -77,10 +77,10 @@ const settings = definePluginSettings({
         description: "Where to show the Spotify toggle button.",
         options: [
             { label: "Next to Mute/Deafen", value: "PANEL", default: true },
-            { label: "Endcord Toolbox", value: "TOOLBOX" }
+            { label: "Xbtcord Toolbox", value: "TOOLBOX" }
         ],
         get hidden() {
-            return !isPluginEnabled(endcordToolbox.name);
+            return !isPluginEnabled(xbtcordToolbox.name);
         }
     },
 });

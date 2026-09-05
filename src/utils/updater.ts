@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -26,7 +26,7 @@ async function Unwrap<T>(p: Promise<IpcRes<T>>) {
 }
 
 export async function checkForUpdates() {
-    changes = await Unwrap(EndcordNative.updater.getUpdates());
+    changes = await Unwrap(XbtcordNative.updater.getUpdates());
 
     // we only want to check this for the git updater, not the http updater
     if (!IS_STANDALONE) {
@@ -42,18 +42,18 @@ export async function checkForUpdates() {
 export async function update() {
     if (!isOutdated) return true;
 
-    const res = await Unwrap(EndcordNative.updater.update());
+    const res = await Unwrap(XbtcordNative.updater.update());
 
     if (res) {
         isOutdated = false;
-        if (!await Unwrap(EndcordNative.updater.rebuild()))
+        if (!await Unwrap(XbtcordNative.updater.rebuild()))
             throw new Error("The Build failed. Please try manually building the new update");
     }
 
     return res;
 }
 
-export const getRepo = () => Unwrap(EndcordNative.updater.getRepo());
+export const getRepo = () => Unwrap(XbtcordNative.updater.getRepo());
 
 export async function maybePromptToUpdate(confirmMessage: string, checkForDev = false) {
     if (IS_WEB || IS_UPDATER_DISABLED) return;

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -7,7 +7,7 @@
 import "./style.css";
 
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
-import { Devs, EndcordDevs } from "@utils/constants";
+import { Devs, XbtcordDevs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { ChannelStore, Menu } from "@webpack/common";
 
@@ -33,10 +33,10 @@ const messageCtxPatch: NavContextMenuPatchCallback = (children, { message }) => 
 
 export default definePlugin({
     name: "Translate+",
-    description: "Endcord's translate plugin but with support for artistic languages!",
+    description: "Xbtcord's translate plugin but with support for artistic languages!",
     dependencies: ["MessageAccessoriesAPI", "MessagePopoverAPI"],
     tags: ["Chat", "Utility"],
-    authors: [Devs.Ven, EndcordDevs.Prince527],
+    authors: [Devs.Ven, XbtcordDevs.Prince527],
     settings,
     contextMenus: {
         "message": messageCtxPatch

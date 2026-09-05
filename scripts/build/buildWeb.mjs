@@ -1,6 +1,6 @@
 #!/usr/bin/node
 /*
- * Endcord, a modification for Discord's desktop app
+ * Xbtcord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,9 +31,9 @@ import { BUILD_TIMESTAMP, commonOpts, globPlugins, IS_DEV, IS_REPORTER, IS_ANTI_
  */
 const commonOptions = {
     ...commonOpts,
-    entryPoints: ["browser/Endcord.ts"],
+    entryPoints: ["browser/Xbtcord.ts"],
     format: "iife",
-    globalName: "Endcord",
+    globalName: "Xbtcord",
     external: ["~plugins", "~git-hash", "/assets/*"],
     target: ["esnext"],
     plugins: [
@@ -84,7 +84,7 @@ const buildConfigs = [
     {
         ...commonOptions,
         outfile: "dist/browser.js",
-        footer: { js: "//# sourceURL=file:///EndcordWeb" }
+        footer: { js: "//# sourceURL=file:///XbtcordWeb" }
     },
     {
         ...commonOptions,
@@ -93,7 +93,7 @@ const buildConfigs = [
             ...commonOptions.define,
             IS_EXTENSION: "true"
         },
-        footer: { js: "//# sourceURL=file:///EndcordWeb" }
+        footer: { js: "//# sourceURL=file:///XbtcordWeb" }
     },
     {
         ...commonOptions,
@@ -103,13 +103,13 @@ const buildConfigs = [
             IS_USERSCRIPT: "true",
             window: "unsafeWindow",
         },
-        outfile: "dist/Endcord.user.js",
+        outfile: "dist/Xbtcord.user.js",
         banner: {
             js: readFileSync("browser/userscript.meta.js", "utf-8").replace("%version%", `${VERSION}.${new Date().getTime()}`)
         },
         footer: {
-            // UserScripts get wrapped in an iife, so define Endcord prop on window that returns our local
-            js: "Object.defineProperty(unsafeWindow,'Endcord',{get:()=>Endcord});"
+            // UserScripts get wrapped in an iife, so define Xbtcord prop on window that returns our local
+            js: "Object.defineProperty(unsafeWindow,'Xbtcord',{get:()=>Xbtcord});"
         }
     }
 ];
@@ -146,8 +146,8 @@ async function loadDir(dir, basePath = "") {
  */
 async function buildExtension(target, files) {
     const entries = {
-        "dist/Endcord.js": await readFile("dist/extension.js"),
-        "dist/Endcord.css": await readFile("dist/extension.css"),
+        "dist/Xbtcord.js": await readFile("dist/extension.js"),
+        "dist/Xbtcord.css": await readFile("dist/extension.css"),
         ...await loadDir("dist/vendor/monaco", "dist/"),
         ...Object.fromEntries(await Promise.all(files.map(async f => {
             let content = await readFile(join("browser", f));
@@ -175,10 +175,10 @@ async function buildExtension(target, files) {
     console.info("Unpacked Extension written to dist/" + target);
 }
 
-const appendCssRuntime = readFile("dist/Endcord.user.css", "utf-8").then(content => {
+const appendCssRuntime = readFile("dist/Xbtcord.user.css", "utf-8").then(content => {
     const cssRuntime = `unsafeWindow._vcUserScriptRendererCss=\`${content.replaceAll("`", "\\`")}\``;
 
-    return appendFile("dist/Endcord.user.js", cssRuntime);
+    return appendFile("dist/Xbtcord.user.js", cssRuntime);
 });
 
 if (!process.argv.includes("--skip-extension")) {

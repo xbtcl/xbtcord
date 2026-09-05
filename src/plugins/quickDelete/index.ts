@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { definePluginSettings } from "@api/Settings";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { MessageStore, RestAPI, SelectedChannelStore, showToast, Toasts, UserStore } from "@webpack/common";
 
@@ -62,7 +62,7 @@ export default definePlugin({
     name: "QuickDelete",
     description: "Delete your last message in the current channel with a keyboard shortcut.",
     tags: ["Chat", "Utility"],
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     settings,
 
     start() {

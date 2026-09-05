@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Message } from "@endcord/discord-types";
 import { MessageCache, MessageStore } from "@webpack/common";
+import { Message } from "@xbtcord/discord-types";
 
 /**
  * Update and re-render a message

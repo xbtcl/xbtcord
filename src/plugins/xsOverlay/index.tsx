@@ -1,16 +1,16 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { definePluginSettings } from "@api/Settings";
-import type { Channel, Embed, GuildMember, MessageAttachment, User } from "@endcord/discord-types";
 import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import definePlugin, { makeRange, OptionType, PluginNative, ReporterTestable } from "@utils/types";
 import { findByCodeLazy, findLazy } from "@webpack";
 import { Button, ChannelStore, GuildRoleStore, GuildStore, UserStore } from "@webpack/common";
+import type { Channel, Embed, GuildMember, MessageAttachment, User } from "@xbtcord/discord-types";
 
 const ChannelTypes = findLazy(m => m.ANNOUNCEMENT_THREAD === 10);
 
@@ -178,7 +178,7 @@ let socket: WebSocket;
 
 async function start() {
     if (socket) socket.close();
-    socket = new WebSocket(`ws://127.0.0.1:${settings.store.webSocketPort ?? 42070}/?client=Endcord`);
+    socket = new WebSocket(`ws://127.0.0.1:${settings.store.webSocketPort ?? 42070}/?client=Xbtcord`);
     return new Promise((resolve, reject) => {
         socket.onopen = resolve;
         socket.onerror = reject;
@@ -186,7 +186,7 @@ async function start() {
     });
 }
 
-const Native = EndcordNative.pluginHelpers.XSOverlay as PluginNative<typeof import("./native")>;
+const Native = XbtcordNative.pluginHelpers.XSOverlay as PluginNative<typeof import("./native")>;
 
 export default definePlugin({
     name: "XSOverlay",
@@ -341,7 +341,7 @@ function sendMsgNotif(titleString: string, content: string, message: Message) {
                 content: content,
                 useBase64Icon: true,
                 icon: result,
-                sourceApp: "Endcord"
+                sourceApp: "Xbtcord"
             };
 
             sendToOverlay(msgData);
@@ -360,7 +360,7 @@ function sendOtherNotif(content: string, titleString: string) {
         content: content,
         useBase64Icon: false,
         icon: "default",
-        sourceApp: "Endcord"
+        sourceApp: "Xbtcord"
     };
     sendToOverlay(msgData);
 }
@@ -371,7 +371,7 @@ async function sendToOverlay(notif: NotificationObject) {
         return;
     }
     const apiObject: ApiObject = {
-        sender: "Endcord",
+        sender: "Xbtcord",
         target: "xsoverlay",
         command: "SendNotification",
         jsonData: JSON.stringify(notif),

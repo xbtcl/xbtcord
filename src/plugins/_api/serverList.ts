@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -16,14 +16,14 @@ export default definePlugin({
             find: "#{intl::DISCODO_DISABLED}",
             replacement: {
                 match: /(?<=#{intl::DISCODO_DISABLED}.+?return)(\(.{0,150}?tutorialId:"friends-list".+?}\))(?=}function)/,
-                replace: "[$1].concat(Endcord.Api.ServerList.renderAll(Endcord.Api.ServerList.ServerListRenderPosition.Above))"
+                replace: "[$1].concat(Xbtcord.Api.ServerList.renderAll(Xbtcord.Api.ServerList.ServerListRenderPosition.Above))"
             }
         },
         {
             find: ".setGuildsTree(",
             replacement: {
                 match: /(?<=#{intl::SERVERS}\),gap:"xs",children:)\i\.map\(.{0,50}\.length\)/,
-                replace: "Endcord.Api.ServerList.renderAll(Endcord.Api.ServerList.ServerListRenderPosition.In).concat($&)"
+                replace: "Xbtcord.Api.ServerList.renderAll(Xbtcord.Api.ServerList.ServerListRenderPosition.In).concat($&)"
             }
         }
     ]

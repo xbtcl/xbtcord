@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,7 +10,7 @@ import { Button, MediaEngineStore, showToast, Toasts, useState } from "@webpack/
 import type { VoiceRecorder } from ".";
 import { settings } from "./settings";
 
-const Native = EndcordNative.pluginHelpers.VoiceMessages as PluginNative<typeof import("./native")>;
+const Native = XbtcordNative.pluginHelpers.VoiceMessages as PluginNative<typeof import("./native")>;
 
 export const VoiceRecorderDesktop: VoiceRecorder = ({ setAudioBlob, onRecordingChange }) => {
     const [recording, setRecording] = useState(false);

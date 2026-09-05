@@ -1,21 +1,21 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { CommandArgument, CommandContext, CommandOption } from "@endcord/discord-types";
 import { Logger } from "@utils/Logger";
 import { makeCodeblock } from "@utils/text";
+import { CommandArgument, CommandContext, CommandOption } from "@xbtcord/discord-types";
 
 import { sendBotMessage } from "./commandHelpers";
-import { ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType, EndcordCommand } from "./types";
+import { ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType, XbtcordCommand } from "./types";
 
 export * from "./commandHelpers";
 export * from "./types";
 
-export let BUILT_IN: EndcordCommand[];
-export const commands = {} as Record<string, EndcordCommand>;
+export let BUILT_IN: XbtcordCommand[];
+export const commands = {} as Record<string, XbtcordCommand>;
 
 // hack for plugins being evaluated before we can grab these from webpack
 const OptPlaceholder = Symbol("OptionalMessageOption") as any as CommandOption;
@@ -38,7 +38,7 @@ export let RequiredMessageOption: CommandOption = ReqPlaceholder;
 // Add this offset to every added command to keep them unique
 let commandIdOffset: number;
 
-export const _init = function (cmds: EndcordCommand[]) {
+export const _init = function (cmds: XbtcordCommand[]) {
     try {
         BUILT_IN = cmds;
         OptionalMessageOption = cmds.find(c => (c.untranslatedName || c.displayName) === "shrug")!.options![0];
@@ -50,8 +50,8 @@ export const _init = function (cmds: EndcordCommand[]) {
     return cmds;
 } as never;
 
-export const _handleCommand = function (cmd: EndcordCommand, args: CommandArgument[], ctx: CommandContext) {
-    if (!cmd.isEndcordCommand)
+export const _handleCommand = function (cmd: XbtcordCommand, args: CommandArgument[], ctx: CommandContext) {
+    if (!cmd.isXbtcordCommand)
         return cmd.execute(args, ctx);
 
     const handleError = (err: any) => {
@@ -63,7 +63,7 @@ export const _handleCommand = function (cmd: EndcordCommand, args: CommandArgume
         sendBotMessage(ctx.channel.id, {
             content: `${msg}:\n${makeCodeblock(reason)}`,
             author: {
-                username: "Endcord"
+                username: "Xbtcord"
             }
         });
     };
@@ -81,7 +81,7 @@ export const _handleCommand = function (cmd: EndcordCommand, args: CommandArgume
  * Prepare a Command Option for Discord by filling missing fields
  * @param opt
  */
-export function prepareOption<O extends CommandOption | EndcordCommand>(opt: O): O {
+export function prepareOption<O extends CommandOption | XbtcordCommand>(opt: O): O {
     opt.displayName ||= opt.name;
     opt.displayDescription ||= opt.description;
     opt.options?.forEach((opt, i, opts) => {
@@ -98,7 +98,7 @@ export function prepareOption<O extends CommandOption | EndcordCommand>(opt: O):
 // Yes, Discord registers individual commands for each subcommand
 // TODO: This probably doesn't support nested subcommands. If that is ever needed,
 // investigate
-function registerSubCommands(cmd: EndcordCommand, plugin: string) {
+function registerSubCommands(cmd: XbtcordCommand, plugin: string) {
     cmd.options?.forEach(o => {
         if (o.type !== ApplicationCommandOptionType.SUB_COMMAND)
             throw new Error("When specifying sub-command options, all options must be sub-commands.");
@@ -121,7 +121,7 @@ function registerSubCommands(cmd: EndcordCommand, plugin: string) {
     });
 }
 
-export function registerCommand<C extends EndcordCommand>(command: C, plugin: string) {
+export function registerCommand<C extends XbtcordCommand>(command: C, plugin: string) {
     if (!BUILT_IN) {
         console.warn(
             "[CommandsAPI]",
@@ -134,7 +134,7 @@ export function registerCommand<C extends EndcordCommand>(command: C, plugin: st
     if (BUILT_IN.some(c => c.name === command.name))
         throw new Error(`Command '${command.name}' already exists.`);
 
-    command.isEndcordCommand = true;
+    command.isXbtcordCommand = true;
     command.untranslatedName ??= command.name;
     command.untranslatedDescription ??= command.description;
     command.id ??= `-${BUILT_IN.length + commandIdOffset + 1}`;

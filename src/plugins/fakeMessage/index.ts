@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { ApplicationCommandInputType, ApplicationCommandOptionType, findOption, sendBotMessage } from "@api/Commands";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { UserStore } from "@webpack/common";
 
@@ -13,7 +13,7 @@ export default definePlugin({
     name: "FakeMessage",
     description: "Send a client-side fake message posed as any user via /fakemsg. Only you can see it.",
     tags: ["Chat", "Fun"],
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     dependencies: ["CommandsAPI"],
 
     commands: [

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -22,7 +22,7 @@ export default definePlugin({
             replacement: [
                 {
                     match: /children:\[(?=.{0,300},lostPermissionTooltipText:)/,
-                    replace: "children:[Endcord.Api.MemberListDecorators.__getDecorators(arguments[0],'guild'),"
+                    replace: "children:[Xbtcord.Api.MemberListDecorators.__getDecorators(arguments[0],'guild'),"
                 }
             ]
         },
@@ -30,7 +30,7 @@ export default definePlugin({
             find: "PrivateChannel.renderAvatar",
             replacement: {
                 match: /decorators:(\i\.isSystemDM\(\)\?.+?:null)/,
-                replace: "decorators:[Endcord.Api.MemberListDecorators.__getDecorators(arguments[0],'dm'),$1]"
+                replace: "decorators:[Xbtcord.Api.MemberListDecorators.__getDecorators(arguments[0],'dm'),$1]"
             }
         }
     ]

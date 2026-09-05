@@ -1,10 +1,10 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { cl } from "@endcordplugins/translatePlus/misc/types";
+import { cl } from "@xbtcordplugins/translatePlus/misc/types";
 
 export function Icon() {
     return (

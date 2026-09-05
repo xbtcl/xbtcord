@@ -2,7 +2,7 @@ dist
 node_modules
 
 *.exe
-endcord_installer
+xbtcord_installer
 
 .idea
 .DS_Store

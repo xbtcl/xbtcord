@@ -1,6 +1,6 @@
 #!/usr/bin/node
 /*
- * Endcord, a modification for Discord's desktop app
+ * Xbtcord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,7 +56,7 @@ const nodeCommonOpts = {
     external: ["electron", "original-fs", "~pluginNatives", ...commonOpts.external]
 };
 
-const sourceMapFooter = s => watch ? "" : `//# sourceMappingURL=endcord://${s}.js.map`;
+const sourceMapFooter = s => watch ? "" : `//# sourceMappingURL=xbtcord://${s}.js.map`;
 const sourcemap = watch ? "inline" : "external";
 
 /**
@@ -122,7 +122,7 @@ const buildConfigs = ([
         ...nodeCommonOpts,
         entryPoints: ["src/main/index.ts"],
         outfile: "dist/patcher.js",
-        footer: { js: "//# sourceURL=file:///EndcordPatcher\n" + sourceMapFooter("patcher") },
+        footer: { js: "//# sourceURL=file:///XbtcordPatcher\n" + sourceMapFooter("patcher") },
         sourcemap,
         plugins: [
             // @ts-ignore this is never undefined
@@ -137,12 +137,12 @@ const buildConfigs = ([
     },
     {
         ...commonOpts,
-        entryPoints: ["src/Endcord.ts"],
+        entryPoints: ["src/Xbtcord.ts"],
         outfile: "dist/renderer.js",
         format: "iife",
         target: ["esnext"],
-        footer: { js: "//# sourceURL=file:///EndcordRenderer\n" + sourceMapFooter("renderer") },
-        globalName: "Endcord",
+        footer: { js: "//# sourceURL=file:///XbtcordRenderer\n" + sourceMapFooter("renderer") },
+        globalName: "Xbtcord",
         sourcemap,
         plugins: [
             globPlugins("discordDesktop"),
@@ -158,7 +158,7 @@ const buildConfigs = ([
         ...nodeCommonOpts,
         entryPoints: ["src/preload.ts"],
         outfile: "dist/preload.js",
-        footer: { js: "//# sourceURL=file:///EndcordPreload\n" + sourceMapFooter("preload") },
+        footer: { js: "//# sourceURL=file:///XbtcordPreload\n" + sourceMapFooter("preload") },
         sourcemap,
         define: {
             ...defines,
@@ -167,12 +167,12 @@ const buildConfigs = ([
         }
     },
 
-    // Endcord Desktop main & renderer & preload
+    // Xbtcord Desktop main & renderer & preload
     {
         ...nodeCommonOpts,
         entryPoints: ["src/main/index.ts"],
-        outfile: "dist/endcordDesktopMain.js",
-        footer: { js: "//# sourceURL=file:///EndcordDesktopMain\n" + sourceMapFooter("endcordDesktopMain") },
+        outfile: "dist/xbtcordDesktopMain.js",
+        footer: { js: "//# sourceURL=file:///XbtcordDesktopMain\n" + sourceMapFooter("xbtcordDesktopMain") },
         sourcemap,
         plugins: [
             ...nodeCommonOpts.plugins,
@@ -186,12 +186,12 @@ const buildConfigs = ([
     },
     {
         ...commonOpts,
-        entryPoints: ["src/Endcord.ts"],
-        outfile: "dist/endcordDesktopRenderer.js",
+        entryPoints: ["src/Xbtcord.ts"],
+        outfile: "dist/xbtcordDesktopRenderer.js",
         format: "iife",
         target: ["esnext"],
-        footer: { js: "//# sourceURL=file:///EndcordDesktopRenderer\n" + sourceMapFooter("endcordDesktopRenderer") },
-        globalName: "Endcord",
+        footer: { js: "//# sourceURL=file:///XbtcordDesktopRenderer\n" + sourceMapFooter("xbtcordDesktopRenderer") },
+        globalName: "Xbtcord",
         sourcemap,
         plugins: [
             globPlugins("vesktop"),
@@ -206,8 +206,8 @@ const buildConfigs = ([
     {
         ...nodeCommonOpts,
         entryPoints: ["src/preload.ts"],
-        outfile: "dist/endcordDesktopPreload.js",
-        footer: { js: "//# sourceURL=file:///EndcordPreload\n" + sourceMapFooter("endcordDesktopPreload") },
+        outfile: "dist/xbtcordDesktopPreload.js",
+        footer: { js: "//# sourceURL=file:///XbtcordPreload\n" + sourceMapFooter("xbtcordDesktopPreload") },
         sourcemap,
         define: {
             ...defines,

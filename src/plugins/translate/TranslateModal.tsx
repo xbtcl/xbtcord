@@ -1,14 +1,14 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { Divider } from "@components/Divider";
 import { FormSwitch } from "@components/FormSwitch";
-import { RenderModalProps } from "@endcord/discord-types";
 import { Margins } from "@utils/margins";
 import { Forms, Modal,openModal, SearchableSelect, useMemo } from "@webpack/common";
+import { RenderModalProps } from "@xbtcord/discord-types";
 
 import { settings } from "./settings";
 import { getLanguages } from "./utils";

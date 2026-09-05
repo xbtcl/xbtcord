@@ -1,5 +1,5 @@
 /*
- * Endcord, a modification for Discord's desktop app
+ * Xbtcord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,11 +47,11 @@ export const IS_ANTI_CRASH_TEST = process.argv.includes("--anti-crash-test");
 export const IS_STANDALONE = process.argv.includes("--standalone");
 
 export const IS_UPDATER_DISABLED = process.argv.includes("--disable-updater");
-export const gitHash = process.env.ENDCORD_HASH || execSync("git rev-parse --short HEAD", { encoding: "utf-8" }).trim();
+export const gitHash = process.env.XBTCORD_HASH || execSync("git rev-parse --short HEAD", { encoding: "utf-8" }).trim();
 
 export const banner = {
     js: `
-// Endcord ${gitHash}
+// Xbtcord ${gitHash}
 // Standalone: ${IS_STANDALONE}
 // Platform: ${IS_STANDALONE === false ? process.platform : "Universal"}
 // Updater Disabled: ${IS_UPDATER_DISABLED}
@@ -225,13 +225,21 @@ export const gitRemotePlugin = {
             namespace: "git-remote", path: args.path
         }));
         build.onLoad({ filter, namespace: "git-remote" }, async () => {
-            let remote = process.env.ENDCORD_REMOTE;
+            let remote = process.env.XBTCORD_REMOTE;
             if (!remote) {
-                const res = await promisify(exec)("git remote get-url origin", { encoding: "utf-8" });
-                remote = res.stdout.trim()
-                    .replace("https://github.com/", "")
-                    .replace("git@github.com:", "")
-                    .replace(/.git$/, "");
+                try {
+                    const res = await promisify(exec)("git remote get-url origin", { encoding: "utf-8" });
+                    remote = res.stdout.trim()
+                        .replace("https://github.com/", "")
+                        .replace("git@github.com:", "")
+                        .replace(/.git$/, "");
+                } catch {
+                    // A fork that hasn't been pushed anywhere yet has no `origin`. That is a
+                    // normal state to build in, so it warns rather than failing the build -
+                    // the only thing lost is the updater, which has nowhere to look anyway.
+                    remote = "";
+                    console.warn("[Xbtcord] No `origin` remote and no XBTCORD_REMOTE set - this build can't check for updates.");
+                }
             }
 
             return { contents: `export default "${remote}"` };
@@ -358,8 +366,8 @@ export const commonOpts = {
     external: ["~plugins", "~git-hash", "~git-remote", "/assets/*"],
     inject: ["./scripts/build/inject/react.mjs"],
     jsx: "transform",
-    jsxFactory: "EndcordCreateElement",
-    jsxFragment: "EndcordFragment"
+    jsxFactory: "XbtcordCreateElement",
+    jsxFragment: "XbtcordFragment"
 };
 
 const escapedBuiltinModules = builtinModules

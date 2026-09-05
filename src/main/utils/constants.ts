@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -7,10 +7,10 @@
 import { app } from "electron";
 import { join } from "path";
 
-export const DATA_DIR = process.env.ENDCORD_USER_DATA_DIR ?? (
+export const DATA_DIR = process.env.XBTCORD_USER_DATA_DIR ?? (
     process.env.DISCORD_USER_DATA_DIR
-        ? join(process.env.DISCORD_USER_DATA_DIR, "..", "EndcordData")
-        : join(app.getPath("userData"), "..", "Endcord")
+        ? join(process.env.DISCORD_USER_DATA_DIR, "..", "XbtcordData")
+        : join(app.getPath("userData"), "..", "Xbtcord")
 );
 export const SETTINGS_DIR = join(DATA_DIR, "settings");
 export const THEMES_DIR = join(DATA_DIR, "themes");

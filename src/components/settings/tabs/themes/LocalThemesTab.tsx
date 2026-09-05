@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -56,7 +56,7 @@ async function onFileUpload(e: SyntheticEvent<HTMLInputElement>) {
         return new Promise<void>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
-                EndcordNative.themes.uploadTheme(name, reader.result as string)
+                XbtcordNative.themes.uploadTheme(name, reader.result as string)
                     .then(resolve)
                     .catch(reject);
             };
@@ -79,7 +79,7 @@ export function LocalThemesTab() {
     }, []);
 
     async function refreshLocalThemes() {
-        const themes = await EndcordNative.themes.getThemesList();
+        const themes = await XbtcordNative.themes.getThemesList();
         setUserThemes(themes);
     }
 
@@ -128,7 +128,7 @@ export function LocalThemesTab() {
                             ) : (
                                 <QuickAction
                                     text="Open Themes Folder"
-                                    action={() => EndcordNative.themes.openFolder()}
+                                    action={() => XbtcordNative.themes.openFolder()}
                                     Icon={FolderIcon}
                                 />
                             )}
@@ -139,7 +139,7 @@ export function LocalThemesTab() {
                         />
                         <QuickAction
                             text="Edit QuickCSS"
-                            action={() => EndcordNative.quickCss.openEditor()}
+                            action={() => XbtcordNative.quickCss.openEditor()}
                             Icon={PaintbrushIcon}
                         />
 
@@ -161,7 +161,7 @@ export function LocalThemesTab() {
                             onChange={enabled => onLocalThemeChange(theme.fileName, enabled)}
                             onDelete={async () => {
                                 onLocalThemeChange(theme.fileName, false);
-                                await EndcordNative.themes.deleteTheme(theme.fileName);
+                                await XbtcordNative.themes.deleteTheme(theme.fileName);
                                 refreshLocalThemes();
                             }}
                             theme={theme}

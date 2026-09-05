@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { get as dsGet, set as dsSet } from "@api/DataStore";
 import { definePluginSettings } from "@api/Settings";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { FluxDispatcher, React, UserStore } from "@webpack/common";
 
@@ -198,7 +198,7 @@ export default definePlugin({
     name: "FakeTag",
     description: "Adds a fake clan tag and badge emoji next to your username. Client-side only.",
     tags: ["Customisation", "Fun"],
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     settings,
 
     async start() {

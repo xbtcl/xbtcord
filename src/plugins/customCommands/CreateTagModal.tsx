@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,8 +10,8 @@ import { Flex } from "@components/Flex";
 import { HeadingSecondary } from "@components/Heading";
 import { InfoIcon } from "@components/Icons";
 import { Paragraph } from "@components/Paragraph";
-import { RenderModalProps } from "@endcord/discord-types";
 import { Modal, openModal, TextArea, TextInput, useState } from "@webpack/common";
+import { RenderModalProps } from "@xbtcord/discord-types";
 
 import { parseTagArguments } from ".";
 import { addTag, getTag, removeTag, Tag } from "./settings";

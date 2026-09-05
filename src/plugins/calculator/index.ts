@@ -1,17 +1,17 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { findOption, RequiredMessageOption, sendBotMessage } from "@api/Commands";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
     name: "Calculator",
     description: "/calc does quick maths right in the chat box.",
-    authors: [EndcordDevs.Dann],
+    authors: [XbtcordDevs.Dann],
     dependencies: ["CommandsAPI"],
     commands: [
         {

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -117,7 +117,7 @@ const DefaultSettings: Settings = {
     }
 };
 
-const settings = !IS_REPORTER ? EndcordNative.settings.get() : {} as Settings;
+const settings = !IS_REPORTER ? XbtcordNative.settings.get() : {} as Settings;
 mergeDefaults(settings, DefaultSettings);
 
 export const SettingsStore = new SettingsStoreClass(settings, {
@@ -162,7 +162,7 @@ export const SettingsStore = new SettingsStoreClass(settings, {
 if (!IS_REPORTER) {
     SettingsStore.addGlobalChangeListener((_, path) => {
         SettingsStore.plain.cloud.settingsSyncVersion = Date.now();
-        EndcordNative.settings.set(SettingsStore.plain, path);
+        XbtcordNative.settings.set(SettingsStore.plain, path);
     });
 }
 

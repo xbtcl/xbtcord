@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2023 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { definePluginSettings } from "@api/Settings";
 import { Card } from "@components/Card";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { UserStore } from "@webpack/common";
 
@@ -53,7 +53,7 @@ export default definePlugin({
     name: "PlatformSpoofer",
     description: "Spoof what platform or device you're on",
     tags: ["Utility"],
-    authors: [EndcordDevs.Drag, EndcordDevs.neoarz],
+    authors: [XbtcordDevs.Drag, XbtcordDevs.neoarz],
     settingsAboutComponent: () => (
         <Card variant="warning" defaultPadding>
             We can't guarantee this plugin won't get you warned or banned.
@@ -79,7 +79,7 @@ export default definePlugin({
             replacement: [
                 {
                     match: /(?<=\}\),)(\i)/g,
-                    replace: "$1=e=>({enabled:true}),_endcord_$1"
+                    replace: "$1=e=>({enabled:true}),_xbtcord_$1"
                 }
             ]
         },

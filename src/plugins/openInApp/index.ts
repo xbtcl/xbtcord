@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -66,7 +66,7 @@ const pluginSettings = definePluginSettings(
 );
 
 
-const Native = EndcordNative.pluginHelpers.OpenInApp as PluginNative<typeof import("./native")>;
+const Native = XbtcordNative.pluginHelpers.OpenInApp as PluginNative<typeof import("./native")>;
 
 export default definePlugin({
     name: "OpenInApp",
@@ -126,7 +126,7 @@ export default definePlugin({
                 showToast("Opened link in native app", Toasts.Type.SUCCESS);
 
                 const newUrl = url.replace(rule.match, rule.replace);
-                EndcordNative.native.openExternal(newUrl);
+                XbtcordNative.native.openExternal(newUrl);
 
                 event?.preventDefault();
                 return true;
@@ -145,7 +145,7 @@ export default definePlugin({
     handleAccountView(e: MouseEvent, platformType: string, userId: string) {
         const rule = UrlReplacementRules[platformType];
         if (rule?.accountViewReplace && pluginSettings.store[platformType]) {
-            EndcordNative.native.openExternal(rule.accountViewReplace(userId));
+            XbtcordNative.native.openExternal(rule.accountViewReplace(userId));
             e.preventDefault();
             return true;
         }

@@ -1,13 +1,13 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-// Ported to Endcord from Nightcord (coll, viciouscal); see https://git.nightcord.su/nightcord/nightcord
+// Ported to Xbtcord from Nightcord (coll, viciouscal); see https://git.nightcord.su/nightcord/nightcord
 
 import { definePluginSettings } from "@api/Settings";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { Forms } from "@webpack/common";
 
@@ -198,7 +198,7 @@ function removeCSS() {
 export default definePlugin({
     name: "SmoothType",
     description: "Fully customize the cursor caret — transition delay, easing, and color — for a smooth typing animation.",
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     settings,
 
     start() {

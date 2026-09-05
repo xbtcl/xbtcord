@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { definePluginSettings } from "@api/Settings";
-import { EndcordDevs } from "@utils/constants";
+import { XbtcordDevs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import definePlugin, { OptionType } from "@utils/types";
 import { FluxDispatcher, RestAPI, UserStore } from "@webpack/common";
@@ -84,7 +84,7 @@ export default definePlugin({
     name: "AutoReact",
     description: "Automatically react to messages containing specific keywords.",
     tags: ["Utility", "Chat"],
-    authors: [EndcordDevs.Sharp],
+    authors: [XbtcordDevs.Sharp],
     settings,
 
     start() {

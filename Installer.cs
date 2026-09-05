@@ -4,13 +4,13 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace EndcordInstaller
+namespace XbtcordInstaller
 {
     class Program
     {
-        static string EndcordDistPath = Path.Combine(
+        static string XbtcordDistPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "Endcord", "dist"
+            "Xbtcord", "dist"
         );
 
         static void Main(string[] args)
@@ -18,7 +18,7 @@ namespace EndcordInstaller
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("==================================================");
-            Console.WriteLine("           ENDCORD KURULUM YÖNETİCİSİ             ");
+            Console.WriteLine("           XBTCORD KURULUM YÖNETİCİSİ             ");
             Console.WriteLine("==================================================");
             Console.ResetColor();
 
@@ -29,9 +29,9 @@ namespace EndcordInstaller
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Lütfen Yapmak İstediğiniz İşlemi Seçin:");
                 Console.ResetColor();
-                Console.WriteLine("1. Endcord Kur (Install)");
-                Console.WriteLine("2. Endcord Kaldır (Uninstall)");
-                Console.WriteLine("3. Endcord Onar (Repair)");
+                Console.WriteLine("1. Xbtcord Kur (Install)");
+                Console.WriteLine("2. Xbtcord Kaldır (Uninstall)");
+                Console.WriteLine("3. Xbtcord Onar (Repair)");
                 Console.WriteLine("4. Çalışan Discord Süreçlerini Kapat");
                 Console.WriteLine("5. Çıkış");
                 Console.Write("\nSeçiminiz (1-5): ");
@@ -162,7 +162,7 @@ namespace EndcordInstaller
             // Extract files
             try
             {
-                Directory.CreateDirectory(EndcordDistPath);
+                Directory.CreateDirectory(XbtcordDistPath);
                 string[] filesToExtract = new string[] {
                     "patcher.js", "patcher.js.map",
                     "preload.js", "preload.js.map",
@@ -170,10 +170,10 @@ namespace EndcordInstaller
                     "renderer.css", "renderer.css.map"
                 };
 
-                Console.WriteLine("\n[1/2] Endcord dosyaları çıkartılıyor...");
+                Console.WriteLine("\n[1/2] Xbtcord dosyaları çıkartılıyor...");
                 foreach (var file in filesToExtract)
                 {
-                    string dest = Path.Combine(EndcordDistPath, file);
+                    string dest = Path.Combine(XbtcordDistPath, file);
                     ExtractResource(file, dest);
                     Console.WriteLine("Çıkartıldı: " + file);
                 }
@@ -181,7 +181,7 @@ namespace EndcordInstaller
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Endcord dosyaları çıkartılırken hata oluştu: " + ex.Message);
+                Console.WriteLine("Xbtcord dosyaları çıkartılırken hata oluştu: " + ex.Message);
                 Console.ResetColor();
                 return;
             }
@@ -208,7 +208,7 @@ namespace EndcordInstaller
 
                     string loaderJs = @"const { join } = require('path');
 const appData = process.env.APPDATA || (process.platform === 'darwin' ? join(process.env.HOME, 'Library/Application Support') : join(process.env.HOME, '.config'));
-const patcherPath = join(appData, 'Endcord', 'dist', 'patcher.js');
+const patcherPath = join(appData, 'Xbtcord', 'dist', 'patcher.js');
 require(patcherPath);";
                     File.WriteAllText(Path.Combine(appDir, "index.js"), loaderJs);
 

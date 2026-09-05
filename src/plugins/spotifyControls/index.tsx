@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -48,8 +48,8 @@ export default definePlugin({
             replacement: {
                 // react.jsx)(AccountPanel, { ..., showTaglessAccountPanel: blah })
                 match: /(?<=\i\.jsxs?\)\()(\i),{(?=[^}]*?userTag:\i,occluded:)/,
-                // react.jsx(WrapperComponent, { EndcordOriginal: AccountPanel, ...
-                replace: "$self.PanelWrapper,{EndcordOriginal:$1,"
+                // react.jsx(WrapperComponent, { XbtcordOriginal: AccountPanel, ...
+                replace: "$self.PanelWrapper,{XbtcordOriginal:$1,"
             }
         },
         {
@@ -84,7 +84,7 @@ export default definePlugin({
 
     start: () => toggleHoverControls(settings.store.hoverControls),
 
-    PanelWrapper({ EndcordOriginal, ...props }) {
+    PanelWrapper({ XbtcordOriginal, ...props }) {
         return (
             <>
                 <ErrorBoundary
@@ -98,7 +98,7 @@ export default definePlugin({
                     <Player />
                 </ErrorBoundary>
 
-                <EndcordOriginal {...props} />
+                <XbtcordOriginal {...props} />
             </>
         );
     }

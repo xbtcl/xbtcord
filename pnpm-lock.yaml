@@ -42,7 +42,7 @@ importers:
         specifier: ^1.0.1
         version: 1.0.2
     devDependencies:
-      '@endcord/discord-types':
+      '@xbtcord/discord-types':
         specifier: link:packages/discord-types
         version: link:packages/discord-types
       '@stylistic/eslint-plugin':
@@ -157,9 +157,9 @@ importers:
         specifier: ^5.7.0
         version: 5.8.0
 
-  packages/endcord-types:
+  packages/xbtcord-types:
     dependencies:
-      '@endcord/discord-types':
+      '@xbtcord/discord-types':
         specifier: workspace:*
         version: link:../discord-types
       '@types/lodash':

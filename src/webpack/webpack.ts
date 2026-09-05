@@ -1,17 +1,17 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { traceFunction } from "@debug/Tracer";
-import type { FluxStore } from "@endcord/discord-types";
-import type { ModuleExports, ModuleFactory, WebpackRequire } from "@endcord/discord-types/webpack";
 import { makeLazy, proxyLazy } from "@utils/lazy";
 import { LazyComponent } from "@utils/lazyReact";
 import { Logger } from "@utils/Logger";
 import { canonicalizeMatch } from "@utils/patches";
 import { escapeRegExp } from "@utils/text";
+import type { FluxStore } from "@xbtcord/discord-types";
+import type { ModuleExports, ModuleFactory, WebpackRequire } from "@xbtcord/discord-types/webpack";
 
 import type { AnyModuleFactory, AnyWebpackRequire } from "./types";
 
@@ -59,7 +59,7 @@ export const filters = {
             return stringMatches(Function.prototype.toString.call(m), parsedCode);
         };
 
-        filter.$$endcordProps = [...code];
+        filter.$$xbtcordProps = [...code];
         return filter;
     },
     byStoreName: (name: StoreNameFilter): FilterFn => m =>
@@ -81,7 +81,7 @@ export const filters = {
             return false;
         };
 
-        filter.$$endcordProps = [...code];
+        filter.$$xbtcordProps = [...code];
         return filter;
     },
 

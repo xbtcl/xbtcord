@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { fetchBuffer, fetchJson } from "@main/utils/http";
-import { ENDCORD_USER_AGENT } from "@shared/endcordUserAgent";
 import { IpcEvents } from "@shared/IpcEvents";
+import { XBTCORD_USER_AGENT } from "@shared/xbtcordUserAgent";
 import { ipcMain } from "electron";
 import { writeFile } from "fs/promises";
 import { join } from "path";
@@ -14,7 +14,7 @@ import { join } from "path";
 import gitHash from "~git-hash";
 import gitRemote from "~git-remote";
 
-import { ENDCORD_FILES,serializeErrors } from "./common";
+import { serializeErrors,XBTCORD_FILES } from "./common";
 
 const API_BASE = `https://api.github.com/repos/${gitRemote}`;
 let PendingUpdates = [] as [string, string][];
@@ -25,7 +25,7 @@ async function githubGet<T = any>(endpoint: string) {
             Accept: "application/vnd.github+json",
             // "All API requests MUST include a valid User-Agent header.
             // Requests with no User-Agent header will be rejected."
-            "User-Agent": ENDCORD_USER_AGENT
+            "User-Agent": XBTCORD_USER_AGENT
         }
     });
 }
@@ -60,7 +60,7 @@ async function fetchUpdates() {
         return false;
 
     data.assets.forEach(({ name, browser_download_url }) => {
-        if (ENDCORD_FILES.some(s => name.startsWith(s))) {
+        if (XBTCORD_FILES.some(s => name.startsWith(s))) {
             PendingUpdates.push([name, browser_download_url]);
         }
     });

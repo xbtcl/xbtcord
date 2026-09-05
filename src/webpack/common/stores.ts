@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import * as t from "@endcord/discord-types";
 import { findByCodeLazy, findByPropsLazy } from "@webpack";
+import * as t from "@xbtcord/discord-types";
 
 import { waitForStore } from "./internal";
 
@@ -136,5 +136,5 @@ waitForStore("ThemeStore", m => {
     ThemeStore = m;
     // Importing this directly causes all webpack commons to be imported, which can easily cause circular dependencies.
     // For this reason, use a non import access here.
-    Endcord.Api.Themes.initQuickCssThemeStore(m);
+    Xbtcord.Api.Themes.initQuickCssThemeStore(m);
 });

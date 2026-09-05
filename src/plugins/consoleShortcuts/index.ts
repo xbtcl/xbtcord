@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -94,8 +94,8 @@ function makeShortcuts() {
         wp: Webpack,
         wpc: { getter: () => Webpack.cache },
         wreq: { getter: () => Webpack.wreq },
-        wpPatcher: { getter: () => Endcord.WebpackPatcher },
-        wpInstances: { getter: () => Endcord.WebpackPatcher.allWebpackInstances },
+        wpPatcher: { getter: () => Xbtcord.WebpackPatcher },
+        wpInstances: { getter: () => Xbtcord.WebpackPatcher.allWebpackInstances },
         wpsearch: search,
         wpex: extract,
         wpexs: (code: string) => extract(findModuleId(code)!),
@@ -111,11 +111,11 @@ function makeShortcuts() {
         findAllComponentsByCode: (...code: string[]) => findAll(filters.componentByCode(...code)),
         findExportedComponent: (...props: string[]) => findByProps(...props)[props[0]],
         findStore: findStoreWrapper(Webpack.findStore),
-        PluginsApi: { getter: () => Endcord.Plugins },
-        plugins: { getter: () => Endcord.Plugins.plugins },
-        Settings: { getter: () => Endcord.Settings },
-        Api: { getter: () => Endcord.Api },
-        Util: { getter: () => Endcord.Util },
+        PluginsApi: { getter: () => Xbtcord.Plugins },
+        plugins: { getter: () => Xbtcord.Plugins.plugins },
+        Settings: { getter: () => Xbtcord.Settings },
+        Api: { getter: () => Xbtcord.Api },
+        Util: { getter: () => Xbtcord.Util },
         reload: () => location.reload(),
         restart: IS_WEB ? DESKTOP_ONLY("restart") : relaunch,
         canonicalizeMatch,
@@ -141,7 +141,7 @@ function makeShortcuts() {
 
                     if (s.parentElement?.tagName === "HEAD")
                         doc.head.append(n);
-                    else if (n.id?.startsWith("endcord-") || n.id?.startsWith("vcd-"))
+                    else if (n.id?.startsWith("xbtcord-") || n.id?.startsWith("vcd-"))
                         doc.documentElement.append(n);
                     else
                         doc.body.append(n);
@@ -154,7 +154,7 @@ function makeShortcuts() {
             doc.addEventListener("close", () => root.unmount(), { once: true });
         },
 
-        preEnable: (plugin: string) => (Endcord.Settings.plugins[plugin] ??= { enabled: true }).enabled = true,
+        preEnable: (plugin: string) => (Xbtcord.Settings.plugins[plugin] ??= { enabled: true }).enabled = true,
 
         channel: { getter: () => getCurrentChannel(), preload: false },
         channelId: { getter: () => Common.SelectedChannelStore.getChannelId(), preload: false },
@@ -191,8 +191,8 @@ function loadAndCacheShortcut(key: string, val: any, forceLoad: boolean) {
     function unwrapProxy(value: any) {
         if (value[SYM_LAZY_GET]) {
             forceLoad ? currentVal[SYM_LAZY_GET]() : currentVal[SYM_LAZY_CACHED];
-        } else if (value.$$endcordGetWrappedComponent) {
-            return forceLoad ? value.$$endcordGetWrappedComponent() : value;
+        } else if (value.$$xbtcordGetWrappedComponent) {
+            return forceLoad ? value.$$xbtcordGetWrappedComponent() : value;
         }
 
         return value;
@@ -269,7 +269,7 @@ export default definePlugin({
         this.eagerLoad(false);
 
         if (!IS_WEB) {
-            const Native = EndcordNative.pluginHelpers.ConsoleShortcuts as PluginNative<typeof import("./native")>;
+            const Native = XbtcordNative.pluginHelpers.ConsoleShortcuts as PluginNative<typeof import("./native")>;
             Native.initDevtoolsOpenEagerLoad();
         }
     },

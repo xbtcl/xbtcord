@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -33,7 +33,7 @@ export default definePlugin({
     ],
 
     renderButtons(props: { nameplate?: any; }) {
-        return Endcord.Api.UserArea._renderButtons({
+        return Xbtcord.Api.UserArea._renderButtons({
             nameplate: !this.shouldHideNameplate() ? props.nameplate : null,
             iconForeground: accountClasses.iconForeground,
             hideTooltips: this.shouldHideTooltips()

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -19,7 +19,7 @@ export function waitForComponent<T extends ComponentType<any> = ComponentType<an
     const lazyComponent = LazyComponent(() => {
         if (myValue) return myValue;
 
-        const error = new Error(`Endcord could not find the ${name} Component`);
+        const error = new Error(`Xbtcord could not find the ${name} Component`);
         logger.error(error);
 
         if (IS_DEV) throw error;

@@ -1,15 +1,15 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { ModuleFactory } from "@endcord/discord-types/webpack";
 import { Logger } from "@utils/Logger";
 import { canonicalizeMatch } from "@utils/patches";
 import * as Webpack from "@webpack";
 import { wreq } from "@webpack";
 import { AnyModuleFactory } from "@webpack/types";
+import { ModuleFactory } from "@xbtcord/discord-types/webpack";
 import pLimit from "p-limit";
 
 function getWebpackChunkMap() {

@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Message } from "@endcord/discord-types";
 import { Parser, useEffect, useState } from "@webpack/common";
+import { Message } from "@xbtcord/discord-types";
 
 import { TranslateIcon } from "./TranslateIcon";
 import { cl, TranslationValue } from "./utils";
@@ -32,7 +32,7 @@ export function TranslationAccessory({ message }: { message: Message; }) {
 
     useEffect(() => {
         // Ignore MessageLinkEmbeds messages
-        if ((message as any).endcordEmbeddedBy) return;
+        if ((message as any).xbtcordEmbeddedBy) return;
 
         TranslationSetters.set(message.id, setTranslation);
 

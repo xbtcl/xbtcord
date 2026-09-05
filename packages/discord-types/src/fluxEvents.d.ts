@@ -4,13 +4,13 @@ function makeFluxEventList() {
     // without explicitly typing so that this function is also valid javascript
     const events = new Set(["MESSAGE_CREATE"]);
 
-    const { nodes } = Endcord.Webpack.Common.FluxDispatcher._actionHandlers._dependencyGraph;
+    const { nodes } = Xbtcord.Webpack.Common.FluxDispatcher._actionHandlers._dependencyGraph;
     for (const nodeId in nodes) {
         for (const event in nodes[nodeId].actionHandler) {
             events.add(event);
         }
     }
-    for (const event in Endcord.Webpack.Common.FluxDispatcher._subscriptions) {
+    for (const event in Xbtcord.Webpack.Common.FluxDispatcher._subscriptions) {
         events.add(event);
     }
 

@@ -1,6 +1,6 @@
 {
-    "name": "@endcord/discord-types",
-    "author": "Endcord Contributors",
+    "name": "@xbtcord/discord-types",
+    "author": "Xbtcord Contributors",
     "private": false,
     "description": "Typescript definitions for the webpack modules of the Discord Web app",
     "version": "1.0.1",

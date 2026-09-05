@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2023 Vendicated, FieryFlames and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */

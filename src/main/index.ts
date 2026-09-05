@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -16,8 +16,8 @@ import { installExt } from "./utils/extensions";
 
 if (IS_VESKTOP || !IS_VANILLA) {
     app.whenReady().then(() => {
-        protocol.handle("endcord", ({ url: unsafeUrl }) => {
-            let url = decodeURI(unsafeUrl).slice("endcord://".length).replace(/\?v=\d+$/, "");
+        protocol.handle("xbtcord", ({ url: unsafeUrl }) => {
+            let url = decodeURI(unsafeUrl).slice("xbtcord://".length).replace(/\?v=\d+$/, "");
 
             if (url.endsWith("/")) url = url.slice(0, -1);
 
@@ -39,11 +39,11 @@ if (IS_VESKTOP || !IS_VANILLA) {
 
             switch (url) {
                 case "renderer.js.map":
-                case "endcordDesktopRenderer.js.map":
+                case "xbtcordDesktopRenderer.js.map":
                 case "preload.js.map":
-                case "endcordDesktopPreload.js.map":
+                case "xbtcordDesktopPreload.js.map":
                 case "patcher.js.map":
-                case "endcordDesktopMain.js.map":
+                case "xbtcordDesktopMain.js.map":
                     return net.fetch(pathToFileURL(join(__dirname, url)).toString());
                 default:
                     return new Response(null, {
@@ -55,8 +55,8 @@ if (IS_VESKTOP || !IS_VANILLA) {
         try {
             if (RendererSettings.store.enableReactDevtools)
                 installExt("fmkadmapgofadopljbjfkapdkoienihi")
-                    .then(() => console.info("[Endcord] Installed React Developer Tools"))
-                    .catch(err => console.error("[Endcord] Failed to install React Developer Tools", err));
+                    .then(() => console.info("[Xbtcord] Installed React Developer Tools"))
+                    .catch(err => console.error("[Xbtcord] Failed to install React Developer Tools", err));
         } catch { }
 
 

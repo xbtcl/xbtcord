@@ -1,13 +1,13 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Channel, User } from "@endcord/discord-types";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { GuildStore } from "@webpack/common";
+import { Channel, User } from "@xbtcord/discord-types";
 
 export default definePlugin({
     name: "ForceOwnerCrown",

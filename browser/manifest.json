@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "minimum_chrome_version": "111",
 
-    "name": "Endcord Web",
+    "name": "Xbtcord Web",
     "description": "The cutest Discord mod now in your browser",
     "author": "Vendicated",
     "homepage_url": "https://github.com/rootpoii/endcord",
@@ -28,7 +28,7 @@
         {
             "run_at": "document_start",
             "matches": ["*://*.discord.com/*"],
-            "js": ["dist/Endcord.js"],
+            "js": ["dist/Xbtcord.js"],
             "all_frames": true,
             "world": "MAIN"
         }

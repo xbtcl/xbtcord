@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { toProxiedUrl } from "@endcordplugins/fileUpload/constants";
-import { settings } from "@endcordplugins/fileUpload/settings";
 import { PluginNative } from "@utils/types";
+import { toProxiedUrl } from "@xbtcordplugins/fileUpload/constants";
+import { settings } from "@xbtcordplugins/fileUpload/settings";
 
 type S3Store = {
     s3Endpoint?: string;

@@ -1,10 +1,10 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { ENDCORD_USER_AGENT } from "@shared/endcordUserAgent";
+import { XBTCORD_USER_AGENT } from "@shared/xbtcordUserAgent";
 import { execFile } from "child_process";
 import { promisify } from "util";
 
@@ -41,7 +41,7 @@ async function fetchRemoteData({ id, name, artist, album }: { id: string, name: 
 
         const songData = await fetch(dataUrl, {
             headers: {
-                "user-agent": ENDCORD_USER_AGENT,
+                "user-agent": XBTCORD_USER_AGENT,
             },
         })
             .then(r => r.json())

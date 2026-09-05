@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -9,7 +9,7 @@ import { saveFile } from "@utils/web";
 // @ts-ignore
 import { unzipSync } from "fflate";
 
-const Native = EndcordNative?.pluginHelpers?.ZipPreview as PluginNative<typeof import("./native")> | undefined;
+const Native = XbtcordNative?.pluginHelpers?.ZipPreview as PluginNative<typeof import("./native")> | undefined;
 
 export const MAX_ZIP_BYTES = 50 * 1024 * 1024;
 export const MAX_ENTRIES = 1000;

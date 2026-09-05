@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -8,9 +8,9 @@ import { debounce } from "@shared/debounce";
 import { IpcEvents } from "@shared/IpcEvents";
 import { contextBridge, webFrame } from "electron/renderer";
 
-import EndcordNative, { invoke, sendSync } from "./EndcordNative";
+import XbtcordNative, { invoke, sendSync } from "./XbtcordNative";
 
-contextBridge.exposeInMainWorld("EndcordNative", EndcordNative);
+contextBridge.exposeInMainWorld("XbtcordNative", XbtcordNative);
 
 // Discord
 if (location.protocol !== "data:") {
@@ -23,7 +23,7 @@ if (location.protocol !== "data:") {
     }
 } // Monaco popout
 else {
-    contextBridge.exposeInMainWorld("setCss", debounce(EndcordNative.quickCss.set));
-    contextBridge.exposeInMainWorld("getCurrentCss", EndcordNative.quickCss.get);
-    contextBridge.exposeInMainWorld("getTheme", EndcordNative.quickCss.getEditorTheme);
+    contextBridge.exposeInMainWorld("setCss", debounce(XbtcordNative.quickCss.set));
+    contextBridge.exposeInMainWorld("getCurrentCss", XbtcordNative.quickCss.get);
+    contextBridge.exposeInMainWorld("getTheme", XbtcordNative.quickCss.getEditorTheme);
 }

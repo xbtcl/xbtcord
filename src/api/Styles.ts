@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -19,35 +19,35 @@ export interface Style {
     dom: HTMLStyleElement | null;
 }
 
-export const styleMap = window.EndcordStyles ??= new Map();
+export const styleMap = window.XbtcordStyles ??= new Map();
 
-export const endcordRootNode = document.createElement("endcord-root");
+export const xbtcordRootNode = document.createElement("xbtcord-root");
 /**
- * Houses all Endcord core styles. This includes all imported css files
+ * Houses all Xbtcord core styles. This includes all imported css files
  */
-export const coreStyleRootNode = document.createElement("endcord-styles");
+export const coreStyleRootNode = document.createElement("xbtcord-styles");
 /**
  * Houses all plugin specific managed styles
  */
-export const managedStyleRootNode = document.createElement("endcord-managed-styles");
+export const managedStyleRootNode = document.createElement("xbtcord-managed-styles");
 /**
  * Houses the user's themes and quick css
  */
-export const userStyleRootNode = document.createElement("endcord-user-styles");
+export const userStyleRootNode = document.createElement("xbtcord-user-styles");
 
-endcordRootNode.style.display = "none";
-endcordRootNode.append(coreStyleRootNode, managedStyleRootNode, userStyleRootNode);
+xbtcordRootNode.style.display = "none";
+xbtcordRootNode.append(coreStyleRootNode, managedStyleRootNode, userStyleRootNode);
 
 export function initStyles() {
-    const osValuesNode = createAndAppendStyle("endcord-os-theme-values", coreStyleRootNode);
-    createAndAppendStyle("endcord-text", coreStyleRootNode).textContent = generateTextCss();
-    const rendererCssNode = createAndAppendStyle("endcord-css-core", coreStyleRootNode);
+    const osValuesNode = createAndAppendStyle("xbtcord-os-theme-values", coreStyleRootNode);
+    createAndAppendStyle("xbtcord-text", coreStyleRootNode).textContent = generateTextCss();
+    const rendererCssNode = createAndAppendStyle("xbtcord-css-core", coreStyleRootNode);
     const vesktopCssNode = IS_VESKTOP ? createAndAppendStyle("vesktop-css-core", coreStyleRootNode) : null;
-    createAndAppendStyle("endcord-margins", coreStyleRootNode).textContent = generateMarginCss();
+    createAndAppendStyle("xbtcord-margins", coreStyleRootNode).textContent = generateMarginCss();
 
-    EndcordNative.native.getRendererCss().then(css => rendererCssNode.textContent = css);
+    XbtcordNative.native.getRendererCss().then(css => rendererCssNode.textContent = css);
     if (IS_DEV) {
-        EndcordNative.native.onRendererCssUpdate(newCss => {
+        XbtcordNative.native.onRendererCssUpdate(newCss => {
             rendererCssNode.textContent = newCss;
         });
     }
@@ -59,7 +59,7 @@ export function initStyles() {
         });
     }
 
-    EndcordNative.themes.getSystemValues().then(values => {
+    XbtcordNative.themes.getSystemValues().then(values => {
         const variables = Object.entries(values)
             .filter(([, v]) => !!v)
             .map(([k, v]) => `--${k}: ${v};`)
@@ -69,7 +69,7 @@ export function initStyles() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.documentElement.append(endcordRootNode);
+    document.documentElement.append(xbtcordRootNode);
 }, { once: true });
 
 export function requireStyle(name: string) {
@@ -96,7 +96,7 @@ export function enableStyle(name: string) {
 
     if (!style.dom) {
         style.dom = document.createElement("style");
-        style.dom.dataset.endcordName = style.name;
+        style.dom.dataset.xbtcordName = style.name;
     }
     compileStyle(style);
 

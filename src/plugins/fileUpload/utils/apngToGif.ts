@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 /*
  * FFmpeg loading and worker code adapted from the MoreStickers plugin
- * by Leko and Arjix (src/endcordplugins/moreStickers/utils.tsx)
+ * by Leko and Arjix (src/xbtcordplugins/moreStickers/utils.tsx)
  */
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";

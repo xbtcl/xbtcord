@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -10,12 +10,12 @@ import { Card } from "@components/Card";
 import { Heading } from "@components/Heading";
 import { Margins } from "@components/margins";
 import { Paragraph } from "@components/Paragraph";
-import { Activity, ActivityAssets, ActivityButton } from "@endcord/discord-types";
-import { ActivityFlags, ActivityStatusDisplayType, ActivityType } from "@endcord/discord-types/enums";
 import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import definePlugin, { OptionType } from "@utils/types";
 import { ApplicationAssetUtils, AuthenticationStore, FluxDispatcher, PresenceStore } from "@webpack/common";
+import { Activity, ActivityAssets, ActivityButton } from "@xbtcord/discord-types";
+import { ActivityFlags, ActivityStatusDisplayType, ActivityType } from "@xbtcord/discord-types/enums";
 
 interface TrackData {
     name: string;

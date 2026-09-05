@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -12,8 +12,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
 import { openSettingsTabModal, UpdaterTab } from "@components/settings";
-import { Channel, RenderModalProps } from "@endcord/discord-types";
-import { CONTRIB_ROLE_ID, Devs, DONOR_ROLE_ID, ENDCORD_GUILD_ID,KNOWN_ISSUES_CHANNEL_ID, REGULAR_ROLE_ID, SUPPORT_CATEGORY_ID, SUPPORT_CHANNEL_ID, VENBOT_USER_ID } from "@utils/constants";
+import { CONTRIB_ROLE_ID, Devs, DONOR_ROLE_ID, KNOWN_ISSUES_CHANNEL_ID, REGULAR_ROLE_ID, SUPPORT_CATEGORY_ID, SUPPORT_CHANNEL_ID, VENBOT_USER_ID,XBTCORD_GUILD_ID } from "@utils/constants";
 import { sendMessage } from "@utils/discord";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
@@ -24,6 +23,7 @@ import { makeCodeblock } from "@utils/text";
 import definePlugin from "@utils/types";
 import { checkForUpdates, isOutdated, update } from "@utils/updater";
 import { Button, ChannelStore, ConfirmModal, Forms, GuildMemberStore, openModal, Parser, PermissionsBits, PermissionStore, RelationshipStore, showToast, Text, Toasts, UserStore } from "@webpack/common";
+import { Channel, RenderModalProps } from "@xbtcord/discord-types";
 import { JSX } from "react";
 
 import gitHash from "~git-hash";
@@ -34,7 +34,7 @@ import SettingsPlugin from "./settings";
 const CodeBlockRe = /```js\n(.+?)```/s;
 
 const AdditionalAllowedChannelIds = [
-    "1024286218801926184", // Endcord > #bot-commands
+    "1024286218801926184", // Xbtcord > #bot-commands
 ];
 
 const TrustedRolesIds = [
@@ -73,7 +73,7 @@ async function generateDebugInfoMessage() {
     })();
 
     const info = {
-        Endcord:
+        Xbtcord:
             `v${VERSION} • [${gitHash}](<https://github.com/rootpoii/endcord/commit/${gitHash}>)` +
             `${SettingsPlugin.additionalInfo} - ${Intl.DateTimeFormat("en-GB", { dateStyle: "medium" }).format(BUILD_TIMESTAMP)}`,
         Client: `${RELEASE_CHANNEL} ~ ${client}`,
@@ -86,7 +86,7 @@ async function generateDebugInfoMessage() {
 
     const commonIssues = {
         "Activity Sharing disabled": tryOrElse(() => !ShowCurrentGame.getSetting(), false),
-        "Endcord DevBuild": !IS_STANDALONE,
+        "Xbtcord DevBuild": !IS_STANDALONE,
         "Has UserPlugins": Object.values(PluginMeta).some(m => m.userPlugin),
         "More than two weeks out of date": BUILD_TIMESTAMP < Date.now() - 12096e5,
     };
@@ -139,11 +139,11 @@ function DevBuildConfirmModal(props: RenderModalProps) {
             }}
         >
             <div>
-                <Forms.FormText>You are using a custom build of Endcord, which we do not provide support for!</Forms.FormText>
+                <Forms.FormText>You are using a custom build of Xbtcord, which we do not provide support for!</Forms.FormText>
 
                 <Forms.FormText className={Margins.top8}>
-                    We only provide support for <Link href="https://endcord.dev/download">official builds</Link>.
-                    Either <Link href="https://endcord.dev/download">switch to an official build</Link> or figure your issue out yourself.
+                    We only provide support for <Link href="https://github.com/rootpoii/endcord">official builds</Link>.
+                    Either <Link href="https://github.com/rootpoii/endcord">switch to an official build</Link> or figure your issue out yourself.
                 </Forms.FormText>
 
                 <Text variant="text-md/bold" className={Margins.top8}>You will be banned from receiving support if you ignore this rule.</Text>
@@ -171,14 +171,14 @@ export default definePlugin({
 
     commands: [
         {
-            name: "endcord-debug",
-            description: "Send Endcord debug info",
+            name: "xbtcord-debug",
+            description: "Send Xbtcord debug info",
             predicate: ctx => isPluginDev(UserStore.getCurrentUser()?.id) || isSupportAllowedChannel(ctx.channel),
             execute: async () => ({ content: await generateDebugInfoMessage() })
         },
         {
-            name: "endcord-plugins",
-            description: "Send Endcord plugin list",
+            name: "xbtcord-plugins",
+            description: "Send Xbtcord plugin list",
             predicate: ctx => isPluginDev(UserStore.getCurrentUser()?.id) || isSupportAllowedChannel(ctx.channel),
             execute: () => ({ content: generatePluginList() })
         }
@@ -207,7 +207,7 @@ export default definePlugin({
                             onCancel={() => openSettingsTabModal(UpdaterTab!)}
                         >
                             <div>
-                                <Forms.FormText>You are using an outdated version of Endcord! Chances are, your issue is already fixed.</Forms.FormText>
+                                <Forms.FormText>You are using an outdated version of Xbtcord! Chances are, your issue is already fixed.</Forms.FormText>
                                 <Forms.FormText className={Margins.top8}>
                                     Please first update before asking for support!
                                 </Forms.FormText>
@@ -221,7 +221,7 @@ export default definePlugin({
                 }
             }
 
-            const roles = GuildMemberStore.getSelfMember(ENDCORD_GUILD_ID)?.roles;
+            const roles = GuildMemberStore.getSelfMember(XBTCORD_GUILD_ID)?.roles;
             if (!roles || TrustedRolesIds.some(id => roles.includes(id))) return;
 
             if (!IS_WEB && IS_UPDATER_DISABLED) {
@@ -233,9 +233,9 @@ export default definePlugin({
                         variant="primary"
                     >
                         <div>
-                            <Forms.FormText>You are using an externally updated Endcord version, which we do not provide support for!</Forms.FormText>
+                            <Forms.FormText>You are using an externally updated Xbtcord version, which we do not provide support for!</Forms.FormText>
                             <Forms.FormText className={Margins.top8}>
-                                Please either switch to an <Link href="https://endcord.dev/download">officially supported version of Endcord</Link>, or
+                                Please either switch to an <Link href="https://github.com/rootpoii/endcord">officially supported version of Xbtcord</Link>, or
                                 contact your package maintainer for support instead.
                             </Forms.FormText>
                         </div>
@@ -285,21 +285,21 @@ export default definePlugin({
         }
 
         if (props.channel.parent_id === SUPPORT_CATEGORY_ID && PermissionStore.can(PermissionsBits.SEND_MESSAGES, props.channel)) {
-            if (props.message.content.includes("/endcord-debug") || props.message.content.includes("/endcord-plugins")) {
+            if (props.message.content.includes("/xbtcord-debug") || props.message.content.includes("/xbtcord-plugins")) {
                 buttons.push(
                     <Button
                         key="vc-dbg"
                         color={Button.Colors.PRIMARY}
                         onClick={async () => sendMessage(props.channel.id, { content: await generateDebugInfoMessage() })}
                     >
-                        Run /endcord-debug
+                        Run /xbtcord-debug
                     </Button>,
                     <Button
                         key="vc-plg-list"
                         color={Button.Colors.PRIMARY}
                         onClick={async () => sendMessage(props.channel.id, { content: generatePluginList() })}
                     >
-                        Run /endcord-plugins
+                        Run /xbtcord-plugins
                     </Button>
                 );
             }
@@ -339,9 +339,9 @@ export default definePlugin({
 
         return (
             <Card variant="warning" className={Margins.top8} defaultPadding>
-                Please do not private message Endcord plugin developers for support!
+                Please do not private message Xbtcord plugin developers for support!
                 <br />
-                Instead, use the Endcord support channel: {Parser.parse("https://discord.com/channels/1015060230222131221/1026515880080842772")}
+                Instead, use the Xbtcord support channel: {Parser.parse("https://discord.com/channels/1015060230222131221/1026515880080842772")}
                 {!ChannelStore.getChannel(SUPPORT_CHANNEL_ID) && " (Click the link to join)"}
             </Card>
         );

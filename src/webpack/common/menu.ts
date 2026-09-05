@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import type * as t from "@endcord/discord-types";
 import { filters, mapMangledModuleLazy, waitFor } from "@webpack";
+import type * as t from "@xbtcord/discord-types";
 
 export const Menu = {} as t.Menu;
 

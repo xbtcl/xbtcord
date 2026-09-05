@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -84,7 +84,7 @@ export const SpotifyStore = proxyLazyWebpack(() => {
                 ? "spotify:" + path.replaceAll("/", (_, idx) => idx === 0 ? "" : ":")
                 : "https://open.spotify.com" + path;
 
-            EndcordNative.native.openExternal(url);
+            XbtcordNative.native.openExternal(url);
         }
 
         // Need to keep track of this manually
@@ -150,7 +150,7 @@ export const SpotifyStore = proxyLazyWebpack(() => {
                     position_ms: Math.round(ms)
                 }
             }).catch((e: any) => {
-                console.error("[EndcordSpotifyControls] Failed to seek", e);
+                console.error("[XbtcordSpotifyControls] Failed to seek", e);
                 this.isSettingPosition = false;
             });
         }

@@ -10,18 +10,18 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Endcord Installer")]
-[assembly: AssemblyDescription("Native Win32 fast installer, uninstaller and repair utility for Endcord.")]
+[assembly: AssemblyTitle("Xbtcord Installer")]
+[assembly: AssemblyDescription("Native Win32 fast installer, uninstaller and repair utility for Xbtcord.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Endcord Inc.")]
-[assembly: AssemblyProduct("Endcord")]
-[assembly: AssemblyCopyright("Copyright © 2026 Endcord")]
+[assembly: AssemblyCompany("Xbtcord Inc.")]
+[assembly: AssemblyProduct("Xbtcord")]
+[assembly: AssemblyCopyright("Copyright © 2026 Xbtcord")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
 
-namespace EndcordInstaller
+namespace XbtcordInstaller
 {
     static class Program
     {
@@ -330,7 +330,7 @@ namespace EndcordInstaller
 
         static readonly string DistPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "Endcord", "dist");
+            "Xbtcord", "dist");
 
         List<DiscordClient> clients = new List<DiscordClient>();
         List<ClientCard>    cards   = new List<ClientCard>();
@@ -422,7 +422,7 @@ namespace EndcordInstaller
 
         void BuildUI()
         {
-            Text            = "Endcord Installer";
+            Text            = "Xbtcord Installer";
             ClientSize      = new Size(820, 580);
             MinimumSize     = new Size(820, 580);
             BackColor       = C.Bg;
@@ -445,7 +445,7 @@ namespace EndcordInstaller
                     g.DrawImage(LogoImg, new Rectangle(14, 8, 28, 28));
                     textX = 50;
                 }
-                TextRenderer.DrawText(g, "Endcord Installer", F.Title,
+                TextRenderer.DrawText(g, "Xbtcord Installer", F.Title,
                     new Rectangle(textX, 0, 260, 44), C.Text,
                     TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
             };
@@ -469,7 +469,7 @@ namespace EndcordInstaller
             sidebarPanel.Width = 210;
             sidebarPanel.BackColor = C.Sidebar;
 
-            string[] tabTitles = { "Install Endcord", "Uninstall", "Repair Install", "Close Discord" };
+            string[] tabTitles = { "Install Xbtcord", "Uninstall", "Repair Install", "Close Discord" };
             string[] tabDesc   = { "Inject client mod", "Restore vanilla", "Fix system files", "Force exit clients" };
 
             for (int i = 0; i < 4; i++)
@@ -584,7 +584,7 @@ namespace EndcordInstaller
             actPanel.Dock = DockStyle.Bottom;
             actPanel.Height = 52;
 
-            btnAction = new CustomActionButton("INSTALL ENDCORD");
+            btnAction = new CustomActionButton("INSTALL XBTCORD");
             btnAction.Dock = DockStyle.Right;
             btnAction.Width = 220;
             btnAction.Click += (s, e) =>
@@ -626,7 +626,7 @@ namespace EndcordInstaller
             chkAll.Checked = true;
             foreach (var c in cards) c.Selected = true;
 
-            string[] actionTexts = { "INSTALL ENDCORD", "UNINSTALL ENDCORD", "REPAIR INSTALLATION", "CLOSE ALL DISCORD" };
+            string[] actionTexts = { "INSTALL XBTCORD", "UNINSTALL XBTCORD", "REPAIR INSTALLATION", "CLOSE ALL DISCORD" };
             btnAction.Text = actionTexts[activeTab];
             SetStatus("Selected Mode: " + tabTitlesText[activeTab]);
         }
@@ -828,7 +828,7 @@ namespace EndcordInstaller
         // Injects our patcher require into index.js (prepend, idempotent)
         static void InjectDesktopCore(string indexJs)
         {
-            string patcherLine = "require(require('path').join(process.env.APPDATA, 'Endcord', 'dist', 'patcher.js'));";
+            string patcherLine = "require(require('path').join(process.env.APPDATA, 'Xbtcord', 'dist', 'patcher.js'));";
 
             string existing = File.Exists(indexJs) ? File.ReadAllText(indexJs) : "";
 
@@ -838,7 +838,7 @@ namespace EndcordInstaller
                 File.WriteAllText(bakPath, existing);
 
             // Already patched? Skip.
-            if (existing.Contains("Endcord"))
+            if (existing.Contains("Xbtcord"))
                 return;
 
             // Prepend our require line
@@ -861,7 +861,7 @@ namespace EndcordInstaller
                 string[] lines = content.Split('\n');
                 var filtered = new System.Collections.Generic.List<string>();
                 foreach (var line in lines)
-                    if (!line.Contains("Endcord") && !line.Contains("patcher.js"))
+                    if (!line.Contains("Xbtcord") && !line.Contains("patcher.js"))
                         filtered.Add(line);
                 File.WriteAllText(indexJs, string.Join("\n", filtered));
             }
@@ -909,7 +909,7 @@ namespace EndcordInstaller
 
         void DoInstall(List<DiscordClient> targets, bool repair)
         {
-            SafeLog(repair ? "Starting Endcord repair..." : "Starting Endcord installation...", C.AccentLight);
+            SafeLog(repair ? "Starting Xbtcord repair..." : "Starting Xbtcord installation...", C.AccentLight);
             SetProg(5);
 
             // ── Step 1: Extract dist files ────────────────────────────────────────
@@ -918,7 +918,7 @@ namespace EndcordInstaller
                 Directory.CreateDirectory(DistPath);
                 string[] files = { "patcher.js","patcher.js.map","preload.js","preload.js.map",
                                    "renderer.js","renderer.js.map","renderer.css","renderer.css.map" };
-                SafeLog("Extracting Endcord system files...", C.TextDim);
+                SafeLog("Extracting Xbtcord system files...", C.TextDim);
                 for (int i = 0; i < files.Length; i++)
                 {
                     string dest = Path.Combine(DistPath, files[i]);
@@ -976,7 +976,7 @@ namespace EndcordInstaller
                             "{\n  \"name\": \"discord\",\n  \"main\": \"index.js\"\n}");
 
                         File.WriteAllText(Path.Combine(appDir, "index.js"),
-                            "require(require('path').join(process.env.APPDATA, 'Endcord', 'dist', 'patcher.js'));\n");
+                            "require(require('path').join(process.env.APPDATA, 'Xbtcord', 'dist', 'patcher.js'));\n");
 
                         SafeLog("  [legacy] " + appDir, C.TextDim);
                         patchedAny = true;
@@ -996,7 +996,7 @@ namespace EndcordInstaller
 
         void DoUninstall(List<DiscordClient> targets)
         {
-            SafeLog("Removing Endcord from selected installations...", C.AccentLight);
+            SafeLog("Removing Xbtcord from selected installations...", C.AccentLight);
             for (int i = 0; i < targets.Count; i++)
             {
                 var c = targets[i];
@@ -1242,7 +1242,7 @@ namespace EndcordInstaller
 
             var edSize = TextRenderer.MeasureText(editionStr, F.MutedText);
             bool injected = dc.IsInjected();
-            string statusStr = injected ? "ENDCORD PATCHED" : "VANILLA";
+            string statusStr = injected ? "XBTCORD PATCHED" : "VANILLA";
             Color statusColor = injected ? C.Green : C.Amber;
             Color statusBgColor = injected ? C.GreenBg : C.AmberBg;
             var statusSize = TextRenderer.MeasureText(statusStr, F.MutedText);

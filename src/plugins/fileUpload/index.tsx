@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -9,12 +9,12 @@ import "./styles.css";
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { OpenExternalIcon } from "@components/Icons";
-import { CloudUpload } from "@endcord/discord-types";
-import { Devs, EndcordDevs } from "@utils/constants";
+import { Devs, XbtcordDevs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import definePlugin from "@utils/types";
 import { findByPropsLazy } from "@webpack";
 import { DraftType, FluxDispatcher, Menu, PermissionsBits, PermissionStore, React, showToast, Toasts, UploadAttachmentStore, useEffect, UserStore, useState } from "@webpack/common";
+import { CloudUpload } from "@xbtcord/discord-types";
 
 import { settings } from "./settings";
 import { serviceLabels, ServiceType } from "./types";
@@ -311,7 +311,7 @@ export default definePlugin({
     name: "FileUpload",
     description: "Upload files to hosting services like Zipline, Nest, S3, and WebDAV",
     tags: ["Media"],
-    authors: [EndcordDevs.creations, EndcordDevs.keircn, Devs.ScattrdBlade],
+    authors: [XbtcordDevs.creations, XbtcordDevs.keircn, Devs.ScattrdBlade],
     settings,
     patches: [
         {

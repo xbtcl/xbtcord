@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { definePluginSettings } from "@api/Settings";
 import { BackupRestoreIcon, MainSettingsIcon, PaintbrushIcon, PatchHelperIcon, PlaceholderIcon, PluginsIcon, UpdaterIcon, VesktopSettingsIcon } from "@components/Icons";
-import { BackupAndRestoreTab, EndcordTab,PatchHelperTab, PluginsTab, ThemesTab, UpdaterTab } from "@components/settings/tabs";
+import { BackupAndRestoreTab, PatchHelperTab, PluginsTab, ThemesTab, UpdaterTab,XbtcordTab } from "@components/settings/tabs";
 import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
 import definePlugin, { IconProps, OptionType } from "@utils/types";
@@ -68,7 +68,7 @@ interface SettingsLayoutBuilder {
 const settings = definePluginSettings({
     settingsLocation: {
         type: OptionType.SELECT,
-        description: "Where to put the Endcord settings section",
+        description: "Where to put the Xbtcord settings section",
         options: [
             { label: "At the very top", value: "top" },
             { label: "Above the Nitro section", value: "aboveNitro", default: true },
@@ -78,9 +78,9 @@ const settings = definePluginSettings({
             { label: "At the very bottom", value: "bottom" },
         ] as { label: string; value: SettingsLocation; default?: boolean; }[]
     },
-    includeEndcordInfoWhenCopying: {
+    includeXbtcordInfoWhenCopying: {
         type: OptionType.BOOLEAN,
-        description: "Also copy Endcord info (Endcord, Electron, Chromium) when clicking the version info in the bottom left area of the Settings page",
+        description: "Also copy Xbtcord info (Xbtcord, Electron, Chromium) when clicking the version info in the bottom left area of the Settings page",
         default: true
     }
 });
@@ -152,46 +152,46 @@ export default definePlugin({
         if (originalLayoutBuilder.key !== "$Root") return layout;
         if (!Array.isArray(layout)) return layout;
 
-        if (layout.some(s => s?.key === "endcord_section")) return layout;
+        if (layout.some(s => s?.key === "xbtcord_section")) return layout;
 
         const { buildEntry } = this;
 
-        const endcordEntries: SettingsLayoutNode[] = [
+        const xbtcordEntries: SettingsLayoutNode[] = [
             buildEntry({
-                key: "endcord_main",
-                title: "Endcord",
-                panelTitle: "Endcord Settings",
-                Component: EndcordTab,
+                key: "xbtcord_main",
+                title: "Xbtcord",
+                panelTitle: "Xbtcord Settings",
+                Component: XbtcordTab,
                 Icon: MainSettingsIcon
             }),
             buildEntry({
-                key: "endcord_plugins",
+                key: "xbtcord_plugins",
                 title: "Plugins",
                 Component: PluginsTab,
                 Icon: PluginsIcon
             }),
             buildEntry({
-                key: "endcord_themes",
+                key: "xbtcord_themes",
                 title: "Themes",
                 Component: ThemesTab,
                 Icon: PaintbrushIcon
             }),
             !IS_UPDATER_DISABLED && UpdaterTab && buildEntry({
-                key: "endcord_updater",
+                key: "xbtcord_updater",
                 title: "Updater",
-                panelTitle: "Endcord Updater",
+                panelTitle: "Xbtcord Updater",
                 Component: UpdaterTab,
                 Icon: UpdaterIcon
             }),
 
             buildEntry({
-                key: "endcord_backup_restore",
+                key: "xbtcord_backup_restore",
                 title: "Backup & Restore",
                 Component: BackupAndRestoreTab,
                 Icon: BackupRestoreIcon
             }),
             !IS_STANDALONE && PatchHelperTab && buildEntry({
-                key: "endcord_patch_helper",
+                key: "xbtcord_patch_helper",
                 title: "Patch Helper",
                 Component: PatchHelperTab,
                 Icon: PatchHelperIcon
@@ -203,7 +203,7 @@ export default definePlugin({
                 if (Object.values(FallbackSectionTypes).includes(section)) return null;
 
                 return buildEntry({
-                    key: `endcord_deprecated_custom_${section}`,
+                    key: `xbtcord_deprecated_custom_${section}`,
                     title: label,
                     Component: element,
                     Icon: section === "Vesktop" ? VesktopSettingsIcon : PlaceholderIcon
@@ -211,11 +211,11 @@ export default definePlugin({
             })
         ].filter(isTruthy);
 
-        const endcordSection: SettingsLayoutNode = {
-            key: "endcord_section",
+        const xbtcordSection: SettingsLayoutNode = {
+            key: "xbtcord_section",
             type: LayoutTypes.SECTION,
-            useTitle: () => "Endcord Settings",
-            buildLayout: () => endcordEntries
+            useTitle: () => "Xbtcord Settings",
+            buildLayout: () => xbtcordEntries
         };
 
         const { settingsLocation } = settings.store;
@@ -238,7 +238,7 @@ export default definePlugin({
             idx += 1;
         }
 
-        layout.splice(idx, 0, endcordSection);
+        layout.splice(idx, 0, xbtcordSection);
 
         return layout;
     },
@@ -248,12 +248,12 @@ export default definePlugin({
     customEntries: [] as EntryOptions[],
 
     get electronVersion() {
-        return EndcordNative.native.getVersions().electron || window.legcord?.electron || null;
+        return XbtcordNative.native.getVersions().electron || window.legcord?.electron || null;
     },
 
     get chromiumVersion() {
         try {
-            return EndcordNative.native.getVersions().chrome
+            return XbtcordNative.native.getVersions().chrome
                 // @ts-expect-error Typescript will add userAgentData IMMEDIATELY
                 || navigator.userAgentData?.brands?.find(b => b.brand === "Chromium" || b.brand === "Google Chrome")?.version
                 || null;
@@ -273,7 +273,7 @@ export default definePlugin({
     getInfoRows() {
         const { electronVersion, chromiumVersion, additionalInfo } = this;
 
-        const rows = [`Endcord ${gitHash}${additionalInfo}`];
+        const rows = [`Xbtcord ${gitHash}${additionalInfo}`];
 
         if (electronVersion) rows.push(`Electron ${electronVersion}`);
         if (chromiumVersion) rows.push(`Chromium ${chromiumVersion}`);
@@ -282,7 +282,7 @@ export default definePlugin({
     },
 
     getInfoString() {
-        if (!settings.store.includeEndcordInfoWhenCopying) return "";
+        if (!settings.store.includeXbtcordInfoWhenCopying) return "";
         return "\n" + this.getInfoRows().join("\n");
     },
 

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -55,7 +55,7 @@ export default definePlugin({
                 // Patch the central context menu handler
                 {
                     match: /(?=let{navId:)(?<=function \i\((\i)\).+?)/,
-                    replace: "$1=Endcord.Api.ContextMenu._usePatchContextMenu($1);"
+                    replace: "$1=Xbtcord.Api.ContextMenu._usePatchContextMenu($1);"
                 },
 
                 // Demangle Discord's Menu Item module

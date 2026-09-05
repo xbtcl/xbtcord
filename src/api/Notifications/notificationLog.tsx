@@ -1,16 +1,16 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import * as DataStore from "@api/DataStore";
 import { Settings } from "@api/Settings";
-import { openNotificationSettingsModal } from "@components/settings/tabs/endcord/NotificationSettings";
-import { RenderModalProps } from "@endcord/discord-types";
+import { openNotificationSettingsModal } from "@components/settings/tabs/xbtcord/NotificationSettings";
 import { classNameFactory } from "@utils/css";
 import { useAwaiter } from "@utils/react";
 import { ConfirmModal, Forms, ListScrollerThin, Modal,openModal, React, Timestamp, useEffect, useReducer, useState } from "@webpack/common";
+import { RenderModalProps } from "@xbtcord/discord-types";
 import { nanoid } from "nanoid";
 import type { DispatchWithoutAction } from "react";
 

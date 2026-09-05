@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -18,7 +18,7 @@ export default definePlugin({
                 match: /(?<=,channel:\i,message:\i\}\)\.then\().+?(?=\i\.content!==this\.props\.message\.content&&\i\((.+?)\)\})/,
                 replace: (match, args) => "" +
                     `async ${match}` +
-                    `if(await Endcord.Api.MessageEvents._handlePreEdit(${args}))` +
+                    `if(await Xbtcord.Api.MessageEvents._handlePreEdit(${args}))` +
                     "return Promise.resolve({shouldClear:false,shouldRefocus:true});"
             }
         },
@@ -28,7 +28,7 @@ export default definePlugin({
                 // https://regex101.com/r/7iswuk/1
                 match: /let (\i)=\i\.\i\.parse\((\i),.+?\.getSendMessageOptions\(\{.+?\}\)?;(?=.+?(\i)\.flags=)(?<=\)\(({.+?})\)\.then.+?)/,
                 replace: (m, parsedMessage, channel, options, props) => m +
-                    `if(await Endcord.Api.MessageEvents._handlePreSend(${channel}.id,${parsedMessage},${options},${props}))` +
+                    `if(await Xbtcord.Api.MessageEvents._handlePreSend(${channel}.id,${parsedMessage},${options},${props}))` +
                     "return{shouldClear:false,shouldRefocus:true};"
             }
         },
@@ -37,7 +37,7 @@ export default definePlugin({
             replacement: {
                 match: /let\{id:\i}=(\i),{id:\i}=(\i);return \i\.useCallback\((\i)=>\{/,
                 replace: (m, message, channel, event) =>
-                    `const vcMsg=${message},vcChan=${channel};${m}Endcord.Api.MessageEvents._handleClick(vcMsg,vcChan,${event});`
+                    `const vcMsg=${message},vcChan=${channel};${m}Xbtcord.Api.MessageEvents._handleClick(vcMsg,vcChan,${event});`
             }
         }
     ]

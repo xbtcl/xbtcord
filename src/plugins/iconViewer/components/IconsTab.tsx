@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2025 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -8,14 +8,14 @@ import { Button } from "@components/Button";
 import { Heading } from "@components/Heading";
 import { SettingsTab, wrapTab } from "@components/settings";
 import { TooltipContainer } from "@components/TooltipContainer";
-import { Icon } from "@endcord/discord-types";
-import { iconsModule } from "@endcordplugins/_core/concatenatedModules";
 import { IconsDef } from "@plugins/iconViewer/types";
 import { debounce } from "@shared/debounce";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { useIntersection } from "@utils/react";
 import { Clickable, TextInput, useCallback, useEffect, useMemo, useState } from "@webpack/common";
+import { Icon } from "@xbtcord/discord-types";
+import { iconsModule } from "@xbtcordplugins/_core/concatenatedModules";
 
 import { openIconModal } from "./Modals";
 

@@ -1,15 +1,15 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { Settings, SettingsStore } from "@api/Settings";
-import { ThemeStore } from "@endcord/discord-types";
 import { createAndAppendStyle } from "@utils/css";
 import { PopoutWindowStore } from "@webpack/common";
+import { ThemeStore } from "@xbtcord/discord-types";
 
-import { endcordRootNode,userStyleRootNode } from "./Styles";
+import { userStyleRootNode,xbtcordRootNode } from "./Styles";
 
 let style: HTMLStyleElement;
 let themesStyle: HTMLStyleElement;
@@ -17,21 +17,21 @@ let themesStyle: HTMLStyleElement;
 async function toggle(isEnabled: boolean) {
     if (!style) {
         if (isEnabled) {
-            style = createAndAppendStyle("endcord-custom-css", userStyleRootNode);
-            EndcordNative.quickCss.addChangeListener(css => {
+            style = createAndAppendStyle("xbtcord-custom-css", userStyleRootNode);
+            XbtcordNative.quickCss.addChangeListener(css => {
                 style.textContent = css;
                 // At the time of writing this, changing textContent resets the disabled state
                 style.disabled = !Settings.useQuickCss;
                 updatePopoutWindows();
             });
-            style.textContent = await EndcordNative.quickCss.get();
+            style.textContent = await XbtcordNative.quickCss.get();
         }
     } else
         style.disabled = !isEnabled;
 }
 
 async function initThemes() {
-    themesStyle ??= createAndAppendStyle("endcord-themes", userStyleRootNode);
+    themesStyle ??= createAndAppendStyle("xbtcord-themes", userStyleRootNode);
 
     const { themeLinks, enabledThemes } = Settings;
 
@@ -55,13 +55,13 @@ async function initThemes() {
 
     if (IS_WEB) {
         for (const theme of enabledThemes) {
-            const themeData = await EndcordNative.themes.getThemeData(theme);
+            const themeData = await XbtcordNative.themes.getThemeData(theme);
             if (!themeData) continue;
             const blob = new Blob([themeData], { type: "text/css" });
             links.push(URL.createObjectURL(blob));
         }
     } else {
-        const localThemes = enabledThemes.map(theme => `endcord:///themes/${theme}?v=${Date.now()}`);
+        const localThemes = enabledThemes.map(theme => `xbtcord:///themes/${theme}?v=${Date.now()}`);
         links.push(...localThemes);
     }
 
@@ -76,9 +76,9 @@ function applyToPopout(popoutWindow: Window | undefined, key: string) {
 
     const doc = popoutWindow.document;
 
-    doc.querySelector("endcord-root")?.remove();
+    doc.querySelector("xbtcord-root")?.remove();
 
-    doc.documentElement.appendChild(endcordRootNode.cloneNode(true));
+    doc.documentElement.appendChild(xbtcordRootNode.cloneNode(true));
 }
 
 function updatePopoutWindows() {
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (!IS_WEB) {
-        EndcordNative.quickCss.addThemeChangeListener(initThemes);
+        XbtcordNative.quickCss.addThemeChangeListener(initThemes);
     }
 }, { once: true });
 

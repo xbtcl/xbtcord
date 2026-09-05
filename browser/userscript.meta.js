@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name            Endcord
+// @name            Xbtcord
 // @description     A Discord client mod - Web version
 // @version         %version%
 // @author          Vendicated (https://github.com/Vendicated)
@@ -23,4 +23,4 @@
 // to overwrite stuff on the window on sites that use CSP. Use Tampermonkey or use a chromium based browser
 // https://github.com/violentmonkey/violentmonkey/issues/997
 
-// this is a compiled and minified version of Endcord. For the source code, visit the GitHub repo
+// this is a compiled and minified version of Xbtcord. For the source code, visit the GitHub repo

@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-export const REACT_GLOBAL = "Endcord.Webpack.Common.React";
+export const REACT_GLOBAL = "Xbtcord.Webpack.Common.React";
 export const VENBOT_USER_ID = "1017176847865352332";
-export const ENDCORD_GUILD_ID = "1015060230222131221";
+export const XBTCORD_GUILD_ID = "1015060230222131221";
 export const DONOR_ROLE_ID = "1042507929485586532";
 export const CONTRIB_ROLE_ID = "1026534353167208489";
 export const REGULAR_ROLE_ID = "1026504932959977532";
@@ -58,5 +58,5 @@ export const DevsById = /* #__PURE__*/ (() =>
     ))
 )() as Record<string, Dev>;
 
-export const EndcordDevs = Devs;
+export const XbtcordDevs = Devs;
 

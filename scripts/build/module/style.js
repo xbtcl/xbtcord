@@ -1,5 +1,5 @@
 /*
- * Endcord, a modification for Discord's desktop app
+ * Xbtcord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-(window.EndcordStyles ??= new Map()).set(STYLE_NAME, {
+(window.XbtcordStyles ??= new Map()).set(STYLE_NAME, {
     name: STYLE_NAME,
     source: STYLE_SOURCE,
     classNames: {},

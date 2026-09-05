@@ -1,13 +1,13 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Message } from "@endcord/discord-types";
-import { languages } from "@endcordplugins/translatePlus/misc/languages";
-import { cl, Translation } from "@endcordplugins/translatePlus/misc/types";
 import { Parser, useEffect, useState } from "@webpack/common";
+import { Message } from "@xbtcord/discord-types";
+import { languages } from "@xbtcordplugins/translatePlus/misc/languages";
+import { cl, Translation } from "@xbtcordplugins/translatePlus/misc/types";
 
 import { SmallIcon } from "./icon";
 import { translate } from "./translator";
@@ -18,7 +18,7 @@ export function Accessory({ message }: { message: Message; }) {
     const [translation, setTranslation] = useState<Translation | undefined>(undefined);
 
     useEffect(() => {
-        if ((message as any).endcordEmbeddedBy) return;
+        if ((message as any).xbtcordEmbeddedBy) return;
 
         setters.set(message.id, setTranslation);
 

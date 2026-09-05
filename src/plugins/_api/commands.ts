@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -23,7 +23,7 @@ export default definePlugin({
 
                     // textCommands = builtInCommands.filter(...)
                     match: /(?<=\w=)(\w)(\.filter\(.{0,60}tenor)/,
-                    replace: "Endcord.Api.Commands._init($1)$2",
+                    replace: "Xbtcord.Api.Commands._init($1)$2",
                 }
             ],
         },
@@ -33,7 +33,7 @@ export default definePlugin({
             replacement: {
                 // return [2, cmd.execute(args, ctx)]
                 match: /,(\i)\.execute\((\i),(\i)\)/,
-                replace: (_, cmd, args, ctx) => `,Endcord.Api.Commands._handleCommand(${cmd}, ${args}, ${ctx})`
+                replace: (_, cmd, args, ctx) => `,Xbtcord.Api.Commands._handleCommand(${cmd}, ${args}, ${ctx})`
             }
         },
         // Show plugin name instead of "Built-In"

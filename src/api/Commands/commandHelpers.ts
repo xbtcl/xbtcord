@@ -1,13 +1,13 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { CommandArgument, Message } from "@endcord/discord-types";
 import { mergeDefaults } from "@utils/mergeDefaults";
 import { findByCodeLazy } from "@webpack";
 import { MessageActions, SnowflakeUtils } from "@webpack/common";
+import { CommandArgument, Message } from "@xbtcord/discord-types";
 import type { PartialDeep } from "type-fest";
 
 const createBotMessage = findByCodeLazy('username:"Clyde"');

@@ -1,16 +1,16 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2023 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { User } from "@endcord/discord-types";
 import { AvatarDecoration } from "@plugins/decor";
 import { getUsersDecorations } from "@plugins/decor/lib/api";
 import { DECORATION_FETCH_COOLDOWN, SKU_ID } from "@plugins/decor/lib/constants";
 import { debounce } from "@shared/debounce";
 import { proxyLazy } from "@utils/lazy";
 import { useEffect, useState, zustandCreate } from "@webpack/common";
+import { User } from "@xbtcord/discord-types";
 
 interface UserDecorationData {
     asset: string | null;

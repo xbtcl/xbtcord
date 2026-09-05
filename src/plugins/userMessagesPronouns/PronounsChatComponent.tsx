@@ -1,16 +1,16 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { getUserSettingLazy } from "@api/UserSettings";
 import ErrorBoundary from "@components/ErrorBoundary";
-import { Message } from "@endcord/discord-types";
 import { getIntlMessage } from "@utils/discord";
 import { classes } from "@utils/misc";
 import { findCssClassesLazy } from "@webpack";
 import { Tooltip, UserStore } from "@webpack/common";
+import { Message } from "@xbtcord/discord-types";
 
 import { settings } from "./settings";
 import { useFormattedPronouns } from "./utils";

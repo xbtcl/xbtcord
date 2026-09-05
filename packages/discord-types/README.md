@@ -2,20 +2,20 @@
 
 This package provides TypeScript types for the Webpack modules of Discord's web app.
 
-While it was primarily created for Endcord, other client mods could also benefit from this, so it is published as a standalone package!
+While it was primarily created for Xbtcord, other client mods could also benefit from this, so it is published as a standalone package!
 
 ## Installation
 
 ```bash
-npm install -D @endcord/discord-types
-yarn add -D @endcord/discord-types
-pnpm add -D @endcord/discord-types
+npm install -D @xbtcord/discord-types
+yarn add -D @xbtcord/discord-types
+pnpm add -D @xbtcord/discord-types
 ```
 
 ## Example Usage
 
 ```ts
-import type { UserStore } from "@endcord/discord-types";
+import type { UserStore } from "@xbtcord/discord-types";
 
 const userStore: UserStore = findStore("UserStore"); // findStore is up to you to implement, this library only provides types and no runtime code
 ```
@@ -24,7 +24,7 @@ const userStore: UserStore = findStore("UserStore"); // findStore is up to you t
 
 This library also exports some const enums that you can use from Typescript code:
 ```ts
-import { ApplicationCommandType } from "@endcord/discord-types/enums";
+import { ApplicationCommandType } from "@xbtcord/discord-types/enums";
 
 console.log(ApplicationCommandType.CHAT_INPUT); // 1
 ```

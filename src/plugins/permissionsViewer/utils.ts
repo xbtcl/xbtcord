@@ -1,14 +1,14 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Guild, GuildMember, Role } from "@endcord/discord-types";
-import { PermissionOverwriteType } from "@endcord/discord-types/enums";
 import { classNameFactory } from "@utils/css";
 import { extractAndLoadChunksLazy, findByPropsLazy } from "@webpack";
 import { GuildRoleStore } from "@webpack/common";
+import { Guild, GuildMember, Role } from "@xbtcord/discord-types";
+import { PermissionOverwriteType } from "@xbtcord/discord-types/enums";
 
 import { PermissionsSortOrder, settings } from ".";
 

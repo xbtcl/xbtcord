@@ -1,11 +1,11 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import * as t from "@endcord/discord-types";
 import { filters, findByCodeLazy, findExportedComponentLazy, mapMangledModuleLazy } from "@webpack";
+import * as t from "@xbtcord/discord-types";
 
 export const Modal: t.Modal = findExportedComponentLazy("Modal");
 export const ConfirmModal: t.ConfirmModal = findExportedComponentLazy("ConfirmModal");

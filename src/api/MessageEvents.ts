@@ -1,12 +1,12 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import type { Channel, CustomEmoji, Message } from "@endcord/discord-types";
 import { Logger } from "@utils/Logger";
 import { MessageStore } from "@webpack/common";
+import type { Channel, CustomEmoji, Message } from "@xbtcord/discord-types";
 import type { Promisable } from "type-fest";
 
 const MessageEventsLogger = new Logger("MessageEvents", "#e5c890");

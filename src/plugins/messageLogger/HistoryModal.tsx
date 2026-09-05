@@ -1,17 +1,17 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import ErrorBoundary from "@components/ErrorBoundary";
 import { TooltipContainer } from "@components/TooltipContainer";
-import { RenderModalProps } from "@endcord/discord-types";
 import { classNameFactory } from "@utils/css";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { findCssClassesLazy } from "@webpack";
 import { Modal,openModal, TabBar, Timestamp, useState } from "@webpack/common";
+import { RenderModalProps } from "@xbtcord/discord-types";
 
 import { parseEditContent } from ".";
 

@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -61,9 +61,9 @@ function CloudSetupSection() {
             <SectionHeading text="Cloud Integrations" />
 
             <Paragraph size="md" className={Margins.bottom20}>
-                Endcord comes with a cloud integration that adds goodies like settings sync across devices.
-                It <Link href="https://endcord.dev/cloud/privacy">respects your privacy</Link>, and
-                the <Link href="https://github.com/Endcord/Backend">source code</Link> is AGPL 3.0 licensed so you
+                Xbtcord comes with a cloud integration that adds goodies like settings sync across devices.
+                It <Link href="https://vencord.dev/cloud/privacy">respects your privacy</Link>, and
+                the <Link href="https://github.com/Vencord/Backend">source code</Link> is AGPL 3.0 licensed so you
                 can host it yourself.
             </Paragraph>
             <FormSwitch
@@ -123,7 +123,7 @@ function SettingsSyncSection() {
                 <FormSwitch
                     key="cloud-sync"
                     title="Enable Settings Sync"
-                    description="Save your Endcord settings to the cloud so you can easily keep them the same on all your devices"
+                    description="Save your Xbtcord settings to the cloud so you can easily keep them the same on all your devices"
                     value={cloud.settingsSync}
                     onChange={v => { cloud.settingsSync = v; }}
                     disabled={!cloud.authenticated}

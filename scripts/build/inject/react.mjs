@@ -1,5 +1,5 @@
 /*
- * Endcord, a modification for Discord's desktop app
+ * Xbtcord, a modification for Discord's desktop app
  * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export const EndcordFragment = /* #__PURE__*/ Symbol.for("react.fragment");
-export let EndcordCreateElement =
-    (...args) => (EndcordCreateElement = Endcord.Webpack.Common.React.createElement)(...args);
+export const XbtcordFragment = /* #__PURE__*/ Symbol.for("react.fragment");
+export let XbtcordCreateElement =
+    (...args) => (XbtcordCreateElement = Xbtcord.Webpack.Common.React.createElement)(...args);

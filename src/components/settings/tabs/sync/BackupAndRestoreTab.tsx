@@ -1,5 +1,5 @@
 /*
- * Endcord, a Discord client mod
+ * Xbtcord, a Discord client mod
  * Copyright (c) 2026 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
@@ -23,9 +23,9 @@ function BackupAndRestoreTab() {
                 </Card>
 
                 <Text variant="text-md/normal" className={Margins.bottom8}>
-                    You can import and export your Endcord settings as a JSON file.
+                    You can import and export your Xbtcord settings as a JSON file.
                     This allows you to easily transfer your settings to another device,
-                    or recover your settings after reinstalling Endcord or Discord.
+                    or recover your settings after reinstalling Xbtcord or Discord.
                 </Text>
 
                 <Heading tag="h4">Settings Export contains:</Heading>
