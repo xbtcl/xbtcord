@@ -1,0 +1,57 @@
+.xbt-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    padding-bottom: 8px;
+}
+
+.xbt-gallery-tile {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--background-secondary, rgb(0 0 0 / 20%));
+}
+
+.xbt-gallery-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    display: block;
+}
+
+.xbt-gallery-jump {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    border: none;
+    padding: 4px 6px;
+    font-size: 11px;
+    color: #fff;
+    background: rgb(0 0 0 / 60%);
+    cursor: pointer;
+    text-align: start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.1s;
+    font-family: inherit;
+}
+
+.xbt-gallery-tile:hover .xbt-gallery-jump {
+    opacity: 1;
+}
+
+.xbt-gallery-count,
+.xbt-gallery-empty {
+    color: var(--text-muted, var(--text-secondary));
+    display: block;
+    margin-bottom: 8px;
+}
+
+.xbt-gallery-empty {
+    text-align: center;
+    padding: 24px 8px;
+}

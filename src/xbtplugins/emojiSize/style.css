@@ -1,0 +1,21 @@
+/*
+ * Emoji sizing.
+ *
+ * Discord marks emoji in an emoji-only message with a "jumbo" class and leaves the rest at
+ * the inline size, so the two cases can be sized separately without needing to know which
+ * message is which.
+ */
+
+img.emoji:not(.jumboable),
+[class*="emoji"]:not(.jumboable) > img.emoji {
+    width: var(--xbt-emoji-inline, 22px) !important;
+    height: var(--xbt-emoji-inline, 22px) !important;
+    object-fit: contain;
+}
+
+img.emoji.jumboable,
+img.jumboable {
+    width: var(--xbt-emoji-jumbo, 48px) !important;
+    height: var(--xbt-emoji-jumbo, 48px) !important;
+    object-fit: contain;
+}

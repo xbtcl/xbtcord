@@ -1,0 +1,26 @@
+/*
+ * Cuts animation out of the client.
+ *
+ * Discord's own "Reduce Motion" accessibility setting only reaches the transitions it knows
+ * about; this covers the rest, including animated avatars and banners, which are the ones
+ * that actually cost anything on a weak machine.
+ *
+ * `!important` throughout because almost all of these are set inline or by a more specific
+ * rule, and a stylesheet that loses the cascade fight does nothing at all.
+ */
+
+body.xbt-reduce-motion *,
+body.xbt-reduce-motion *::before,
+body.xbt-reduce-motion *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+}
+
+/* Keep loading spinners spinning - a frozen spinner reads as a hung client. */
+body.xbt-reduce-motion [class*="spinner"] *,
+body.xbt-reduce-motion [class*="Spinner"] * {
+    animation-duration: revert !important;
+    animation-iteration-count: infinite !important;
+}

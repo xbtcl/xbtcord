@@ -1,0 +1,18 @@
+.xbt-media-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.xbt-media-info-item {
+    font-size: 11px;
+    color: var(--text-muted, var(--text-secondary));
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.xbt-media-info-item:hover {
+    color: var(--text-normal, var(--text-default));
+    text-decoration: underline;
+}
