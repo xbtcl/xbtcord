@@ -102,17 +102,25 @@ jobs:
               run: |
                   short="$(git rev-parse --short HEAD)"
 
-                  # A single moving "latest" release, so the installer always has a stable
-                  # URL to fetch from. --clobber replaces the assets in place.
+                  # The release TITLE must end in the bare short hash, with nothing after it.
+                  #
+                  # The in-client updater decides whether you are out of date by taking
+                  # everything after the last space in the release name and comparing it to
+                  # the hash baked into the build. Wrapping it - "Latest build (abc1234)" -
+                  # makes that comparison read "(abc1234)", which can never match, so every
+                  # client would consider itself permanently outdated and re-download on
+                  # every launch. Leave the hash last and unadorned.
                   gh release create latest \
-                      --title "Latest build" \
+                      --title "Latest build $short" \
                       --notes "Rolling build of the main branch." \
                       --latest \
                       || true
 
                   gh release upload latest --clobber release/*
                   gh release edit latest \
-                      --title "Latest build ($short)" \
+                      --title "Latest build $short" \
                       --notes "Rolling build of \`main\`, from commit $short.
 
-                  Download **XbtcordInstaller.exe** and run it. No admin rights needed."
+                  Download **XbtcordInstaller.exe** and run it. No admin rights needed.
+
+                  Already installed? You do not need this file - the client updates itself."

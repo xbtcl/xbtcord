@@ -31,6 +31,7 @@
         "checkPluginNames": "node scripts/checkPluginNames.mjs",
         "makeIcon": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/makeIcon.ps1",
         "makeSourceLogos": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/makeSourceLogos.ps1",
+        "makeConnectionIcons": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/makeConnectionIcons.ps1",
         "lint-styles": "stylelint \"src/**/*.css\" --ignore-pattern src/userplugins",
         "lint:fix": "pnpm lint --fix && node scripts/fixImportSeparators.mjs src",
         "test": "pnpm checkPluginNames && pnpm buildStandalone && pnpm testTsc && pnpm lint && pnpm lint-styles && pnpm generatePluginJson",
