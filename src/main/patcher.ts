@@ -5,7 +5,8 @@
  */
 
 import { onceDefined } from "@shared/onceDefined";
-import electron, { app, BrowserWindowConstructorOptions, Menu } from "electron";
+import { XBTCORD_ICON } from "@utils/xbtcordLogo";
+import electron, { app, BrowserWindowConstructorOptions, Menu, nativeImage } from "electron";
 import { dirname, join } from "path";
 
 import { RendererSettings } from "./settings";
@@ -68,6 +69,21 @@ if (!IS_VANILLA) {
             options.webPreferences.sandbox = false;
             // work around discord unloading when in background
             options.webPreferences.backgroundThrottling = false;
+
+            /*
+             * Xbtcord's own icon, for the window and the taskbar button.
+             *
+             * Built from a data URI rather than a file so it cannot go missing: the icon
+             * has to exist at window-creation time, and by then a path would depend on
+             * where the client was installed and whether that file survived a Discord
+             * update. The mark sits on a dark plate here because the source art is white
+             * on transparency, which is invisible against a light taskbar.
+             */
+            try {
+                options.icon = nativeImage.createFromDataURL(XBTCORD_ICON);
+            } catch (err) {
+                console.error("[Xbtcord] Couldn't build the window icon", err);
+            }
 
             if (frameless) {
                 options.frame = false;

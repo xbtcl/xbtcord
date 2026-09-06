@@ -93,6 +93,78 @@ function Start-Discord($installs) {
     }
 }
 
+# --- shortcut icons ---------------------------------------------------------------------
+#
+# Discord.exe's *embedded* icon is deliberately left alone. Rewriting resources inside a
+# signed binary invalidates its signature, and Discord's updater replaces the exe anyway,
+# so it would break things and then quietly undo itself. Shortcuts are the part of "the
+# icon on the PC" that is actually the user's to change, and changing them is reversible.
+
+$IconStore = Join-Path $env:LOCALAPPDATA "Xbtcord\xbtcord.ico"
+$IconBackup = Join-Path $env:LOCALAPPDATA "Xbtcord\shortcut-icons.json"
+
+function Get-ShortcutPaths {
+    $candidates = @(
+        (Join-Path ([Environment]::GetFolderPath("Desktop")) "Discord.lnk"),
+        (Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Discord Inc\Discord.lnk"),
+        (Join-Path $env:APPDATA "Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Discord.lnk")
+    )
+    if ($env:OneDrive) { $candidates += (Join-Path $env:OneDrive "Desktop\Discord.lnk") }
+
+    return $candidates | Where-Object { Test-Path $_ } | Select-Object -Unique
+}
+
+function Set-ShortcutIcons($iconSource) {
+    $shortcuts = Get-ShortcutPaths
+    if (-not $shortcuts) { Write-Step "No Discord shortcuts found to reicon"; return }
+
+    New-Item -ItemType Directory -Path (Split-Path -Parent $IconStore) -Force | Out-Null
+    Copy-Item $iconSource $IconStore -Force
+
+    # Remember what each shortcut pointed at, so uninstalling can put it back.
+    $previous = @{}
+    if (Test-Path $IconBackup) {
+        try { (Get-Content $IconBackup -Raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $previous[$_.Name] = $_.Value } } catch { }
+    }
+
+    $shell = New-Object -ComObject WScript.Shell
+    foreach ($path in $shortcuts) {
+        try {
+            $lnk = $shell.CreateShortcut($path)
+            if (-not $previous.ContainsKey($path)) { $previous[$path] = $lnk.IconLocation }
+            $lnk.IconLocation = "$IconStore,0"
+            $lnk.Save()
+            Write-Good "Reiconed $(Split-Path -Leaf (Split-Path -Parent $path))\$(Split-Path -Leaf $path)"
+        } catch {
+            Write-Warn "Couldn't reicon $path"
+        }
+    }
+
+    $previous | ConvertTo-Json | Set-Content $IconBackup -Encoding utf8
+
+    # Windows caches shortcut icons aggressively; this nudges it without a logoff.
+    try { & "$env:WINDIR\System32\ie4uinit.exe" -show } catch { }
+}
+
+function Restore-ShortcutIcons {
+    if (-not (Test-Path $IconBackup)) { return }
+
+    $shell = New-Object -ComObject WScript.Shell
+    try { $previous = Get-Content $IconBackup -Raw | ConvertFrom-Json } catch { return }
+
+    foreach ($prop in $previous.PSObject.Properties) {
+        if (-not (Test-Path $prop.Name)) { continue }
+        try {
+            $lnk = $shell.CreateShortcut($prop.Name)
+            $lnk.IconLocation = $prop.Value
+            $lnk.Save()
+        } catch { }
+    }
+    Remove-Item $IconBackup -Force -ErrorAction SilentlyContinue
+    try { & "$env:WINDIR\System32\ie4uinit.exe" -show } catch { }
+    Write-Step "Restored the original shortcut icons"
+}
+
 function Set-Patch($resources, $patcher) {
     $asar = Join-Path $resources "app.asar"
     $original = Join-Path $resources "_app.asar"
@@ -150,6 +222,7 @@ try {
             if (Remove-Patch $install.Resources) { Write-Good "Removed from $($install.Branch)" }
             else { Write-Warn "$($install.Branch) was not patched" }
         }
+        Restore-ShortcutIcons
         if (Test-Path $InstallDir) { Remove-Item $InstallDir -Recurse -Force; Write-Step "Deleted $InstallDir" }
         Write-Host ""
         Write-Good "Xbtcord removed. Settings kept at $env:APPDATA\Xbtcord."
@@ -174,6 +247,9 @@ try {
             Set-Patch $install.Resources $patcher
             Write-Good "Patched $($install.Branch) $($install.Version)"
         }
+
+        $icon = Join-Path $RepoRoot "assets\xbtcord.ico"
+        if (Test-Path $icon) { Set-ShortcutIcons $icon } else { Write-Warn "No icon at $icon - shortcuts left alone" }
 
         Write-Host ""
         Write-Good "Done. Discord will start with Xbtcord from now on."
