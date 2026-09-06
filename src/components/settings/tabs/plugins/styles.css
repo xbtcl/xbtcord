@@ -91,3 +91,16 @@
     flex-direction: column;
     gap: 1.25em;
 }
+
+/*
+ * The little project logo on each plugin card, saying which fork it came from.
+ * Sized to sit on the same line as the plugin name without pushing it around.
+ */
+.vc-plugins-source-logo {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    margin-left: auto;
+    object-fit: contain;
+    justify-self: flex-end;
+}

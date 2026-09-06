@@ -5,6 +5,8 @@
  */
 
 import { VENCORD_PLUGINS } from "@utils/pluginOrigins";
+import { ENDCORD_LOGO, EQUICORD_LOGO, VENCORD_LOGO } from "@utils/pluginSourceLogos";
+import { XBTCORD_ICON } from "@utils/xbtcordLogo";
 
 import { PluginMeta } from "~plugins";
 
@@ -44,6 +46,27 @@ export const SourceColors: Record<PluginSource, string> = {
     [PluginSource.Vencord]: "#5865F2",
     [PluginSource.Endcord]: "#38bdf8",
     [PluginSource.User]: "#3ba55d"
+};
+
+/**
+ * Each project's own logo. User plugins have nobody's logo to show, so they keep the
+ * text badge - there is no mark for "yours".
+ */
+export const SourceLogos: Record<PluginSource, string | null> = {
+    [PluginSource.Xbtcord]: XBTCORD_ICON,
+    [PluginSource.Equicord]: EQUICORD_LOGO,
+    [PluginSource.Vencord]: VENCORD_LOGO,
+    [PluginSource.Endcord]: ENDCORD_LOGO,
+    [PluginSource.User]: null
+};
+
+/** What the badge says on hover. */
+export const SourceTooltips: Record<PluginSource, string> = {
+    [PluginSource.Xbtcord]: "Xbtcord plugin",
+    [PluginSource.Equicord]: "Equicord plugin",
+    [PluginSource.Vencord]: "Vencord plugin",
+    [PluginSource.Endcord]: "Endcord plugin",
+    [PluginSource.User]: "Your own plugin"
 };
 
 export function getPluginSource(name: string): PluginSource {

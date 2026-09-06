@@ -10,7 +10,7 @@ import { Settings } from "@api/Settings";
 import { CogWheel, InfoIcon } from "@components/Icons";
 import { AddonCard } from "@components/settings/AddonCard";
 import { AddonBadge } from "@components/settings/PluginBadge";
-import { getPluginSource, PluginSource, SourceColors, SourceLabels } from "@utils/pluginSource";
+import { getPluginSource, SourceColors, SourceLabels, SourceLogos, SourceTooltips } from "@utils/pluginSource";
 import { Plugin } from "@utils/types";
 import { React, showToast, Toasts } from "@webpack/common";
 
@@ -88,11 +88,14 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
             name={plugin.name}
             description={plugin.description}
             sourceBadge={
-                // Vencord is the single biggest group and the root everything else sits
-                // on, so it reads as the default and goes unbadged. Badging it too would
-                // put a label on most cards and single out nothing.
-                source === PluginSource.Vencord
-                    ? null
+                SourceLogos[source]
+                    ? <img
+                        src={SourceLogos[source]!}
+                        alt={SourceLabels[source]}
+                        title={SourceTooltips[source]}
+                        className={cl("source-logo")}
+                    />
+                    // User plugins have no project logo to show, so they keep a word.
                     : <AddonBadge text={SourceLabels[source]} color={SourceColors[source]} />
             }
             isNew={isNew}
