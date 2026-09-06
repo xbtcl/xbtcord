@@ -1,11 +1,39 @@
-.xbt-last-seen {
+/*
+ * The Last Seen row, sat under Discord's own "Member Since".
+ *
+ * Styled to match rather than to stand out: the label copies the heading treatment Discord
+ * uses above it, so the addition reads as part of the profile instead of bolted onto it.
+ */
+
+.xbt-last-seen-host {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    margin-top: 8px;
+    margin-top: 12px;
 }
 
 .xbt-last-seen-label {
-    color: var(--header-secondary, var(--text-secondary));
-    letter-spacing: 0.02em;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: var(--header-primary, var(--text-default));
+}
+
+.xbt-last-seen-value {
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--text-normal, var(--text-default));
+}
+
+/* Member list marker for someone who has been away more than a day. */
+.xbt-last-seen-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted, #949ba4);
+    vertical-align: middle;
+    flex: 0 0 auto;
+    cursor: default;
 }
