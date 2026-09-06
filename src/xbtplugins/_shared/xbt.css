@@ -1,0 +1,106 @@
+/*
+ * Shared layout for the Xbtcord plugin modals.
+ *
+ * Every one of these plugins shows the same shape - a scrolling list of rows, each with a
+ * bit of text on the left and buttons on the right - so they share one stylesheet rather
+ * than each shipping a near-identical copy.
+ */
+
+.xbt-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 8px;
+}
+
+.xbt-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--background-secondary, var(--background-base-lower));
+}
+
+.xbt-row-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.xbt-row-preview {
+    color: var(--text-muted, var(--text-secondary));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.xbt-row-meta {
+    color: var(--text-muted, var(--text-secondary));
+}
+
+.xbt-row-actions {
+    display: flex;
+    gap: 6px;
+    flex: 0 0 auto;
+}
+
+.xbt-empty {
+    color: var(--text-muted, var(--text-secondary));
+    text-align: center;
+    padding: 24px 8px;
+}
+
+.xbt-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.xbt-form-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.xbt-form-row > *:first-child {
+    flex: 1;
+}
+
+.xbt-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--background-modifier-selected, rgb(255 255 255 / 8%));
+    color: var(--text-muted, var(--text-secondary));
+    font-size: 11px;
+    font-weight: 600;
+}
+
+button.xbt-tag {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.xbt-tag-active {
+    background: var(--brand-500, #5865f2);
+    color: #fff;
+}
+
+/* Someone's local time, shown beside their name. */
+.xbt-timezone {
+    color: var(--text-muted, var(--text-secondary));
+    font-size: 11px;
+    font-weight: 500;
+    cursor: default;
+}
+
+/* A message the client is hiding because of a word filter. */
+.xbt-hidden-message {
+    opacity: 0.35;
+    font-style: italic;
+}

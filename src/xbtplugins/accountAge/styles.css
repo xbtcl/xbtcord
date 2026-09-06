@@ -1,0 +1,13 @@
+.xbt-new-account {
+    display: inline-block;
+    padding: 0 4px;
+    border-radius: 3px;
+    background: var(--status-warning, #f0b232);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 14px;
+    letter-spacing: 0.4px;
+    vertical-align: middle;
+    cursor: default;
+}

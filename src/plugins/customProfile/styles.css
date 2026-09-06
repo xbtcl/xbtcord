@@ -28,14 +28,20 @@
     margin-top: 4px;
 }
 
+/*
+ * This used to be declared twice, ~60 lines apart, with the second copy silently winning
+ * on padding and adding a margin. Merged into one block that computes to exactly what the
+ * pair did, so nothing moves on screen.
+ */
 .cp-account-header-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    padding: 8px;
+    padding: 4px;
     border-radius: 8px;
     transition: background 0.1s;
+    margin-right: 8px;
     border: 2px solid transparent;
     flex-shrink: 0;
 }
@@ -84,25 +90,6 @@
     display: none;
 
     /* Chrome, Safari, Edge */
-}
-
-.cp-account-header-item {
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 8px;
-    transition: background 0.1s;
-    margin-right: 8px;
-    border: 2px solid transparent;
-    flex-shrink: 0;
-}
-
-.cp-account-header-item:hover {
-    background: rgb(255 255 255 / 5%);
-}
-
-.cp-account-header-item--selected {
-    background: rgb(88 101 242 / 15%);
-    border-color: #5865f2;
 }
 
 .cp-account-header-avatar {

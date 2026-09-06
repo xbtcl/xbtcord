@@ -1,0 +1,54 @@
+.xbt-chain-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 2px 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-link, #00a8fc);
+}
+
+.xbt-chain-toggle:hover {
+    text-decoration: underline;
+}
+
+.xbt-chain {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 2px 0 6px;
+    padding-inline-start: 8px;
+    border-inline-start: 2px solid var(--background-modifier-accent, rgb(255 255 255 / 10%));
+}
+
+.xbt-chain-link {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    min-width: 0;
+}
+
+.xbt-chain-link:hover {
+    background: var(--background-modifier-hover, rgb(255 255 255 / 5%));
+}
+
+.xbt-chain-author {
+    font-weight: 600;
+    color: var(--header-secondary, var(--text-secondary));
+    flex: 0 0 auto;
+}
+
+.xbt-chain-content {
+    color: var(--text-muted, var(--text-secondary));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.xbt-chain-meta {
+    color: var(--text-muted, var(--text-secondary));
+}

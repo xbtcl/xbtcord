@@ -1,0 +1,41 @@
+/*
+ * Hides Discord's Quest advertising.
+ *
+ * Class-prefix selectors, the same technique themes use: the readable half of a name like
+ * `questsUpsell_a1b2c3` survives builds, the hash does not. Nothing is patched and nothing
+ * is blocked at the network level, so the worst case when Discord renames something is that
+ * one nag comes back.
+ */
+
+/* The quest bar that wedges itself above the DM list. */
+[class*="questsUpsell"],
+[class*="questUpsell"],
+[class*="questsContainer"],
+[class*="questBar"] {
+    display: none !important;
+}
+
+/* The nav row next to Friends and Shop. */
+[data-list-item-id*="quest"],
+a[href^="/quests"] {
+    display: none !important;
+}
+
+/* The badge that appears on the gift and inventory buttons. */
+[class*="questsBadge"],
+[class*="questBadge"] {
+    display: none !important;
+}
+
+/* The popup that slides in from the bottom left when a new quest lands. */
+[class*="questsPopout"],
+[class*="questPopout"],
+[class*="questsToast"] {
+    display: none !important;
+}
+
+/* The "Play a quest" entry in the gift picker and the profile quest section. */
+[class*="questsSection"],
+[class*="questProfile"] {
+    display: none !important;
+}

@@ -1,0 +1,45 @@
+/*
+ * Focus mode.
+ *
+ * These are class-prefix selectors rather than Discord's hashed class names, which is how
+ * themes have always done it: the readable half of `membersWrap_a1b2c3` is stable across
+ * builds, the hash is not. A redesign can still move things, and then a toggle here quietly
+ * stops hiding something - annoying, but never broken in a way that damages anything.
+ */
+
+body.xbt-focus-members [class*="membersWrap"],
+body.xbt-focus-members [class*="membersGroup"] {
+    display: none !important;
+}
+
+body.xbt-focus-servers [class*="guilds_"] {
+    display: none !important;
+}
+
+body.xbt-focus-channels [class*="sidebar_"] {
+    display: none !important;
+}
+
+/* In-app toasts and the notification log popout. */
+body.xbt-focus-quiet #vc-notification-container,
+body.xbt-focus-quiet [class*="notificationLog"],
+body.xbt-focus-quiet [class*="toast_"] {
+    display: none !important;
+}
+
+body.xbt-focus-avatars [class*="avatar_"] {
+    filter: grayscale(100%);
+}
+
+body.xbt-focus-media img[class*="lazyImg"],
+body.xbt-focus-media video,
+body.xbt-focus-media [class*="imageWrapper"] {
+    filter: blur(18px);
+    transition: filter 0.15s ease;
+}
+
+body.xbt-focus-media img[class*="lazyImg"]:hover,
+body.xbt-focus-media video:hover,
+body.xbt-focus-media [class*="imageWrapper"]:hover {
+    filter: none;
+}
