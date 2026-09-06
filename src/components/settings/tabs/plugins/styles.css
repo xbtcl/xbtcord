@@ -43,9 +43,15 @@
 
 .vc-plugins-filter-controls {
     display: grid;
-    height: 40px;
+
+    /*
+     * Three controls now - type, source and tags. auto-fit rather than a fixed 3 columns so
+     * they drop to two rows in a narrow settings pane instead of squeezing to unreadable
+     * widths, and min-height rather than height so a wrapped second row is not clipped.
+     */
+    min-height: 40px;
     gap: 10px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     align-items: center;
 }
 

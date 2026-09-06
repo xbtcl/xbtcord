@@ -21,7 +21,7 @@ import { isTruthy } from "@utils/guards";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
-import { getPluginSource, PluginSource } from "@utils/pluginSource";
+import { getPluginSource, PluginSource, SourceLabels } from "@utils/pluginSource";
 import { useAwaiter, useCleanupEffect } from "@utils/react";
 import { PluginTag, PluginTags } from "@utils/types";
 import { Button, ConfirmModal,lodash, openModal, Parser, React, SearchableSelect, Select, TextInput, Tooltip, useMemo, useRef, useState } from "@webpack/common";
@@ -67,11 +67,7 @@ const enum SearchStatus {
     DISABLED,
     NEW,
     USER_PLUGINS,
-    API_PLUGINS,
-    XBTCORD_PLUGINS,
-    EQUICORD_PLUGINS,
-    VENCORD_PLUGINS,
-    ENDCORD_PLUGINS
+    API_PLUGINS
 }
 
 function ExcludedPluginsList({ search }: { search: string; }) {
@@ -157,13 +153,41 @@ function PluginSettings() {
 
     const hasUserPlugins = useMemo(() => !IS_STANDALONE && Object.values(PluginMeta).some(m => m.userPlugin), []);
 
-    const [searchValue, setSearchValue] = useState({ value: "", tags: [] as PluginTag[], status: SearchStatus.ALL });
+    /**
+     * Only sources that something actually came from.
+     *
+     * Offering "User" on an install with no user plugins, or "Endcord" on a build where
+     * every one has been replaced, gives you a filter that can only ever return nothing.
+     */
+    const sourceOptions = useMemo(() => {
+        const present = new Set(Object.values(Plugins).map(p => getPluginSource(p.name)));
+
+        return [
+            PluginSource.Xbtcord,
+            PluginSource.Equicord,
+            PluginSource.Vencord,
+            PluginSource.Endcord,
+            PluginSource.User
+        ]
+            .filter(source => present.has(source))
+            .map(source => ({ label: SourceLabels[source], value: source }));
+    }, []);
+
+    // Which project a plugin came from is its own axis, not a kind of "type" - you want to
+    // ask for "the Xbtcord ones that are disabled", which a single dropdown cannot express.
+    // So it gets its own multi-select, the way tags do.
+    const [searchValue, setSearchValue] = useState({
+        value: "",
+        tags: [] as PluginTag[],
+        sources: [] as PluginSource[],
+        status: SearchStatus.ALL
+    });
 
     const search = searchValue.value.toLowerCase();
     const onSearch = (query: string) => setSearchValue(prev => ({ ...prev, value: query }));
 
     const pluginFilter = (plugin: typeof Plugins[keyof typeof Plugins]) => {
-        const { status, tags } = searchValue;
+        const { status, tags, sources } = searchValue;
 
         switch (status) {
             case SearchStatus.DISABLED:
@@ -181,19 +205,11 @@ function PluginSettings() {
             case SearchStatus.API_PLUGINS:
                 if (!plugin.name.endsWith("API")) return false;
                 break;
-            case SearchStatus.XBTCORD_PLUGINS:
-                if (getPluginSource(plugin.name) !== PluginSource.Xbtcord) return false;
-                break;
-            case SearchStatus.EQUICORD_PLUGINS:
-                if (getPluginSource(plugin.name) !== PluginSource.Equicord) return false;
-                break;
-            case SearchStatus.VENCORD_PLUGINS:
-                if (getPluginSource(plugin.name) !== PluginSource.Vencord) return false;
-                break;
-            case SearchStatus.ENDCORD_PLUGINS:
-                if (getPluginSource(plugin.name) !== PluginSource.Endcord) return false;
-                break;
         }
+
+        // Any of the picked sources, rather than all of them - a plugin only has one, so
+        // requiring all would make picking a second source empty the list.
+        if (sources.length && !sources.includes(getPluginSource(plugin.name))) return false;
 
         if (tags.length && tags.some(t => !plugin.tags?.includes(t))) return false;
 
@@ -298,16 +314,26 @@ function PluginSettings() {
                             { label: "Show New", value: SearchStatus.NEW },
                             hasUserPlugins && { label: "Show UserPlugins", value: SearchStatus.USER_PLUGINS },
                             { label: "Show API Plugins", value: SearchStatus.API_PLUGINS },
-                            { label: "Show Xbtcord Plugins", value: SearchStatus.XBTCORD_PLUGINS },
-                            { label: "Show Equicord Plugins", value: SearchStatus.EQUICORD_PLUGINS },
-                            { label: "Show Vencord Plugins", value: SearchStatus.VENCORD_PLUGINS },
-                            { label: "Show Endcord Plugins", value: SearchStatus.ENDCORD_PLUGINS },
                         ].filter(isTruthy)}
                         serialize={String}
                         select={status => setSearchValue(prev => ({ ...prev, status }))}
                         isSelected={v => v === searchValue.status}
                         closeOnSelect={true}
                         placeholder="Filter by Type"
+                    />
+                    <SearchableSelect
+                        options={sourceOptions}
+                        value={searchValue.sources}
+                        onChange={sources => setSearchValue(prev => ({ ...prev, sources: sources ?? [] }))}
+                        closeOnSelect={false}
+                        placeholder="Filter by Source"
+                        multi
+                        /*
+                         * No renderOptionPrefix here, tempting as the project logos are.
+                         * Passing one makes this combobox select its first option on mount,
+                         * so the plugin list opened pre-filtered to Xbtcord with the filter
+                         * looking untouched. The logos still mark every card.
+                         */
                     />
                     <SearchableSelect
                         options={PluginTags.map(tag => ({ label: tag, value: tag }))}
