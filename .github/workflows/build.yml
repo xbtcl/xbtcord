@@ -117,9 +117,21 @@ jobs:
                       || true
 
                   gh release upload latest --clobber release/*
+
+                  # GitHub shows a release's *publish* date, and this one is published once
+                  # and then has its assets swapped forever after - so the date on the page
+                  # is the day the release was created, not the day these files were built,
+                  # and it only drifts further out. Neither upload --clobber nor edit moves
+                  # it. Rather than fight that, the real build time goes in the notes.
+                  built="$(date -u '+%Y-%m-%d %H:%M UTC')"
+
                   gh release edit latest \
                       --title "Latest build $short" \
                       --notes "Rolling build of \`main\`, from commit $short.
+
+                  **Built $built.** The date GitHub shows above is when this release was
+                  first created, not when these files were built - the assets are replaced
+                  in place on every build.
 
                   Download **XbtcordInstaller.exe** and run it. No admin rights needed.
 
