@@ -28,6 +28,7 @@
             "@utils/*": ["./src/utils/*"],
             "@plugins/*": ["./src/plugins/*"],
             "@xbtcordplugins/*": ["./src/plugins/*"],
+            "@xbtplugins/*": ["./src/xbtplugins/*"],
             "@shared/*": ["./src/shared/*"],
             "@webpack/common": ["./src/webpack/common"],
             "@webpack/common/*": ["./src/webpack/common/*"],

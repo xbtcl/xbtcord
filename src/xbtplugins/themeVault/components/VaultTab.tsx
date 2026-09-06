@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import "@plugins/themeVault/glass.css";
-import "@plugins/themeVault/styles.css";
+import "@xbtplugins/themeVault/glass.css";
+import "@xbtplugins/themeVault/styles.css";
 
 import { useSettings } from "@api/Settings";
 import { Button } from "@components/Button";
@@ -15,13 +15,13 @@ import { Link } from "@components/Link";
 import { Notice } from "@components/Notice";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
-import { collectTags, getThemes, VaultTheme } from "@plugins/themeVault/api";
-import { disableTheme, enableExclusively, enableTheme } from "@plugins/themeVault/install";
-import { settings } from "@plugins/themeVault/settings";
 import { classNameFactory } from "@utils/css";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { Select, showToast, TextInput, Toasts, useEffect, useMemo, useState } from "@webpack/common";
+import { collectTags, getThemes, VaultTheme } from "@xbtplugins/themeVault/api";
+import { disableTheme, enableExclusively, enableTheme } from "@xbtplugins/themeVault/install";
+import { settings } from "@xbtplugins/themeVault/settings";
 
 import { openPreview } from "./PreviewModal";
 import { VaultCard } from "./VaultCard";

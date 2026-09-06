@@ -5,10 +5,10 @@
  */
 
 import { Link } from "@components/Link";
-import { VaultTheme } from "@plugins/themeVault/api";
 import { classNameFactory } from "@utils/css";
 import { Modal, openModal } from "@webpack/common";
 import { RenderModalProps } from "@xbtcord/discord-types";
+import { VaultTheme } from "@xbtplugins/themeVault/api";
 
 const cl = classNameFactory("tc-vault-");
 

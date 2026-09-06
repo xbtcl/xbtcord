@@ -6,10 +6,10 @@
 
 import { TextButton } from "@components/Button";
 import { Switch } from "@components/Switch";
-import { VaultTheme } from "@plugins/themeVault/api";
 import { classNameFactory } from "@utils/css";
 import { copyWithToast } from "@utils/discord";
 import { Tooltip } from "@webpack/common";
+import { VaultTheme } from "@xbtplugins/themeVault/api";
 
 const cl = classNameFactory("tc-vault-");
 

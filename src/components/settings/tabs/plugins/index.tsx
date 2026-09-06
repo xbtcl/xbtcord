@@ -21,6 +21,7 @@ import { isTruthy } from "@utils/guards";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
+import { getPluginSource, PluginSource } from "@utils/pluginSource";
 import { useAwaiter, useCleanupEffect } from "@utils/react";
 import { PluginTag, PluginTags } from "@utils/types";
 import { Button, ConfirmModal,lodash, openModal, Parser, React, SearchableSelect, Select, TextInput, Tooltip, useMemo, useRef, useState } from "@webpack/common";
@@ -66,7 +67,9 @@ const enum SearchStatus {
     DISABLED,
     NEW,
     USER_PLUGINS,
-    API_PLUGINS
+    API_PLUGINS,
+    XBTCORD_PLUGINS,
+    UPSTREAM_PLUGINS
 }
 
 function ExcludedPluginsList({ search }: { search: string; }) {
@@ -176,6 +179,12 @@ function PluginSettings() {
             case SearchStatus.API_PLUGINS:
                 if (!plugin.name.endsWith("API")) return false;
                 break;
+            case SearchStatus.XBTCORD_PLUGINS:
+                if (getPluginSource(plugin.name) !== PluginSource.Xbtcord) return false;
+                break;
+            case SearchStatus.UPSTREAM_PLUGINS:
+                if (getPluginSource(plugin.name) !== PluginSource.Upstream) return false;
+                break;
         }
 
         if (tags.length && tags.some(t => !plugin.tags?.includes(t))) return false;
@@ -281,6 +290,8 @@ function PluginSettings() {
                             { label: "Show New", value: SearchStatus.NEW },
                             hasUserPlugins && { label: "Show UserPlugins", value: SearchStatus.USER_PLUGINS },
                             { label: "Show API Plugins", value: SearchStatus.API_PLUGINS },
+                            { label: "Show Xbtcord Plugins", value: SearchStatus.XBTCORD_PLUGINS },
+                            { label: "Show Upstream Plugins", value: SearchStatus.UPSTREAM_PLUGINS },
                         ].filter(isTruthy)}
                         serialize={String}
                         select={status => setSearchValue(prev => ({ ...prev, status }))}

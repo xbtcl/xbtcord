@@ -9,6 +9,8 @@ import { hasAnyVisibleSettings, isPluginEnabled, pluginRequiresRestart, startDep
 import { Settings } from "@api/Settings";
 import { CogWheel, InfoIcon } from "@components/Icons";
 import { AddonCard } from "@components/settings/AddonCard";
+import { AddonBadge } from "@components/settings/PluginBadge";
+import { getPluginSource, PluginSource, SourceColors, SourceLabels } from "@utils/pluginSource";
 import { Plugin } from "@utils/types";
 import { React, showToast, Toasts } from "@webpack/common";
 
@@ -79,10 +81,19 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         onRestartNeeded(plugin.name, "enabled");
     }
 
+    const source = getPluginSource(plugin.name);
+
     return (
         <AddonCard
             name={plugin.name}
             description={plugin.description}
+            sourceBadge={
+                // Upstream is the overwhelming majority, so badging it too would just be
+                // noise on every card. Only the ones worth picking out get a badge.
+                source === PluginSource.Upstream
+                    ? null
+                    : <AddonBadge text={SourceLabels[source]} color={SourceColors[source]} />
+            }
             isNew={isNew}
             enabled={isEnabled()}
             setEnabled={toggleEnabled}
