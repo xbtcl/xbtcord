@@ -43,6 +43,11 @@ export const CspPolicies: PolicyMap = {
     "*.tenor.com": ImageSrc, // Tenor, used by some themes
     "files.catbox.moe": ImageAndCssSrc, // Catbox, used by some themes
 
+    // ThemeVault. The catalogue itself is fetched in the main process because the store
+    // sends no CORS headers; this entry is only for the thumbnails the grid renders.
+    "betterdiscord.app": ImageSrc,
+    "api.betterdiscord.app": ConnectSrc,
+
     "cdn.discordapp.com": ImageAndCssSrc, // Discord CDN, used by Xbtcord and some themes to load media
     "media.discordapp.net": ImageSrc, // Discord media CDN, possible alternative to Discord CDN
 

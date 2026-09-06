@@ -1,0 +1,273 @@
+/* Theme Vault - the BetterDiscord store, rendered inside Discord's own settings. */
+
+.tc-vault-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.tc-vault-search {
+    flex: 1 1 220px;
+    min-width: 180px;
+}
+
+.tc-vault-select {
+    flex: 0 1 190px;
+    min-width: 150px;
+}
+
+.tc-vault-count {
+    margin: 16px 0 8px;
+}
+
+.tc-vault-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding-bottom: 24px;
+}
+
+.tc-vault-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--background-base-lower);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.tc-vault-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+}
+
+.tc-vault-card-enabled {
+    border-color: var(--text-brand);
+    box-shadow: inset 0 0 0 1px var(--text-brand);
+}
+
+.tc-vault-thumb {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--background-base-lowest);
+    cursor: pointer;
+}
+
+.tc-vault-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tc-vault-thumb-empty {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+}
+
+.tc-vault-thumb-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #fff;
+    background: rgb(0 0 0 / 55%);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.tc-vault-thumb:hover .tc-vault-thumb-overlay,
+.tc-vault-thumb:focus-visible .tc-vault-thumb-overlay {
+    opacity: 1;
+}
+
+.tc-vault-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+}
+
+.tc-vault-head {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.tc-vault-titles {
+    min-width: 0;
+}
+
+.tc-vault-name {
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-default);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tc-vault-author {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.tc-vault-desc {
+    display: -webkit-box;
+    flex: 1;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--text-subtle);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.tc-vault-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tc-vault-tag {
+    padding: 2px 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--background-base-lowest);
+    border-radius: 4px;
+}
+
+.tc-vault-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding-top: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.tc-vault-spacer {
+    flex: 1;
+}
+
+.tc-vault-link {
+    font-size: 12px;
+}
+
+/* Preview modal */
+
+.tc-vault-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tc-vault-preview-img {
+    width: 100%;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+}
+
+.tc-vault-preview-desc {
+    color: var(--text-default);
+}
+
+.tc-vault-preview-facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 4px 16px;
+    margin: 0;
+    font-size: 14px;
+}
+
+.tc-vault-preview-facts dt {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.tc-vault-preview-facts dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+    color: var(--text-default);
+}
+
+.tc-vault-preview-note {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/*
+ * Sidebar row.
+ *
+ * Discord's rows carry a second class on the <li> whose module exports a single mangled
+ * key, so there is no stable way to look it up - matching on "container" alone lands on
+ * a different module. It contributes 1px of vertical padding and, via a descendant rule,
+ * the 8px corner radius on the row's inner button. Both are reproduced here rather than
+ * chased through webpack; the inner button still carries Discord's own interactive class,
+ * so hover and active states come from them.
+ */
+.tc-vault-row {
+    padding: 1px 0;
+}
+
+.tc-vault-row > div {
+    border-radius: 8px;
+}
+
+
+/*
+ * Glass mode. The cards go translucent so the settings background shows through blurred
+ * behind them; `position: relative` is what lets the highlight pseudo element anchor.
+ */
+.tc-vault-grid-glass .tc-vault-card {
+    position: relative;
+    background: color-mix(in srgb, var(--background-base-lower) 78%, transparent);
+    border-color: color-mix(in srgb, var(--white-500, #fff) 12%, var(--border-subtle));
+}
+
+.tc-vault-grid-glass .tc-vault-card::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--white-500, #fff) 24%, transparent),
+        transparent
+    );
+    content: "";
+    pointer-events: none;
+}
+
+.tc-vault-grid-glass .tc-vault-meta {
+    border-top-color: color-mix(in srgb, var(--white-500, #fff) 10%, transparent);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+    .tc-vault-grid-glass .tc-vault-card {
+        background: color-mix(in srgb, var(--background-base-lower) 46%, transparent);
+        backdrop-filter: blur(20px) saturate(150%);
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .tc-vault-grid-glass .tc-vault-card {
+        background: var(--background-base-lower);
+        backdrop-filter: none;
+    }
+}

@@ -182,9 +182,19 @@ export type TextInput = ComponentType<PropsWithChildren<{
 
     focusProps?: any;
 
+    /**
+     * Defaults to **false**, which is why a TextInput dropped into a flex row comes out
+     * narrow and clipped instead of filling the space it was given.
+     */
+    fullWidth?: boolean;
+    /** Shows an x that empties the field. */
+    clearable?: boolean;
+    leading?: ReactNode;
+    trailing?: ReactNode;
+
     /** TextInput.Sizes.DEFAULT */
     size?: string;
-} & Omit<HTMLProps<HTMLInputElement>, "onChange" | "maxLength">>> & {
+} & Omit<HTMLProps<HTMLInputElement>, "onChange" | "maxLength" | "size">>> & {
     Sizes: Record<"DEFAULT" | "MINI", string>;
 };
 

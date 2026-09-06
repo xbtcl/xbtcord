@@ -1,0 +1,68 @@
+/*
+ * Frosted-glass surfaces for Xbtcord's own UI.
+ *
+ * Translucency plus a backdrop blur, and no background image anywhere - the blur is of
+ * whatever Discord is already drawing behind the panel, so it costs nothing to load and
+ * adapts to any theme underneath rather than fighting one.
+ *
+ * `backdrop-filter` only shows if the element is actually see-through, so the background
+ * colours here are deliberately partial. Where the renderer can't blur, the @supports
+ * block is skipped and the surface stays solid and readable.
+ */
+
+.tc-glass {
+    position: relative;
+    background: color-mix(in srgb, var(--background-base-low) 82%, transparent);
+    border: 1px solid color-mix(in srgb, var(--white-500, #fff) 10%, var(--border-subtle));
+}
+
+.tc-glass-panel {
+    position: relative;
+    background: color-mix(in srgb, var(--background-base-lower) 76%, transparent);
+}
+
+/*
+ * A faint top highlight, the way real glass catches light at its edge. Subtle enough to
+ * read as depth rather than as a border.
+ */
+.tc-glass::before,
+.tc-glass-panel::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--white-500, #fff) 22%, transparent),
+        transparent
+    );
+    content: "";
+    pointer-events: none;
+}
+
+@supports (backdrop-filter: blur(1px)) {
+    /* Deeper translucency once the blur is doing the work of separating the layers. */
+    .tc-glass {
+        background: color-mix(in srgb, var(--background-base-low) 55%, transparent);
+        backdrop-filter: blur(22px) saturate(150%);
+    }
+
+    .tc-glass-panel {
+        background: color-mix(in srgb, var(--background-base-lower) 48%, transparent);
+        backdrop-filter: blur(22px) saturate(150%);
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .tc-glass {
+        background: var(--background-base-low);
+        backdrop-filter: none;
+    }
+
+    .tc-glass-panel {
+        background: var(--background-base-lower);
+        backdrop-filter: none;
+    }
+}
