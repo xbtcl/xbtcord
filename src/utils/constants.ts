@@ -60,3 +60,10 @@ export const DevsById = /* #__PURE__*/ (() =>
 
 export const XbtcordDevs = Devs;
 
+/**
+ * Equicord plugins credit their authors through this name. It resolves through the same
+ * proxy as Devs, which synthesises an entry for any author it does not know, so imported
+ * plugins keep their bylines without a table of several hundred people to maintain.
+ */
+export const EquicordDevs = Devs;
+

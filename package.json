@@ -29,7 +29,7 @@
         "uninject": "node scripts/runInstaller.mjs -- --uninstall",
         "lint": "eslint",
         "lint-styles": "stylelint \"src/**/*.css\" --ignore-pattern src/userplugins",
-        "lint:fix": "pnpm lint --fix",
+        "lint:fix": "pnpm lint --fix && node scripts/fixImportSeparators.mjs src",
         "test": "pnpm buildStandalone && pnpm testTsc && pnpm lint && pnpm lint-styles && pnpm generatePluginJson",
         "testWeb": "pnpm lint && pnpm buildWeb && pnpm testTsc",
         "testTsc": "tsc --noEmit",

@@ -69,7 +69,9 @@ const enum SearchStatus {
     USER_PLUGINS,
     API_PLUGINS,
     XBTCORD_PLUGINS,
-    UPSTREAM_PLUGINS
+    EQUICORD_PLUGINS,
+    VENCORD_PLUGINS,
+    ENDCORD_PLUGINS
 }
 
 function ExcludedPluginsList({ search }: { search: string; }) {
@@ -182,8 +184,14 @@ function PluginSettings() {
             case SearchStatus.XBTCORD_PLUGINS:
                 if (getPluginSource(plugin.name) !== PluginSource.Xbtcord) return false;
                 break;
-            case SearchStatus.UPSTREAM_PLUGINS:
-                if (getPluginSource(plugin.name) !== PluginSource.Upstream) return false;
+            case SearchStatus.EQUICORD_PLUGINS:
+                if (getPluginSource(plugin.name) !== PluginSource.Equicord) return false;
+                break;
+            case SearchStatus.VENCORD_PLUGINS:
+                if (getPluginSource(plugin.name) !== PluginSource.Vencord) return false;
+                break;
+            case SearchStatus.ENDCORD_PLUGINS:
+                if (getPluginSource(plugin.name) !== PluginSource.Endcord) return false;
                 break;
         }
 
@@ -291,7 +299,9 @@ function PluginSettings() {
                             hasUserPlugins && { label: "Show UserPlugins", value: SearchStatus.USER_PLUGINS },
                             { label: "Show API Plugins", value: SearchStatus.API_PLUGINS },
                             { label: "Show Xbtcord Plugins", value: SearchStatus.XBTCORD_PLUGINS },
-                            { label: "Show Upstream Plugins", value: SearchStatus.UPSTREAM_PLUGINS },
+                            { label: "Show Equicord Plugins", value: SearchStatus.EQUICORD_PLUGINS },
+                            { label: "Show Vencord Plugins", value: SearchStatus.VENCORD_PLUGINS },
+                            { label: "Show Endcord Plugins", value: SearchStatus.ENDCORD_PLUGINS },
                         ].filter(isTruthy)}
                         serialize={String}
                         select={status => setSearchValue(prev => ({ ...prev, status }))}

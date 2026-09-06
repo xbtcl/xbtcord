@@ -88,9 +88,10 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
             name={plugin.name}
             description={plugin.description}
             sourceBadge={
-                // Upstream is the overwhelming majority, so badging it too would just be
-                // noise on every card. Only the ones worth picking out get a badge.
-                source === PluginSource.Upstream
+                // Vencord is the single biggest group and the root everything else sits
+                // on, so it reads as the default and goes unbadged. Badging it too would
+                // put a label on most cards and single out nothing.
+                source === PluginSource.Vencord
                     ? null
                     : <AddonBadge text={SourceLabels[source]} color={SourceColors[source]} />
             }
