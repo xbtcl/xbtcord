@@ -1,0 +1,56 @@
+/*
+ * Xbtcord installer - resources
+ * Copyright (c) 2026 Xbtcord and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+#include <windows.h>
+#include "resource.h"
+
+/* The window and taskbar icon. */
+IDI_APPICON ICON "../assets/xbtcord.ico"
+
+/*
+ * The same .ico again, this time as raw bytes.
+ *
+ * Retheming a shortcut means pointing its IconLocation at a real file on disk, so the
+ * installer has to be able to write one out. Reading it back out of its own ICON resource
+ * would mean rebuilding the ICONDIR header from the RT_GROUP_ICON directory by hand;
+ * carrying a second, byte-identical copy costs a few KB and no cleverness.
+ */
+IDR_ICOFILE RCDATA "../assets/xbtcord.ico"
+
+/*
+ * app.manifest is deliberately NOT included here.
+ *
+ * MinGW's GCC spec links its own default-manifest.o into every non-shared binary, and ld
+ * refuses to merge two non-default manifests ("multiple non-default manifests"). So each
+ * toolchain embeds the manifest its own way instead - MSVC through /MANIFESTINPUT, MinGW
+ * by overriding default-manifest.o. See build.ps1.
+ */
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 1, 0, 0, 0
+PRODUCTVERSION 1, 0, 0, 0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904B0"
+        {
+            VALUE "CompanyName",      "Xbtcord"
+            VALUE "FileDescription",  "Xbtcord Installer"
+            VALUE "FileVersion",      "1.0.0.0"
+            VALUE "InternalName",     "XbtcordInstaller"
+            VALUE "LegalCopyright",   "GPL-3.0-or-later"
+            VALUE "OriginalFilename", "XbtcordInstaller.exe"
+            VALUE "ProductName",      "Xbtcord"
+            VALUE "ProductVersion",   "1.0.0.0"
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x409, 1200
+    }
+}

@@ -20,7 +20,6 @@ on:
 
 jobs:
     TestPlugins:
-        if: github.repository == 'Vendicated/Vencord'
         runs-on: ubuntu-latest
 
         steps:

@@ -1,4 +1,5 @@
-name: Build DevBuild
+name: Build
+
 on:
     push:
         branches:
@@ -8,17 +9,21 @@ on:
             - src/**
             - browser/**
             - scripts/build/**
+            - installer/**
+            - assets/**
             - package.json
             - pnpm-lock.yaml
+    workflow_dispatch:
+
 env:
     FORCE_COLOR: true
 
+# Two builds have to meet before anything is published: the client bundle on Linux and the
+# installer exe on Windows. They are independent, so they run at the same time.
 jobs:
-    Build:
+    client:
+        name: Client bundle
         runs-on: ubuntu-latest
-        permissions:
-            contents: write
-
         steps:
             - uses: actions/checkout@v7
 
@@ -33,52 +38,81 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
-            - name: Build web
-              run: pnpm buildWebStandalone
-
             - name: Build
               run: pnpm build --standalone
 
             - name: Generate plugin list
               run: pnpm generatePluginJson dist/plugins.json dist/plugin-readmes.json
 
-            - name: Clean up obsolete files
-              run: |
-                  rm -rf dist/*-unpacked dist/vendor Vencord.user.css vencordDesktopRenderer.css vencordDesktopRenderer.css.map
+            # Source maps are ~11 MB of the ~14 MB dist and nothing that installs from a
+            # release ever reads them.
+            - name: Drop source maps and scratch output
+              run: rm -rf dist/*.map dist/*-unpacked dist/vendor
 
-            - name: Get some values needed for the release
-              id: release_values
-              run: |
-                  echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: client
+                  path: dist/
+                  retention-days: 7
 
-            - name: Upload DevBuild as release
-              if: github.repository == 'rootpoii/xbtcord'
-              run: |
-                  gh release create devbuild --title "DevBuild" --notes "Automated build" || true
-                  gh release upload devbuild --clobber dist/*
-                  gh release edit devbuild --title "DevBuild $RELEASE_TAG"
+    installer:
+        name: Installer
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v7
+
+            - uses: ilammy/msvc-dev-cmd@v1
+
+            # XBT_REPO is baked in from the repository this is running in, so the exe a fork
+            # produces downloads that fork's releases without anyone editing a constant.
+            - name: Build the installer
+              shell: pwsh
+              run: ./installer/build.ps1 -Repo "${{ github.repository }}" -Toolchain msvc
+
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: installer
+                  path: installer/build/XbtcordInstaller.exe
+                  retention-days: 7
+
+    release:
+        name: Publish
+        runs-on: ubuntu-latest
+        needs: [client, installer]
+        # A fork's PR has no write token, and there is nowhere sensible to publish to anyway.
+        if: github.event_name != 'pull_request'
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v7
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: client
+                  path: release
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: installer
+                  path: release
+
+            - name: Publish the rolling build
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  RELEASE_TAG: ${{ env.release_tag }}
-
-            - name: Upload DevBuild to builds repo
-              if: github.repository == 'rootpoii/xbtcord'
-              continue-on-error: true
               run: |
-                  git config --global user.name "$USERNAME"
-                  git config --global user.email actions@github.com
+                  short="$(git rev-parse --short HEAD)"
 
-                  git clone https://$USERNAME:$API_TOKEN@github.com/$GH_REPO.git upload
-                  cd upload
+                  # A single moving "latest" release, so the installer always has a stable
+                  # URL to fetch from. --clobber replaces the assets in place.
+                  gh release create latest \
+                      --title "Latest build" \
+                      --notes "Rolling build of the main branch." \
+                      --latest \
+                      || true
 
-                  GLOBIGNORE=.git:.gitignore:README.md:LICENSE
-                  rm -rf *
-                  cp -r ../dist/* .
+                  gh release upload latest --clobber release/*
+                  gh release edit latest \
+                      --title "Latest build ($short)" \
+                      --notes "Rolling build of \`main\`, from commit $short.
 
-                  git add -A
-                  git commit -m "Builds for https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
-                  git push --force https://$USERNAME:$API_TOKEN@github.com/$GH_REPO.git
-              env:
-                  API_TOKEN: ${{ secrets.BUILDS_TOKEN }}
-                  GH_REPO: rootpoii/builds
-                  USERNAME: GitHub-Actions
+                  Download **XbtcordInstaller.exe** and run it. No admin rights needed."

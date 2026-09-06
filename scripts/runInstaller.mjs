@@ -1,135 +1,65 @@
 /*
  * Xbtcord, a modification for Discord's desktop app
- * Copyright (c) 2023 Vendicated and contributors
+ * Copyright (c) 2026 Xbtcord and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/*
+ * `pnpm inject` / `pnpm uninject`.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This used to download a prebuilt installer from endcord's releases, which this fork has
+ * no equivalent of - the URL 404s. It now drives the PowerShell installer in this repo
+ * instead, in dev mode: Discord is pointed straight at `dist/`, so a `pnpm build` takes
+ * effect on the next Discord restart with no reinstall.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ * That is the right tool for a working copy. The GUI installer in `installer/` is the one
+ * for everybody else - it copies a snapshot rather than linking a folder that might be
+ * mid-rebuild.
+ */
 
 import "./checkNodeVersion.js";
 
-import { execFileSync, execSync } from "child_process";
-import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { spawnSync } from "child_process";
+import { existsSync } from "fs";
 import { dirname, join } from "path";
-import { Readable } from "stream";
-import { finished } from "stream/promises";
 import { fileURLToPath } from "url";
 
-const BASE_URL = "https://github.com/Endcord/Installer/releases/latest/download/";
-const INSTALLER_PATH_DARWIN = "XbtcordInstaller.app/Contents/MacOS/XbtcordInstaller";
-
 const BASE_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
-const FILE_DIR = join(BASE_DIR, "dist", "Installer");
-const ETAG_FILE = join(FILE_DIR, "etag.txt");
+const SCRIPT = join(BASE_DIR, "scripts", "installer", "xbtcord-install.ps1");
 
-function getFilename() {
-    switch (process.platform) {
-        case "win32":
-            return "XbtcordInstallerCli.exe";
-        case "darwin":
-            return "XbtcordInstaller.MacOS.zip";
-        case "linux":
-            return "XbtcordInstallerCli-linux";
-        default:
-            throw new Error("Unsupported platform: " + process.platform);
-    }
+const uninstall = process.argv.includes("--uninstall");
+
+if (process.platform !== "win32") {
+    console.error(
+        "This fork only ships a Windows installer.\n\n" +
+        "On Linux or macOS, patch Discord by hand: rename `resources/app.asar` to\n" +
+        "`_app.asar`, then create an `app.asar` folder next to it containing a\n" +
+        "package.json of {\"name\":\"discord\",\"main\":\"index.js\"} and an index.js that\n" +
+        `requires ${join(BASE_DIR, "dist", "patcher.js")}.`
+    );
+    process.exit(1);
 }
 
-async function ensureBinary() {
-    const filename = getFilename();
-    console.log("Downloading " + filename);
-
-    mkdirSync(FILE_DIR, { recursive: true });
-
-    const downloadName = join(FILE_DIR, filename);
-    const outputFile = process.platform === "darwin"
-        ? join(FILE_DIR, "XbtcordInstaller")
-        : downloadName;
-
-    const etag = existsSync(outputFile) && existsSync(ETAG_FILE)
-        ? readFileSync(ETAG_FILE, "utf-8")
-        : null;
-
-    const res = await fetch(BASE_URL + filename, {
-        headers: {
-            "User-Agent": "Xbtcord (https://github.com/rootpoii/endcord)",
-            "If-None-Match": etag
-        }
-    });
-
-    if (res.status === 304) {
-        console.log("Up to date, not redownloading!");
-        return outputFile;
-    }
-    if (!res.ok)
-        throw new Error(`Failed to download installer: ${res.status} ${res.statusText}`);
-
-    writeFileSync(ETAG_FILE, res.headers.get("etag"));
-
-    if (process.platform === "darwin") {
-        console.log("Unzipping...");
-        const zip = new Uint8Array(await res.arrayBuffer());
-
-        const ff = await import("fflate");
-        const bytes = ff.unzipSync(zip, {
-            filter: f => f.name === INSTALLER_PATH_DARWIN
-        })[INSTALLER_PATH_DARWIN];
-
-        writeFileSync(outputFile, bytes, { mode: 0o755 });
-
-        console.log("Overriding security policy for installer binary (this is required to run it)");
-        console.log("xattr might error, that's okay");
-
-        const logAndRun = cmd => {
-            console.log("Running", cmd);
-            try {
-                execSync(cmd);
-            } catch { }
-        };
-        logAndRun(`sudo spctl --add '${outputFile}' --label "Xbtcord Installer"`);
-        logAndRun(`sudo xattr -d com.apple.quarantine '${outputFile}'`);
-    } else {
-        // WHY DOES NODE FETCH RETURN A WEB STREAM OH MY GOD
-        const body = Readable.fromWeb(res.body);
-        await finished(body.pipe(createWriteStream(outputFile, {
-            mode: 0o755,
-            autoClose: true
-        })));
-    }
-
-    console.log("Finished downloading!");
-
-    return outputFile;
+if (!existsSync(SCRIPT)) {
+    console.error(`Missing ${SCRIPT}`);
+    process.exit(1);
 }
 
-
-
-const installerBin = await ensureBinary();
-
-console.log("Now running Installer...");
-
-const argStart = process.argv.indexOf("--");
-const args = argStart === -1 ? [] : process.argv.slice(argStart + 1);
-
-try {
-    execFileSync(installerBin, args, {
-        stdio: "inherit",
-        env: {
-            ...process.env,
-            XBTCORD_USER_DATA_DIR: BASE_DIR,
-            XBTCORD_DEV_INSTALL: "1"
-        }
-    });
-} catch {
-    console.error("Something went wrong. Please check the logs above.");
+if (!uninstall && !existsSync(join(BASE_DIR, "dist", "patcher.js"))) {
+    console.error("No build in dist/. Run `pnpm build` first.");
+    process.exit(1);
 }
+
+const args = [
+    "-NoProfile",
+    "-ExecutionPolicy", "Bypass",
+    "-File", SCRIPT,
+    "-NoPause"
+];
+
+// Dev mode links Discord to this working copy; uninstall does not need it.
+if (uninstall) args.push("-Uninstall");
+else args.push("-Dev");
+
+const result = spawnSync("powershell.exe", args, { stdio: "inherit" });
+process.exit(result.status ?? 1);

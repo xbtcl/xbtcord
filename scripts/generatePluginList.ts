@@ -20,7 +20,7 @@ import { Dirent, readdirSync, readFileSync, writeFileSync } from "fs";
 import { access, readFile } from "fs/promises";
 import { join, sep } from "path";
 import { normalize as posixNormalize, sep as posixSep } from "path/posix";
-import { BigIntLiteral, createSourceFile, Identifier, isArrayLiteralExpression, isCallExpression, isExportAssignment, isIdentifier, isObjectLiteralExpression, isPropertyAccessExpression, isPropertyAssignment, isSatisfiesExpression, isStringLiteral, isVariableStatement, NamedDeclaration, NodeArray, ObjectLiteralExpression, ScriptTarget, StringLiteral, SyntaxKind } from "typescript";
+import { BigIntLiteral, createSourceFile, Expression, Identifier, isArrayLiteralExpression, isAsExpression, isCallExpression, isExportAssignment, isIdentifier, isNewExpression, isObjectLiteralExpression, isPropertyAccessExpression, isPropertyAssignment, isSatisfiesExpression, isStringLiteral, isVariableStatement, NamedDeclaration, NodeArray, ObjectLiteralExpression, ScriptTarget, StringLiteral, SyntaxKind } from "typescript";
 
 import { getPluginTarget } from "./utils.mjs";
 
@@ -60,6 +60,19 @@ function getObjectProp(node: ObjectLiteralExpression, name: string) {
     return prop;
 }
 
+/**
+ * Peels the type assertions off an expression to get at the object literal underneath.
+ *
+ * Vencord writes `Object.freeze({...} satisfies Record<string, Dev>)`; this fork writes
+ * `new Proxy({...} as any, ...)`. Both wrap the same shape of table in one type-level
+ * expression, so unwrapping either kind gets to the same place.
+ */
+function unwrapAssertions(node: Expression): Expression {
+    let current = node;
+    while (isSatisfiesExpression(current) || isAsExpression(current)) current = current.expression;
+    return current;
+}
+
 function parseDevs() {
     const file = createSourceFile("constants.ts", readFileSync("src/utils/constants.ts", "utf8"), ScriptTarget.Latest);
 
@@ -67,13 +80,20 @@ function parseDevs() {
         if (!isVariableStatement(child)) continue;
 
         const devsDeclaration = child.declarationList.declarations.find(d => hasName(d, "Devs"));
-        if (!devsDeclaration?.initializer || !isCallExpression(devsDeclaration.initializer)) continue;
+        if (!devsDeclaration?.initializer) continue;
 
-        const value = devsDeclaration.initializer.arguments[0];
+        // Object.freeze(...) is a call; new Proxy(...) is a construction. Either way the
+        // table is the first argument.
+        const initializer = unwrapAssertions(devsDeclaration.initializer);
+        if (!isCallExpression(initializer) && !isNewExpression(initializer)) continue;
 
-        if (!isSatisfiesExpression(value) || !isObjectLiteralExpression(value.expression)) throw new Error("Failed to parse devs: not an object literal");
+        const firstArgument = initializer.arguments?.[0];
+        if (!firstArgument) throw new Error("Failed to parse devs: no argument to unwrap");
 
-        for (const prop of value.expression.properties) {
+        const table = unwrapAssertions(firstArgument);
+        if (!isObjectLiteralExpression(table)) throw new Error("Failed to parse devs: not an object literal");
+
+        for (const prop of table.properties) {
             const name = (prop.name as Identifier).text;
             const value = isPropertyAssignment(prop) ? prop.initializer : prop;
 

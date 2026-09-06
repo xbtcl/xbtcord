@@ -1,0 +1,49 @@
+name: Installer
+
+# The installer is C++, so nothing in the JavaScript test pipeline would ever notice it
+# breaking. This compiles it on every change to it, including from pull requests, which is
+# the only thing standing between a typo and a release nobody can install.
+on:
+    push:
+        paths:
+            - .github/workflows/installer.yml
+            - installer/**
+            - assets/xbtcord.ico
+    pull_request:
+        paths:
+            - .github/workflows/installer.yml
+            - installer/**
+            - assets/xbtcord.ico
+    workflow_dispatch:
+
+jobs:
+    msvc:
+        name: MSVC
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v7
+
+            - uses: ilammy/msvc-dev-cmd@v1
+
+            - name: Build
+              shell: pwsh
+              run: ./installer/build.ps1 -Repo "${{ github.repository }}" -Toolchain msvc
+
+            - name: Check the exe is real
+              shell: pwsh
+              run: |
+                  $exe = "installer/build/XbtcordInstaller.exe"
+                  if (-not (Test-Path $exe)) { throw "No exe was produced" }
+
+                  $size = (Get-Item $exe).Length
+                  Write-Host "Built $exe ($([math]::Round($size / 1KB)) KB)"
+
+                  # A GUI subsystem exe that came out under ~50 KB means the resources or
+                  # half the translation unit went missing.
+                  if ($size -lt 50KB) { throw "That exe is suspiciously small" }
+
+            - uses: actions/upload-artifact@v4
+              with:
+                  name: XbtcordInstaller
+                  path: installer/build/XbtcordInstaller.exe
+                  retention-days: 14
