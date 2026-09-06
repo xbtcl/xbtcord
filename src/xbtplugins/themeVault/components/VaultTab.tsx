@@ -21,6 +21,7 @@ import { classes } from "@utils/misc";
 import { Select, showToast, TextInput, Toasts, useEffect, useMemo, useState } from "@webpack/common";
 import { collectTags, getThemes, VaultTheme } from "@xbtplugins/themeVault/api";
 import { disableTheme, enableExclusively, enableTheme } from "@xbtplugins/themeVault/install";
+import { hoistPicks } from "@xbtplugins/themeVault/picks";
 import { settings } from "@xbtplugins/themeVault/settings";
 
 import { openPreview } from "./PreviewModal";
@@ -111,7 +112,8 @@ function ThemeVaultTab() {
                 || theme.tags.some(t => t.toLowerCase().includes(q));
         });
 
-        return sortThemes(filtered, sort);
+        // Picks ride at the front of whatever order was chosen, rather than reordering it.
+        return hoistPicks(sortThemes(filtered, sort));
     }, [themes, query, sort, tag, onlyEnabled, enabledLinks]);
 
     function toggle(theme: VaultTheme, enabled: boolean) {

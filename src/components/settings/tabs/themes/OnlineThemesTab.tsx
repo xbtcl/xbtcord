@@ -9,6 +9,8 @@ import { Card } from "@components/Card";
 import { Flex } from "@components/Flex";
 import { Forms, TextArea, useState } from "@webpack/common";
 
+import { VaultThemesList } from "./VaultThemesList";
+
 export function OnlineThemesTab() {
     const settings = useSettings(["themeLinks"]);
 
@@ -39,6 +41,9 @@ export function OnlineThemesTab() {
                 <Forms.FormText>You can prefix lines with @light or @dark to toggle them based on your Discord theme</Forms.FormText>
                 <Forms.FormText>Make sure to use direct links to files (raw or github.io)!</Forms.FormText>
             </Card>
+
+            {/* Renders nothing unless the vault has themes of yours in its cache. */}
+            <VaultThemesList />
 
             <section>
                 <Forms.FormTitle tag="h5">Online Themes</Forms.FormTitle>

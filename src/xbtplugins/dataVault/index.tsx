@@ -27,8 +27,44 @@ interface Vault {
     quickCss: string;
     /** The half the built-in backup has never covered. */
     xbtcordData?: Record<string, unknown>;
+    /** The smaller half of that: things kept in localStorage rather than IndexedDB. */
+    xbtcordLocal?: Record<string, string>;
     xbtcordVaultFormat?: number;
     exportedAt?: string;
+}
+
+/*
+ * localStorage keys worth carrying.
+ *
+ * CustomProfile - the profile editor - keeps your presets and per-account profile data in
+ * both IndexedDB and localStorage, and reads localStorage first because it is synchronous.
+ * Capturing only the IndexedDB copy would restore cleanly onto a fresh install and then do
+ * nothing at all on a machine that already had its own localStorage, because the stale copy
+ * would win the race. Both are taken, so a restore is unambiguous either way.
+ *
+ * A prefix list rather than everything: localStorage is mostly Discord's own cache, and
+ * hauling that around would bloat the file and risk restoring someone else's session state.
+ * The sync API's own bookkeeping keys are deliberately not here - restoring "settings are
+ * dirty" or a half-finished sync direction onto another machine causes confusing behaviour.
+ */
+const LOCAL_PREFIXES = ["XbtcordCP_", "Xbtcord_"];
+
+function collectLocal(): Record<string, string> {
+    const out: Record<string, string> = {};
+
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key || !LOCAL_PREFIXES.some(p => key.startsWith(p))) continue;
+
+            const value = localStorage.getItem(key);
+            if (value != null) out[key] = value;
+        }
+    } catch (err) {
+        logger.warn("Couldn't read localStorage", err);
+    }
+
+    return out;
 }
 
 /**
@@ -69,6 +105,7 @@ export async function exportVault(): Promise<string> {
         settings: XbtcordNative.settings.get(),
         quickCss: await XbtcordNative.quickCss.get(),
         xbtcordData: await collectData(),
+        xbtcordLocal: collectLocal(),
         xbtcordVaultFormat: FORMAT,
         exportedAt: new Date().toISOString()
     };
@@ -116,10 +153,10 @@ async function applyVault(text: string, restoreData: boolean) {
         quickCss: parsed.quickCss ?? ""
     }));
 
-    if (!restoreData || !parsed.xbtcordData) return;
+    if (!restoreData) return;
 
     let restored = 0;
-    for (const [key, value] of Object.entries(parsed.xbtcordData)) {
+    for (const [key, value] of Object.entries(parsed.xbtcordData ?? {})) {
         try {
             await DataStore.set(key, value);
             restored++;
@@ -128,7 +165,19 @@ async function applyVault(text: string, restoreData: boolean) {
         }
     }
 
-    logger.info(`Restored ${restored} data entries`);
+    // localStorage after IndexedDB: CustomProfile prefers this copy, so it has to be the
+    // one that ends up authoritative rather than a stale value left behind.
+    for (const [key, value] of Object.entries(parsed.xbtcordLocal ?? {})) {
+        if (!LOCAL_PREFIXES.some(p => key.startsWith(p))) continue;
+        try {
+            localStorage.setItem(key, value);
+            restored++;
+        } catch (err) {
+            logger.warn(`Couldn't restore ${key}`, err);
+        }
+    }
+
+    logger.info(`Restored ${restored} entries`);
 }
 
 async function upload() {
@@ -151,7 +200,7 @@ async function upload() {
         }
 
         const parsed = JSON.parse(text!) as Vault;
-        const entries = Object.keys(parsed.xbtcordData ?? {}).length;
+        const entries = Object.keys(parsed.xbtcordData ?? {}).length + Object.keys(parsed.xbtcordLocal ?? {}).length;
 
         Alerts.show({
             title: "Restore this backup?",
@@ -194,10 +243,13 @@ function VaultPanel() {
 
     useEffect(() => {
         collectData()
-            .then(data => setSummary({
-                keys: Object.keys(data).length,
-                bytes: JSON.stringify(data).length
-            }))
+            .then(data => {
+                const local = collectLocal();
+                setSummary({
+                    keys: Object.keys(data).length + Object.keys(local).length,
+                    bytes: JSON.stringify(data).length + JSON.stringify(local).length
+                });
+            })
             .catch(err => logger.error("Couldn't size the vault", err));
     }, []);
 

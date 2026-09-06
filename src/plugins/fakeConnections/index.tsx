@@ -10,8 +10,8 @@ import { get as dsGet, set as dsSet } from "@api/DataStore";
 import { definePluginSettings } from "@api/Settings";
 import { Button } from "@components/Button";
 import ErrorBoundary from "@components/ErrorBoundary";
-import { ISNTRIP_ICON } from "@utils/connectionIcons";
 import { XbtcordDevs } from "@utils/constants";
+import { addProfileSlot, removeProfileSlot } from "@utils/profileSlot";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByCodeLazy, findByPropsLazy, findComponentByCodeLazy } from "@webpack";
 import { React, SearchableSelect, showToast, TextInput, Toasts, UserStore } from "@webpack/common";
@@ -66,36 +66,13 @@ const PLATFORM_OPTIONS = [
     { label: "Mastodon", value: "mastodon" },
     { label: "Crunchyroll", value: "crunchyroll" },
     { label: "Domain", value: "domain" },
-    { label: "isnt.rip", value: "isntrip" },
 ];
-
-/*
- * Icons for platforms Discord has never heard of.
- *
- * Everything above this resolves through Discord's own platform table, which is why those
- * render with the same artwork as a real connection. Discord has no entry for isnt.rip, so
- * without a mark of our own it falls back to a plain first letter and looks like the
- * "random website" case rather than a proper row. The icon is inlined in the bundle, so
- * opening a profile never fetches anything from isnt.rip.
- */
-const CUSTOM_ICONS: Record<string, string> = {
-    isntrip: ISNTRIP_ICON
-};
-
-/** Where a bare handle should point, for platforms with a predictable profile URL. */
-const PROFILE_URLS: Record<string, (handle: string) => string> = {
-    isntrip: handle => `https://isnt.rip/${encodeURIComponent(handle.replace(/^@/, ""))}`
-};
 
 function getPlatformLabel(type: string) {
     return PLATFORM_OPTIONS.find(o => o.value === type)?.label ?? type;
 }
 
 function getPlatformIcon(type: string, theme: string): string | null {
-    // Ours first: asking Discord for a platform it does not have throws or returns
-    // undefined, and either way we would lose the icon we do have.
-    if (CUSTOM_ICONS[type]) return CUSTOM_ICONS[type];
-
     try {
         const p = platforms.get(useLegacyPlatformType(type));
         if (!p) return null;
@@ -103,28 +80,10 @@ function getPlatformIcon(type: string, theme: string): string | null {
     } catch { return null; }
 }
 
-/**
- * Fills in the link when someone types just a handle.
- *
- * Typing "1cwo" into a row whose platform is isnt.rip means isnt.rip/1cwo, and making the
- * user paste the whole URL to get a working link is the sort of small friction that makes
- * a feature feel unfinished.
- */
-export function resolveConnectionUrl(type: string, name: string, url: string): string {
-    const typed = url.trim();
-    if (typed) return typed;
-
-    const handle = name.trim();
-    if (!handle) return "";
-
-    return PROFILE_URLS[type]?.(handle) ?? "";
-}
-
 function ConnectionRow({ connection, theme }: { connection: FakeConnection; theme: string; }) {
     const iconSrc = getPlatformIcon(connection.type, theme);
     const textColor = settings.store.textColor === "black" ? "rgba(0,0,0,0.85)" : "#ffffff";
-    const href = resolveConnectionUrl(connection.type, connection.name, connection.url);
-    const hasLink = href.length > 0;
+    const hasLink = connection.url.trim().length > 0;
 
     const inner = (
         <div className="vc-fc-account-name">
@@ -158,7 +117,7 @@ function ConnectionRow({ connection, theme }: { connection: FakeConnection; them
             {hasLink
                 ? <a
                     className="vc-fc-link"
-                    href={href}
+                    href={connection.url}
                     target="_blank"
                     rel="noreferrer noopener"
                     style={{ textDecoration: "none", cursor: "pointer", flex: 1, minWidth: 0 }}
@@ -361,9 +320,16 @@ export default definePlugin({
     description: "Add fake connections to your own profile, visible only to you. Supports custom display names, optional clickable links, and per-theme text color. Manage in plugin settings.",
     authors: [XbtcordDevs.lastclipped],
     tags: ["Appearance", "Customisation"],
-    dependencies: ["ProfileSectionsAPI"],
     settings,
 
+    /*
+     * This used to declare a dependency on ProfileSectionsAPI and expose its section for
+     * that API to place. Nothing in this fork provides that API - it came from Equicord
+     * and was never ported, and upstream endcord has no copy either - so the dependency
+     * could never be satisfied and the plugin refused to start every single time, without
+     * saying why. It mounts itself now, through the same patch-free profile slot LastSeen
+     * uses, so it works on its own.
+     */
     renderProfileSection: {
         render: ConnectionsSection,
         priority: 0,
@@ -371,5 +337,10 @@ export default definePlugin({
 
     async start() {
         await loadConnections();
+        addProfileSlot("FakeConnections", userId => <ConnectionsSection userId={userId} isSideBar={false} />);
+    },
+
+    stop() {
+        removeProfileSlot("FakeConnections");
     },
 });

@@ -130,6 +130,23 @@ export async function getThemes(forceRefresh = false): Promise<{ themes: VaultTh
     }
 }
 
+/**
+ * The cached catalogue only, with no network call.
+ *
+ * The Themes tab uses this to put a name and an author against the URLs sitting in
+ * `themeLinks`. It must never fetch: that tab opens constantly, and a settings page that
+ * hits the BetterDiscord store every time you glance at it would be both slow and rude.
+ * An empty result simply means those links render as plain URLs, which is what they did
+ * before.
+ */
+export async function getCachedThemes(): Promise<VaultTheme[]> {
+    try {
+        return (await DataStore.get<CachedCatalogue>(CACHE_KEY))?.themes ?? [];
+    } catch {
+        return [];
+    }
+}
+
 /** Every tag present in the catalogue, most common first. */
 export function collectTags(themes: VaultTheme[]): string[] {
     const counts = new Map<string, number>();

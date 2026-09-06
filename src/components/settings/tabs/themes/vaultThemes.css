@@ -1,0 +1,45 @@
+.xbt-vault-themes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.xbt-vault-themes-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--background-secondary, rgb(255 255 255 / 4%));
+}
+
+.xbt-vault-themes-thumb {
+    width: 56px;
+    height: 34px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex: 0 0 auto;
+    background: var(--background-tertiary, rgb(0 0 0 / 25%));
+}
+
+.xbt-vault-themes-thumb-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted, var(--text-secondary));
+}
+
+.xbt-vault-themes-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.xbt-vault-themes-meta {
+    color: var(--text-muted, var(--text-secondary));
+}

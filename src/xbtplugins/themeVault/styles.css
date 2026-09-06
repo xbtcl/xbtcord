@@ -271,3 +271,29 @@
         backdrop-filter: none;
     }
 }
+
+/*
+ * Dev's pick.
+ *
+ * Sits on the thumbnail rather than in the body, so it reads as a label on the theme
+ * itself and does not push the name and author around on cards that have one.
+ */
+.tc-vault-pick-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--brand-500, #a78bfa);
+    color: #14101f;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.tc-vault-card-pick {
+    outline: 1px solid var(--brand-500, #a78bfa);
+    outline-offset: -1px;
+}

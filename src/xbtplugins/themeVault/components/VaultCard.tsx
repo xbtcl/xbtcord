@@ -10,6 +10,7 @@ import { classNameFactory } from "@utils/css";
 import { copyWithToast } from "@utils/discord";
 import { Tooltip } from "@webpack/common";
 import { VaultTheme } from "@xbtplugins/themeVault/api";
+import { getPick } from "@xbtplugins/themeVault/picks";
 
 const cl = classNameFactory("tc-vault-");
 
@@ -33,8 +34,10 @@ interface Props {
 }
 
 export function VaultCard({ theme, enabled, onToggle, onPreview }: Props) {
+    const pick = getPick(theme);
+
     return (
-        <div className={cl("card", { "card-enabled": enabled })}>
+        <div className={cl("card", { "card-enabled": enabled, "card-pick": !!pick })}>
             <div
                 className={cl("thumb")}
                 role="button"
@@ -46,6 +49,7 @@ export function VaultCard({ theme, enabled, onToggle, onPreview }: Props) {
                     ? <img src={theme.thumbnail} alt="" loading="lazy" />
                     : <div className={cl("thumb-empty")}>{theme.name.slice(0, 2).toUpperCase()}</div>}
                 <div className={cl("thumb-overlay")}>Preview</div>
+                {pick && <div className={cl("pick-badge")}>{pick.label}</div>}
             </div>
 
             <div className={cl("body")}>

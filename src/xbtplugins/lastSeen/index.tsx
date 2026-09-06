@@ -10,6 +10,7 @@ import { definePluginSettings } from "@api/Settings";
 import { ClockIcon } from "@components/Icons";
 import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
+import { addProfileSlot, removeProfileSlot } from "@utils/profileSlot";
 import definePlugin, { OptionType } from "@utils/types";
 import { Menu, PresenceStore, Tooltip, UserStore } from "@webpack/common";
 import { User } from "@xbtcord/discord-types";
@@ -78,73 +79,22 @@ export function describe(userId: string): string {
     return "Not seen online yet";
 }
 
-// -----------------------------------------------------------------------------------------
-// Getting it under Member Since
-// -----------------------------------------------------------------------------------------
-//
-// This is done by watching the DOM rather than by patching Discord, and that is a deliberate
-// choice rather than laziness.
-//
-// The injection point every Vencord-family plugin used for the profile popout - a module
-// containing `"UserProfilePopout");` - does not exist in current Discord at all. A patch
-// aimed at it sits in the pending list forever and silently does nothing, which is exactly
-// how this plugin looked broken. The component that actually renders "Member Since" is
-// minified with no stable anchor: its variable names, its CSS class hashes and its JSX
-// shape all change between builds, so any regex written against it today is a guess with a
-// short shelf life.
-//
-// Watching for the element and appending a sibling cannot crash the client, cannot break
-// the profile, and fails in the only acceptable way when Discord renames something: the
-// line quietly stops appearing. The user id is read from React's own props via the fiber,
-// so it is never guessed from the DOM.
+/**
+ * The row itself. Mounting is handled by the shared profile slot, which is also what
+ * FakeConnections uses - one MutationObserver and one fiber read between them, rather
+ * than each plugin growing its own.
+ */
+function LastSeenRow({ userId }: { userId: string; }) {
+    seen.use();
 
-const MARKER = "xbt-last-seen-host";
+    if (!settings.store.showInProfile) return null;
 
-function fiberProps(node: Element): any | null {
-    const key = Object.keys(node).find(k => k.startsWith("__reactFiber$"));
-    if (!key) return null;
-
-    let fiber = (node as any)[key];
-    for (let depth = 0; depth < 12 && fiber; depth++, fiber = fiber.return) {
-        const props = fiber.memoizedProps;
-        if (props && typeof props.userId === "string") return props;
-    }
-    return null;
-}
-
-function decorate() {
-    if (!settings.store.showInProfile) return;
-
-    for (const wrapper of document.querySelectorAll<HTMLElement>('[class*="memberSince"]')) {
-        // Only the outer wrapper, and only once per render.
-        if (wrapper.dataset.xbtLastSeen === "1") continue;
-        if (wrapper.parentElement?.querySelector(`.${MARKER}`)) continue;
-
-        const props = fiberProps(wrapper);
-        if (!props?.userId) continue;
-
-        wrapper.dataset.xbtLastSeen = "1";
-
-        const host = document.createElement("div");
-        host.className = MARKER;
-        host.innerHTML = "<div class=\"xbt-last-seen-label\">LAST SEEN</div><div class=\"xbt-last-seen-value\"></div>";
-        host.querySelector(".xbt-last-seen-value")!.textContent = describe(props.userId);
-
-        wrapper.insertAdjacentElement("afterend", host);
-    }
-}
-
-let observer: MutationObserver | undefined;
-let scheduled = false;
-
-/** Coalesced to one pass per frame - Discord mutates the DOM constantly. */
-function schedule() {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-        scheduled = false;
-        try { decorate(); } catch (err) { logger.error("Couldn't decorate a profile", err); }
-    });
+    return (
+        <div className="xbt-last-seen-host">
+            <div className="xbt-last-seen-label">LAST SEEN</div>
+            <div className="xbt-last-seen-value">{describe(userId)}</div>
+        </div>
+    );
 }
 
 function AwayMark({ userId }: { userId: string; }) {
@@ -191,8 +141,6 @@ export default definePlugin({
 
                     record(userId, update.status);
                 }
-
-                schedule();
             } catch (err) {
                 logger.error("Failed to record presence", err);
             }
@@ -220,18 +168,10 @@ export default definePlugin({
 
     async start() {
         await seen.load();
-
-        observer = new MutationObserver(schedule);
-        observer.observe(document.body, { childList: true, subtree: true });
-        schedule();
+        addProfileSlot("LastSeen", userId => <LastSeenRow userId={userId} />);
     },
 
     stop() {
-        observer?.disconnect();
-        observer = undefined;
-        for (const host of document.querySelectorAll(`.${MARKER}`)) host.remove();
-        for (const marked of document.querySelectorAll<HTMLElement>("[data-xbt-last-seen]")) {
-            delete marked.dataset.xbtLastSeen;
-        }
+        removeProfileSlot("LastSeen");
     }
 });
