@@ -689,8 +689,33 @@ static void SetShortcutIcons(const std::wstring& iconPath) {
                 wchar_t previous[MAX_PATH] = L"";
                 int previousIndex = 0;
 
-                // Remember what it pointed at, so uninstalling can put it back exactly.
-                if (SUCCEEDED(link->GetIconLocation(previous, ARRAYSIZE(previous), &previousIndex))) {
+                if (FAILED(link->GetIconLocation(previous, ARRAYSIZE(previous), &previousIndex))) {
+                    previous[0] = L'\0';
+                }
+
+                /*
+                 * Never record our own icon as the thing to restore.
+                 *
+                 * Installing twice would otherwise back up the icon the first install set,
+                 * and then uninstalling would "restore" a path it is about to delete -
+                 * leaving a shortcut pointing at a file that no longer exists, which
+                 * Explorer draws as a blank page. When there is nothing trustworthy to go
+                 * back to, the shortcut's own target is the honest answer: that is where
+                 * Windows gets a Discord shortcut's icon from by default anyway.
+                 */
+                bool pointsAtUs = _wcsicmp(previous, iconPath.c_str()) == 0;
+                if (previous[0] == L'\0' || pointsAtUs) {
+                    wchar_t target[MAX_PATH] = L"";
+                    WIN32_FIND_DATAW unused;
+                    if (SUCCEEDED(link->GetPath(target, ARRAYSIZE(target), &unused, SLGP_RAWPATH)) && target[0]) {
+                        // lstrcpynW rather than wcscpy_s: always present, no _s feature test.
+                        lstrcpynW(previous, target, ARRAYSIZE(previous));
+                        previousIndex = 0;
+                    }
+                }
+
+                // Remember what it pointed at, so uninstalling can put it back.
+                if (previous[0]) {
                     backup += ToUtf8(path) + "\t" + ToUtf8(previous) + "\t" +
                               std::to_string(previousIndex) + "\n";
                 }
@@ -754,6 +779,17 @@ static void RestoreShortcutIcons() {
         IPersistFile* file = nullptr;
         if (SUCCEEDED(link->QueryInterface(IID_IPersistFile, reinterpret_cast<void**>(&file)))) {
             if (SUCCEEDED(file->Load(shortcutPath.c_str(), STGM_READWRITE))) {
+                // A recorded icon that has since gone would leave a blank shortcut, so fall
+                // back to the target exe, which is where the icon came from originally.
+                if (!IsFile(iconPath)) {
+                    wchar_t target[MAX_PATH] = L"";
+                    WIN32_FIND_DATAW unused;
+                    if (SUCCEEDED(link->GetPath(target, ARRAYSIZE(target), &unused, SLGP_RAWPATH)) && target[0]) {
+                        iconPath = target;
+                        iconIndex = 0;
+                    }
+                }
+
                 link->SetIconLocation(iconPath.c_str(), iconIndex);
                 file->Save(shortcutPath.c_str(), TRUE);
             }
