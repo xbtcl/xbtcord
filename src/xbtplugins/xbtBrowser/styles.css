@@ -1,0 +1,213 @@
+/*
+ * XbtBrowser - the isolated browser that opens inside Discord.
+ *
+ * Everything is sized in relative units off the modal so the page area grows with the
+ * window, and every colour comes from a Discord variable so a theme restyles the chrome
+ * along with the rest of the client.
+ */
+
+.xbt-br-shell {
+    display: flex;
+    overflow: hidden;
+    height: min(72vh, 820px);
+    flex-direction: column;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    background: var(--background-base-lower);
+}
+
+.xbt-br-chrome {
+    display: flex;
+    height: 44px;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: 0 8px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--background-base-low);
+    gap: 4px;
+}
+
+.xbt-br-nav {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--interactive-normal);
+    cursor: pointer;
+}
+
+.xbt-br-nav:disabled {
+    color: var(--interactive-muted);
+    cursor: default;
+}
+
+.xbt-br-nav:hover:not(:disabled) {
+    background: var(--background-mod-subtle);
+    color: var(--interactive-hover);
+}
+
+.xbt-br-address-form {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    margin: 0 4px;
+}
+
+.xbt-br-address {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: var(--input-background, var(--background-base-lowest));
+    color: var(--text-default);
+    font-family: var(--font-primary);
+    font-size: 13px;
+    line-height: 18px;
+    outline: none;
+}
+
+.xbt-br-address::placeholder {
+    color: var(--text-muted);
+}
+
+.xbt-br-address:focus {
+    border-color: var(--brand-500, #a78bfa);
+    background: var(--background-base-lowest);
+}
+
+.xbt-br-shield {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--background-mod-subtle);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    gap: 4px;
+    cursor: default;
+}
+
+.xbt-br-shield-active {
+    background: color-mix(in srgb, var(--status-positive, #3ba55d) 18%, transparent);
+    color: var(--status-positive, #3ba55d);
+}
+
+/*
+ * An indeterminate loading sweep. It is a background animation rather than a real
+ * progress value because a webview never reports one.
+ */
+.xbt-br-progress {
+    height: 2px;
+    flex: 0 0 auto;
+    background: transparent;
+}
+
+.xbt-br-progress-on {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--brand-500, #a78bfa) 50%,
+        transparent 100%
+    );
+    background-size: 40% 100%;
+    background-repeat: no-repeat;
+    animation: xbt-br-sweep 1.1s ease-in-out infinite;
+}
+
+@keyframes xbt-br-sweep {
+    from {
+        background-position: -40% 0;
+    }
+
+    to {
+        background-position: 140% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .xbt-br-progress-on {
+        background: var(--brand-500, #a78bfa);
+        animation: none;
+    }
+}
+
+.xbt-br-notice {
+    flex: 0 0 auto;
+    margin: 8px;
+}
+
+.xbt-br-stage {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    min-height: 0;
+    flex: 1 1 auto;
+    background: var(--background-base-lowest);
+}
+
+/*
+ * The guest fills the stage. `display: flex` on a webview collapses it in some Electron
+ * builds, so it is laid out as a plain block that stretches instead.
+ */
+.xbt-br-view {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+}
+
+.xbt-br-message {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    gap: 12px;
+    text-align: center;
+}
+
+/* Sits over the page so a failed navigation doesn't leave a blank rectangle. */
+.xbt-br-message-over {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--background-base-lowest) 92%, transparent);
+}
+
+.xbt-br-message-text {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.xbt-br-message-action {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 6px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background: var(--background-base-low);
+    color: var(--text-default);
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.xbt-br-message-action:hover {
+    background: var(--background-mod-subtle);
+}
+
+.xbt-br-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}

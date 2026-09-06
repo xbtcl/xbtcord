@@ -55,6 +55,43 @@ if (!IS_VANILLA) {
         }
     }
 
+    /*
+     * Discord's Electron build is missing `WebContents#getZoomFactor`.
+     *
+     * Electron's own guest view manager reads the embedder's zoom factor while it builds
+     * the web preferences for a <webview>, and that read goes through a getter whose body
+     * is `this.getZoomFactor()`. With the method gone, every attach rejects with
+     * "this.getZoomFactor is not a function" - in the main process, where the renderer
+     * never sees it, so the element just sits there empty and no event ever fires.
+     *
+     * Restoring it on the shared prototype is enough to make XbtBrowser's view attach.
+     * Zoom itself is handled renderer-side through webFrame, so the factor derived from
+     * the zoom level is only ever read, never authoritative.
+     */
+    app.on("web-contents-created", (_event, contents) => {
+        const proto = Object.getPrototypeOf(contents);
+        if (!proto) return;
+
+        if (typeof proto.getZoomFactor !== "function") {
+            proto.getZoomFactor = function () {
+                try {
+                    // Chromium's own relationship between the two.
+                    return typeof this.getZoomLevel === "function" ? 1.2 ** this.getZoomLevel() : 1;
+                } catch {
+                    return 1;
+                }
+            };
+            console.log("[Xbtcord] Restored WebContents#getZoomFactor so <webview> can attach");
+        }
+
+        if (typeof proto.setZoomFactor !== "function") {
+            proto.setZoomFactor = function (factor: number) {
+                if (typeof this.setZoomLevel !== "function" || !(factor > 0)) return;
+                this.setZoomLevel(Math.log(factor) / Math.log(1.2));
+            };
+        }
+    });
+
     class BrowserWindow extends electron.BrowserWindow {
         constructor(options: BrowserWindowConstructorOptions) {
             if (!options?.webPreferences?.preload || !options.title) {
@@ -69,6 +106,10 @@ if (!IS_VANILLA) {
             options.webPreferences.sandbox = false;
             // work around discord unloading when in background
             options.webPreferences.backgroundThrottling = false;
+            // XbtBrowser renders pages in a <webview>, which Electron only permits when the
+            // host window opts in at creation time. Enabling it here is why switching that
+            // plugin on asks for a restart.
+            options.webPreferences.webviewTag = true;
 
             /*
              * Xbtcord's own icon, for the window and the taskbar button.
@@ -112,6 +153,28 @@ if (!IS_VANILLA) {
             process.env.DISCORD_PRELOAD = original;
 
             super(options);
+
+            /*
+             * Turning the webview tag on widens what a compromised renderer could ask for,
+             * so every attach is forced back to a sandboxed, preload-free guest with no
+             * node access. XbtBrowser sets these on the element too; doing it here as well
+             * means the guarantee does not depend on the element being the one we wrote.
+             */
+            this.webContents.on("will-attach-webview", (_event, webPreferences, params) => {
+                delete webPreferences.preload;
+                webPreferences.nodeIntegration = false;
+                webPreferences.nodeIntegrationInSubFrames = false;
+                webPreferences.contextIsolation = true;
+                webPreferences.sandbox = true;
+                webPreferences.webSecurity = true;
+                webPreferences.allowRunningInsecureContent = false;
+
+                // A guest with no partition would share Discord's own session, which is the
+                // one thing this must never do.
+                if (!params.partition?.startsWith("xbtcord-browser") && !params.partition?.startsWith("persist:xbtcord-browser")) {
+                    params.partition = "xbtcord-browser";
+                }
+            });
 
             if (disableMinSize) {
                 // Disable the Electron call entirely so that Discord can't dynamically change the size
