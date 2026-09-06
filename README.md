@@ -18,7 +18,7 @@ GPL-3.0-or-later, same as they are.
 ## Installing
 
 Grab **XbtcordInstaller.exe** from
-[the latest release](https://github.com/brokaliy/xbtcord/releases/latest) and run it.
+[the latest release](https://github.com/xbtcl/xbtcord/releases/latest) and run it.
 
 It finds every Discord branch you have installed, downloads the current build, and patches
 it. No administrator rights are needed — Discord lives in your own `%LOCALAPPDATA%`, and
@@ -91,7 +91,7 @@ The installer is a single-file Win32 app in `installer/`, with no dependencies b
 ships with Windows. It builds with either MSVC or MinGW:
 
 ```powershell
-./installer/build.ps1 -Repo brokaliy/xbtcord
+./installer/build.ps1 -Repo xbtcl/xbtcord
 ```
 
 `-Repo` is baked into the exe and decides where it downloads builds from. CI passes the

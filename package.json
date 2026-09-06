@@ -3,13 +3,13 @@
     "private": "true",
     "version": "1.14.15",
     "description": "A Discord client mod",
-    "homepage": "https://github.com/brokaliy/xbtcord#readme",
+    "homepage": "https://github.com/xbtcl/xbtcord#readme",
     "bugs": {
-        "url": "https://github.com/brokaliy/xbtcord/issues"
+        "url": "https://github.com/xbtcl/xbtcord/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/brokaliy/xbtcord.git"
+        "url": "git+https://github.com/xbtcl/xbtcord.git"
     },
     "license": "GPL-3.0-or-later",
     "author": "Vendicated",
