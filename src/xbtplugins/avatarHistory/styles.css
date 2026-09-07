@@ -1,0 +1,35 @@
+.xbt-avatar-history {
+    margin-top: 8px;
+}
+
+.xbt-avatar-history-label {
+    margin-bottom: 6px;
+    color: var(--header-secondary, var(--text-secondary));
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    text-transform: uppercase;
+}
+
+/* Scrolls sideways rather than wrapping - a profile popout is narrow, and a second row
+   of avatars pushes everything below it out of view. */
+.xbt-avatar-history-strip {
+    display: flex;
+    gap: 6px;
+    padding-bottom: 4px;
+    overflow-x: auto;
+}
+
+.xbt-avatar-history-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.xbt-avatar-history-item:hover {
+    transform: scale(1.08);
+}

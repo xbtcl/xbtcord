@@ -104,3 +104,60 @@ button.xbt-tag {
     opacity: 0.35;
     font-style: italic;
 }
+
+.xbt-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.xbt-palette-swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    padding: 12px 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    /* The swatch is the colour itself, so the label has to stay readable on top of any
+       of them. A hard shadow beats guessing at contrast for every possible role colour. */
+    color: #fff;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 70%);
+}
+
+.xbt-palette-name {
+    font-size: 13px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.xbt-palette-hex {
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.9;
+}
+
+.xbt-palette-copy-all {
+    width: 100%;
+    margin-top: 12px;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: var(--background-modifier-selected, rgb(255 255 255 / 8%));
+    color: var(--text-normal, var(--text-default));
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.xbt-palette-copy-all:hover {
+    background: var(--background-modifier-hover, rgb(255 255 255 / 12%));
+}

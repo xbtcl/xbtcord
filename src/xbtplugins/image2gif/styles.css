@@ -1,0 +1,213 @@
+/*
+ * Image2Gif's own look, rather than the plain stacked rows the other Xbtcord modals use.
+ * This one is a workbench - a preview on the left that stays put while the controls on
+ * the right change - so it gets a two column grid instead.
+ */
+
+.i2g-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 16px;
+    min-height: 340px;
+}
+
+@media (width <= 780px) {
+    .i2g-body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.i2g-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.i2g-drop {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 28px 20px;
+    border: 2px dashed var(--background-modifier-accent, rgb(255 255 255 / 12%));
+    border-radius: 12px;
+    background: var(--background-secondary, var(--background-base-lower));
+    color: var(--text-muted, var(--text-secondary));
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.i2g-drop:hover,
+.i2g-drop-over {
+    border-color: var(--brand-500, #5865f2);
+    background: var(--background-modifier-hover, rgb(255 255 255 / 4%));
+}
+
+.i2g-drop-title {
+    color: var(--text-normal, var(--text-default));
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.i2g-drop-hint {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* The checkerboard makes it obvious when a frame has transparency in it. */
+.i2g-preview {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding: 8px;
+    border-radius: 12px;
+    background-color: var(--background-secondary, var(--background-base-lower));
+    background-image:
+        linear-gradient(45deg, rgb(0 0 0 / 18%) 25%, transparent 25%),
+        linear-gradient(-45deg, rgb(0 0 0 / 18%) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgb(0 0 0 / 18%) 75%),
+        linear-gradient(-45deg, transparent 75%, rgb(0 0 0 / 18%) 75%);
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    background-size: 16px 16px;
+    overflow: hidden;
+}
+
+.i2g-preview img,
+.i2g-preview video {
+    max-width: 100%;
+    max-height: 320px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.i2g-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.i2g-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+.i2g-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.i2g-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted, var(--text-secondary));
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.i2g-label b {
+    color: var(--text-normal, var(--text-default));
+    font-variant-numeric: tabular-nums;
+}
+
+.i2g-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.i2g-chip {
+    padding: 4px 10px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: var(--background-modifier-selected, rgb(255 255 255 / 8%));
+    color: var(--text-muted, var(--text-secondary));
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.i2g-chip:hover {
+    color: var(--text-normal, var(--text-default));
+}
+
+.i2g-chip-active {
+    background: var(--brand-500, #5865f2);
+    color: #fff;
+}
+
+.i2g-range {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--background-modifier-accent, rgb(255 255 255 / 12%));
+    accent-color: var(--brand-500, #5865f2);
+    appearance: none;
+    cursor: pointer;
+}
+
+.i2g-range::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+    border: none;
+    border-radius: 50%;
+    background: var(--brand-500, #5865f2);
+    appearance: none;
+    cursor: grab;
+}
+
+.i2g-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: auto;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--background-secondary, var(--background-base-lower));
+    color: var(--text-muted, var(--text-secondary));
+    font-size: 12px;
+}
+
+.i2g-summary-size {
+    color: var(--text-normal, var(--text-default));
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.i2g-over-limit {
+    color: var(--text-danger, #f23f43);
+}
+
+.i2g-progress {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--background-modifier-accent, rgb(255 255 255 / 12%));
+    overflow: hidden;
+}
+
+.i2g-progress-bar {
+    height: 100%;
+    background: var(--brand-500, #5865f2);
+    transition: width 0.1s linear;
+}
+
+.i2g-error {
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: var(--info-danger-background, rgb(242 63 67 / 10%));
+    color: var(--text-danger, #f23f43);
+    font-size: 12px;
+}

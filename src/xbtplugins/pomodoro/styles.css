@@ -1,0 +1,27 @@
+.xbt-pomodoro {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    padding: 24px 12px;
+    border-radius: 12px;
+    background: var(--background-secondary, var(--background-base-lower));
+}
+
+.xbt-pomodoro-phase {
+    color: var(--text-muted, var(--text-secondary));
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.xbt-pomodoro-clock {
+    color: var(--text-normal, var(--text-default));
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.1;
+
+    /* Tabular figures, or the whole clock jitters sideways every second. */
+    font-variant-numeric: tabular-nums;
+}

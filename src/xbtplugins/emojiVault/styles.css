@@ -1,0 +1,38 @@
+.xbt-emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 6px;
+}
+
+.xbt-emoji-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    padding: 8px 4px;
+    border: none;
+    border-radius: 8px;
+    background: var(--background-secondary, var(--background-base-lower));
+    color: var(--text-muted, var(--text-secondary));
+    font-family: inherit;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.xbt-emoji-tile:hover {
+    background: var(--background-modifier-hover, rgb(255 255 255 / 6%));
+    color: var(--text-normal, var(--text-default));
+}
+
+.xbt-emoji-tile img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.xbt-emoji-tile span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
