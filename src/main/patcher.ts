@@ -10,6 +10,7 @@ import electron, { app, BrowserWindowConstructorOptions, Menu, nativeImage } fro
 import { dirname, join } from "path";
 
 import { RendererSettings } from "./settings";
+import { reapplyShortcutIcons } from "./shortcutIcons";
 import { IS_VANILLA } from "./utils/constants";
 
 console.log("[Xbtcord] Starting up...");
@@ -34,6 +35,14 @@ if (!IS_VANILLA) {
     // Repatch after host updates on Windows
     if (process.platform === "win32") {
         require("./patchWin32Updater");
+
+        /*
+         * The same update that needs a repatch also recreates Discord's shortcuts with
+         * Discord's own icon, so the mark has to be put back at the same time. Deferred
+         * to app ready so nothing blocks startup, and a no-op unless the installer was
+         * used - see shortcutIcons.ts.
+         */
+        app.whenReady().then(() => reapplyShortcutIcons()).catch(() => { });
 
         if (settings.winCtrlQ) {
             const originalBuild = Menu.buildFromTemplate;

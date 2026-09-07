@@ -625,6 +625,54 @@ static bool RemovePatch(const DiscordInstall& install, bool& wasPatched) {
 // Shortcuts are the part of "the icon on my PC" that is genuinely the user's to change,
 // and changing them is reversible.
 
+/**
+ * Collects every Discord*.lnk under a Start Menu folder, one level of subdirectories deep.
+ *
+ * Where the Start Menu shortcut lands depends on which installer created it: some builds
+ * put it in a "Discord Inc" folder, others drop Discord.lnk straight into Programs. An
+ * earlier version of this only looked in the folder, so on a machine with the flat layout
+ * the Start Menu shortcut kept Discord's own icon - and that is the shortcut Windows uses
+ * for the taskbar button, because Discord sets an AppUserModelID and Windows resolves the
+ * taskbar icon through the matching Start Menu entry rather than the running window.
+ */
+static void CollectStartMenuShortcuts(const std::wstring& programs, std::vector<std::wstring>& out) {
+    if (!IsDirectory(programs)) return;
+
+    WIN32_FIND_DATAW entry;
+    HANDLE search = FindFirstFileW(PathJoin(programs, L"*").c_str(), &entry);
+    if (search == INVALID_HANDLE_VALUE) return;
+
+    do {
+        std::wstring name = entry.cFileName;
+        if (name == L"." || name == L"..") continue;
+
+        std::wstring full = PathJoin(programs, name);
+
+        if (entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            // One level only. The Start Menu is shallow, and walking all of it on a
+            // machine with hundreds of entries would be slow for no benefit.
+            WIN32_FIND_DATAW inner;
+            HANDLE innerSearch = FindFirstFileW(PathJoin(full, L"Discord*.lnk").c_str(), &inner);
+            if (innerSearch != INVALID_HANDLE_VALUE) {
+                do {
+                    if (!(inner.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                        out.push_back(PathJoin(full, inner.cFileName));
+                    }
+                } while (FindNextFileW(innerSearch, &inner));
+                FindClose(innerSearch);
+            }
+            continue;
+        }
+
+        if (name.size() > 4 && _wcsnicmp(name.c_str(), L"Discord", 7) == 0 &&
+            _wcsicmp(name.c_str() + name.size() - 4, L".lnk") == 0) {
+            out.push_back(full);
+        }
+    } while (FindNextFileW(search, &entry));
+
+    FindClose(search);
+}
+
 static std::vector<std::wstring> FindShortcuts() {
     std::vector<std::wstring> found;
     std::vector<std::wstring> candidates;
@@ -636,8 +684,14 @@ static std::vector<std::wstring> FindShortcuts() {
 
     std::wstring appData = EnvVar(L"APPDATA");
     if (!appData.empty()) {
-        candidates.push_back(PathJoin(appData, L"Microsoft\\Windows\\Start Menu\\Programs\\Discord Inc\\Discord.lnk"));
+        CollectStartMenuShortcuts(PathJoin(appData, L"Microsoft\\Windows\\Start Menu\\Programs"), candidates);
         candidates.push_back(PathJoin(appData, L"Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar\\Discord.lnk"));
+    }
+
+    // The all-users Start Menu, for a machine-wide install.
+    std::wstring programData = EnvVar(L"ProgramData");
+    if (!programData.empty()) {
+        CollectStartMenuShortcuts(PathJoin(programData, L"Microsoft\\Windows\\Start Menu\\Programs"), candidates);
     }
 
     // OneDrive-redirected desktops are common enough to be worth checking explicitly.
