@@ -28,6 +28,8 @@ export type SettingsPluginUiElements = {
 export interface Settings {
     autoUpdate: boolean;
     autoUpdateNotification: boolean,
+    /** Minutes between update checks while the client is open. Zero checks only at startup. */
+    updateCheckInterval: number;
     useQuickCss: boolean;
     eagerPatches: boolean;
     enabledThemes: string[];
@@ -83,6 +85,7 @@ export interface Settings {
 const DefaultSettings: Settings = {
     autoUpdate: true,
     autoUpdateNotification: true,
+    updateCheckInterval: 15,
     useQuickCss: true,
     themeLinks: [],
     eagerPatches: false, // Eagerly patching no longer works due to module factories with the same id being able to have different sources now.

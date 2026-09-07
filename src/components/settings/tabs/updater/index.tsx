@@ -15,10 +15,10 @@ import { Link } from "@components/Link";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
 import { Margins } from "@utils/margins";
-import { classes } from "@utils/misc";
+import { classes, identity } from "@utils/misc";
 import { useAwaiter } from "@utils/react";
 import { getRepo, isNewer, UpdateLogger } from "@utils/updater";
-import { Forms, React } from "@webpack/common";
+import { Forms, React, Select } from "@webpack/common";
 
 import gitHash from "~git-hash";
 
@@ -53,7 +53,7 @@ function VesktopSection() {
 }
 
 function Updater() {
-    const settings = useSettings(["autoUpdate", "autoUpdateNotification"]);
+    const settings = useSettings(["autoUpdate", "autoUpdateNotification", "updateCheckInterval"]);
 
     const [repo, err, repoPending] = useAwaiter(getRepo, {
         fallbackValue: "Loading...",
@@ -81,6 +81,27 @@ function Updater() {
                 value={settings.autoUpdateNotification}
                 onChange={(v: boolean) => settings.autoUpdateNotification = v}
                 disabled={!settings.autoUpdate}
+            />
+
+            <Forms.FormTitle tag="h5" className={Margins.top16}>Check for updates</Forms.FormTitle>
+            <Forms.FormText className={Margins.bottom8}>
+                How often to look while Discord is open. Each update is only announced once,
+                however often it checks, so a shorter interval does not mean more notifications -
+                it means hearing about a new build without restarting first.
+            </Forms.FormText>
+            <Select
+                placeholder="Update check interval"
+                options={[
+                    { label: "Every 5 minutes", value: 5 },
+                    { label: "Every 15 minutes", value: 15, default: true },
+                    { label: "Every 30 minutes", value: 30 },
+                    { label: "Every hour", value: 60 },
+                    { label: "Only when Discord starts", value: 0 }
+                ]}
+                closeOnSelect={true}
+                select={(v: number) => settings.updateCheckInterval = v}
+                isSelected={(v: number) => v === settings.updateCheckInterval}
+                serialize={identity}
             />
 
             <Forms.FormTitle tag="h5" className={Margins.top20}>Repo</Forms.FormTitle>

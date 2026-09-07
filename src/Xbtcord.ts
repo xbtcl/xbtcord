@@ -31,7 +31,7 @@ import { initPluginManager, PMLogger, startAllPlugins } from "./api/PluginManage
 import { PlainSettings, Settings, SettingsStore } from "./api/Settings";
 import { areLocalSettingsDirty, getCloudSettings, getCloudSyncDirection, markLocalSettingsDirty, putCloudSettings, shouldCloudSync } from "./api/SettingsSync/cloudSync";
 import { relaunch } from "./utils/native";
-import { checkForUpdates, update, UpdateLogger } from "./utils/updater";
+import { changes, checkForUpdates, update, UpdateLogger } from "./utils/updater";
 import { onceReady } from "./webpack";
 import { patches } from "./webpack/patchWebpack";
 
@@ -89,14 +89,23 @@ async function syncSettings() {
     });
 }
 
-let notifiedForUpdatesThisSession = false;
+/*
+ * What was last announced, so the same update is not announced twice.
+ *
+ * This used to be a plain "have we notified this session" flag, which meant the check
+ * could only ever fire once - so an update published while the client was open went
+ * unmentioned until the next restart, which rather defeats the point of checking on a
+ * timer. Keying on the update itself keeps the no-nagging behaviour while still letting a
+ * genuinely new build announce itself.
+ */
+let lastAnnouncedUpdate: string | null = null;
 
 async function runUpdateCheck() {
     if (IS_UPDATER_DISABLED) return;
 
-    const notify = (data: NotificationData) => {
-        if (notifiedForUpdatesThisSession) return;
-        notifiedForUpdatesThisSession = true;
+    const notify = (data: NotificationData, signature: string) => {
+        if (lastAnnouncedUpdate === signature) return;
+        lastAnnouncedUpdate = signature;
 
         setTimeout(() => showNotification({
             permanent: true,
@@ -109,6 +118,10 @@ async function runUpdateCheck() {
         const isOutdated = await checkForUpdates();
         if (!isOutdated) return;
 
+        // The newest commit on offer identifies this particular update. Falling back to
+        // the count keeps things sane if the compare endpoint gave us nothing useful.
+        const signature = changes?.at(-1)?.hash ?? `count:${changes?.length ?? 0}`;
+
         if (Settings.autoUpdate) {
             await update();
             if (Settings.autoUpdateNotification) {
@@ -116,7 +129,7 @@ async function runUpdateCheck() {
                     title: "Xbtcord has been updated!",
                     body: "Click here to restart",
                     onClick: relaunch
-                });
+                }, signature);
             }
             return;
         }
@@ -125,7 +138,7 @@ async function runUpdateCheck() {
             title: "A Xbtcord update is available!",
             body: "Click here to view the update",
             onClick: () => openSettingsTabModal(UpdaterTab!)
-        });
+        }, signature);
     } catch (err) {
         UpdateLogger.error("Failed to check for updates", err);
     }
@@ -140,10 +153,21 @@ async function init() {
     if (!IS_WEB && !IS_UPDATER_DISABLED) {
         runUpdateCheck();
 
-        // this tends to get really annoying, so only do this if the user has auto-update without notification enabled
-        if (Settings.autoUpdate && !Settings.autoUpdateNotification) {
-            setInterval(runUpdateCheck, 1000 * 60 * 30); // 30 minutes
-        }
+        /*
+         * Keep checking while the client is open.
+         *
+         * Upstream only did this for people on auto-update with the notification turned
+         * off, on the grounds that repeat checks get annoying. What actually got annoying
+         * was the opposite: publish a build, and nobody hears about it until they happen
+         * to restart, which for a client people leave running can be days. The
+         * no-nagging half is handled properly now - each update announces itself once,
+         * by hash - so the check can run on a timer for everyone.
+         *
+         * Each pass is one or two GitHub API calls, so even the shortest interval on
+         * offer stays far inside the unauthenticated hourly limit.
+         */
+        const minutes = Settings.updateCheckInterval;
+        if (minutes > 0) setInterval(runUpdateCheck, 1000 * 60 * minutes);
     }
 
     if (IS_DEV) {
