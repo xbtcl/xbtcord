@@ -20,6 +20,7 @@ import {
 import { Message } from "@xbtcord/discord-types";
 
 import { capture, inspect, releaseSource, scaleTo, Source } from "./capture";
+import { ChatImagePicker, toFile } from "./chatImages";
 import { encodeGif } from "./gif";
 
 const WIDTHS = [240, 320, 480, 640, 800];
@@ -61,6 +62,7 @@ function Image2GifModal({ initialFile, ...props }: { initialFile?: File; } & any
     const [source, setSource] = useState<Source | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [dragging, setDragging] = useState(false);
+    const [picking, setPicking] = useState(false);
 
     const [width, setWidth] = useState<number>(settings.store.defaultWidth);
     const [fps, setFps] = useState<number>(settings.store.defaultFps);
@@ -102,6 +104,50 @@ function Image2GifModal({ initialFile, ...props }: { initialFile?: File; } & any
         // Deliberately runs once: this is only ever for the file the modal was opened
         // with, and re-running it on every load change would reset the picker.
     }, []);
+
+    /*
+     * Ctrl+V anywhere in the modal.
+     *
+     * A paste event carries the file directly, which is the only route that works for an
+     * image copied out of another application - navigator.clipboard.read can be blocked
+     * or return nothing depending on what put the image there. The button below falls
+     * back to that API for people who would rather click than use the keyboard.
+     */
+    useEffect(() => {
+        const onPaste = (event: ClipboardEvent) => {
+            const file = [...(event.clipboardData?.files ?? [])]
+                .find(item => item.type.startsWith("image/") || item.type.startsWith("video/"));
+
+            if (!file) return;
+            event.preventDefault();
+            setPicking(false);
+            load(file);
+        };
+
+        document.addEventListener("paste", onPaste, true);
+        return () => document.removeEventListener("paste", onPaste, true);
+    }, [load]);
+
+    async function pasteFromClipboard() {
+        try {
+            const items = await navigator.clipboard.read();
+
+            for (const item of items) {
+                const type = item.types.find(candidate => candidate.startsWith("image/"));
+                if (!type) continue;
+
+                const blob = await item.getType(type);
+                const extension = type.split("/")[1]?.split("+")[0] ?? "png";
+                setPicking(false);
+                await load(new File([blob], `pasted.${extension}`, { type }));
+                return;
+            }
+
+            setError("There is no image on the clipboard. Copy one, or press Ctrl+V here.");
+        } catch {
+            setError("The clipboard could not be read. Press Ctrl+V instead - that route always works.");
+        }
+    }
 
     const frameCount = source?.kind === "video"
         ? Math.max(1, Math.floor((end - start) * fps))
@@ -193,24 +239,40 @@ function Image2GifModal({ initialFile, ...props }: { initialFile?: File; } & any
                                         ? <video src={source.url} controls muted loop />
                                         : <img src={source.url} alt="" />}
                                 </div>
-                                : <div
-                                    className={`i2g-drop${dragging ? " i2g-drop-over" : ""}`}
-                                    onClick={() => input.current?.click()}
-                                    onDragOver={event => { event.preventDefault(); setDragging(true); }}
-                                    onDragLeave={() => setDragging(false)}
-                                    onDrop={event => {
-                                        event.preventDefault();
-                                        setDragging(false);
-                                        const file = event.dataTransfer?.files?.[0];
-                                        if (file) load(file);
-                                    }}
-                                >
-                                    <div className="i2g-drop-title">Drop an image or a video here</div>
-                                    <div className="i2g-drop-hint">
-                                        or click to pick one.<br />
-                                        PNG, JPEG, WebP, MP4, WebM, MOV - anything Discord itself can play.
+                                : picking
+                                    ? <ChatImagePicker
+                                        onCancel={() => setPicking(false)}
+                                        onPick={async media => {
+                                            setPicking(false);
+                                            setError(null);
+                                            try {
+                                                await load(await toFile(media));
+                                            } catch (err: any) {
+                                                setError(err?.message ?? String(err));
+                                            }
+                                        }}
+                                    />
+                                    : <div
+                                        className={`i2g-drop${dragging ? " i2g-drop-over" : ""}`}
+                                        onDragOver={event => { event.preventDefault(); setDragging(true); }}
+                                        onDragLeave={() => setDragging(false)}
+                                        onDrop={event => {
+                                            event.preventDefault();
+                                            setDragging(false);
+                                            const file = event.dataTransfer?.files?.[0];
+                                            if (file) load(file);
+                                        }}
+                                    >
+                                        <div className="i2g-drop-title">Drop an image or a video here</div>
+                                        <div className="i2g-drop-hint">
+                                            Ctrl+V works too - anything Discord itself can play.
+                                        </div>
+                                        <div className="i2g-drop-actions">
+                                            <Button size="small" onClick={() => input.current?.click()}>Choose a file</Button>
+                                            <Button size="small" variant="secondary" onClick={pasteFromClipboard}>Paste</Button>
+                                            <Button size="small" variant="secondary" onClick={() => setPicking(true)}>From this chat</Button>
+                                        </div>
                                     </div>
-                                </div>
                         }
 
                         {source && (
@@ -372,12 +434,25 @@ function open(initialFile?: File) {
     openModal(props => <Image2GifModal {...props} initialFile={initialFile} />);
 }
 
+/*
+ * A picture frame with a conversion arrow curling out of it.
+ *
+ * The first version of this was a rounded rectangle with GIF lettered inside, which is
+ * almost exactly Discord's own GIF picker button sitting two icons along - so in the chat
+ * bar you got the same glyph twice and no way to tell which was which. This one reads as
+ * "turn this picture into something else" at 24px and shares nothing with the neighbour.
+ */
 function GifIcon() {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
                 fill="currentColor"
-                d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm5.5 5.5H7.75a1.25 1.25 0 0 0-1.25 1.25v2.5c0 .69.56 1.25 1.25 1.25H9.5V13H8.25v-.75H11v2A2.25 2.25 0 0 1 8.75 16.5h-1A2.75 2.75 0 0 1 5 13.75v-3.5A2.25 2.25 0 0 1 7.25 8h2.25v1.5ZM13.5 8v8.5H12V8h1.5ZM19 9.5h-2.5v2H19V13h-2.5v3.5H15V8h4v1.5Z"
+                d="M4 3.5A2.5 2.5 0 0 0 1.5 6v9A2.5 2.5 0 0 0 4 17.5h5.2a6.6 6.6 0 0 1-.19-1.5H4a1 1 0 0 1-1-1v-.94l3.2-2.84a1 1 0 0 1 1.3-.02l2.55 2.1a6.6 6.6 0 0 1 1.2-1.16L9.4 10.1a2.5 2.5 0 0 0-3.2.05L3 12.98V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3.6c.53.09 1.03.25 1.5.46V6A2.5 2.5 0 0 0 16 3.5H4Z"
+            />
+            <circle cx="13.2" cy="8.1" r="1.6" fill="currentColor" />
+            <path
+                fill="currentColor"
+                d="M16.75 11a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5Zm0 1.6a3.65 3.65 0 0 1 3.14 1.79l-1.02.6a2.47 2.47 0 1 0 .3 2.26h-1.55v-1.2h2.98v.55a3.65 3.65 0 1 1-3.85-4Z"
             />
         </svg>
     );

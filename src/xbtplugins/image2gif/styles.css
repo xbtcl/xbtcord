@@ -211,3 +211,85 @@
     color: var(--text-danger, #f23f43);
     font-size: 12px;
 }
+
+.i2g-drop-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+/* Picking an existing image out of the channel, in place of the drop zone. */
+.i2g-picker {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+}
+
+.i2g-picker-head {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.i2g-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: 6px;
+    max-height: 320px;
+    padding-right: 4px;
+    overflow-y: auto;
+}
+
+.i2g-picker-tile {
+    position: relative;
+    aspect-ratio: 1;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: var(--background-secondary, var(--background-base-lower));
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.i2g-picker-tile:hover {
+    outline: 2px solid var(--brand-500, #5865f2);
+}
+
+.i2g-picker-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.i2g-picker-blank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--text-muted, var(--text-secondary));
+    font-size: 11px;
+}
+
+.i2g-picker-badge {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgb(0 0 0 / 65%);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.i2g-picker-empty {
+    padding: 32px 12px;
+    color: var(--text-muted, var(--text-secondary));
+    text-align: center;
+}
