@@ -95,8 +95,20 @@ export default definePlugin({
             find: 'tutorialId:"whos-online',
             replacement: [
                 {
-                    match: /(#{intl::CHANNEL_MEMBERS_A11Y_LABEL}.+}\):null,).{0,100}?(?:—|\\u2014) ",\i\]\}\)\]/,
-                    replace: "$1$self.RoleGroupColor(arguments[0])]"
+                    /*
+                     * The visible "Role - 5" text sits in an aria-hidden span of its own, so
+                     * only that span's children are swapped and the label screen readers get is
+                     * left exactly as Discord wrote it.
+                     *
+                     * BetterRoleContext patches this same span first (plugins apply in name
+                     * order), inserting an onContextMenu prop ahead of children - which is what
+                     * pushed the old patch past its 100 character window. That insert is allowed
+                     * for here. Replacing only the children also keeps it: the old patch
+                     * replaced the whole span and threw BetterRoleContext's handler away.
+                     */
+                    // The tempered gap cannot cross into another span, so it only ever spans the one.
+                    match: /(\("span",\{"aria-hidden":!0,(?:(?!\("span").){0,200}?children:)\[\i," (?:\u2014|\\u2014) ",\i\]/,
+                    replace: "$1$self.RoleGroupColor(arguments[0])"
                 },
             ],
             predicate: () => settings.store.memberList
@@ -105,7 +117,7 @@ export default definePlugin({
             find: "#{intl::THREAD_BROWSER_PRIVATE}",
             replacement: [
                 {
-                    match: /children:\[\i," (?:—|\\u2014) ",\i\]/,
+                    match: /children:\[\i," (?:\u2014|\\u2014) ",\i\]/,
                     replace: "children:[$self.RoleGroupColor(arguments[0])]"
                 },
             ],

@@ -11,6 +11,7 @@ import {
 import { definePluginSettings } from "@api/Settings";
 import { CogWheel } from "@components/Icons";
 import { Devs } from "@utils/constants";
+import { t } from "@utils/i18n";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByCodeLazy, findByPropsLazy, mapMangledModuleLazy } from "@webpack";
 import { Menu, UserStore } from "@webpack/common";
@@ -74,7 +75,7 @@ const makeContextMenuPatch: (shouldAddIcon: boolean) => NavContextMenuPatchCallb
     const group = findGroupChildrenByChildId("privacy", children);
     group?.push(
         <Menu.MenuItem
-            label="Apply NewGuildSettings"
+            label={t("Apply NewGuildSettings")}
             id="vc-newguildsettings-apply"
             icon={shouldAddIcon ? CogWheel : void 0}
             action={() => applyDefaultSettings(guild.id)}
@@ -124,7 +125,7 @@ export default definePlugin({
         {
             find: "{joinGuild:",
             replacement: {
-                match: /guildId:(\i),lurker:(\i).{0,20}}\)\);/,
+                match: /guildId:(\i),lurker:(\i).{0,20}}\);/,
                 replace: (m, guildId, lurker) => `${m}if(!${lurker})$self.applyDefaultSettings(${guildId});`
             }
         }

@@ -15,9 +15,9 @@ export default definePlugin({
 
     patches: [
         {
-            find: ".stickers,previewSticker:",
+            find: '.STICKER_PICKER:return""',
             replacement: {
-                match: /if\(\i\.\i\.getUploadCount/,
+                match: /(?<=\){)if\(\i\.\i\.getUploadCount/,
                 replace: "return true;$&",
             }
         }

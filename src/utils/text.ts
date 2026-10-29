@@ -82,6 +82,15 @@ export function formatDuration(time: number, unit: Units, short: boolean = false
 }
 
 /**
+ * The same function under the name endcord gives it.
+ *
+ * Upstream renamed this to formatDurationVerbose and reused "formatDuration" for a different,
+ * milliseconds-based helper. Plugins ported from there call the verbose name; everything here
+ * already calls formatDuration with this signature, so both names point at the one function.
+ */
+export const formatDurationVerbose = formatDuration;
+
+/**
  * Join an array of strings in a human readable way (1, 2 and 3)
  * @param elements Elements
  */

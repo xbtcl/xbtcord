@@ -224,7 +224,8 @@ export default definePlugin({
                     predicate: () => settings.store.removeNameplate,
                 },
                 {
-                    match: /let\{ref:\i,speaking:\i,voiceDb:/,
+                    // Discord slotted a playingSoundboard prop in between, on some builds.
+                    match: /let\{ref:\i,speaking:\i,(?:playingSoundboard:\i,)?voiceDb:/,
                     replace: "arguments[0].nameplate=null;$&",
                     predicate: () => settings.store.removeNameplate,
                 },
@@ -234,7 +235,7 @@ export default definePlugin({
             // Nameplate
             find: ".MINI_PREVIEW,[",
             replacement: {
-                match: /function \i\((\i)\)\{(?=let.{1,5}\{nameplate:\i,)/,
+                match: /function \i\((\i)\)\{(?=let.{0,5}\{nameplate:\i,)/,
                 replace:
                     '$&if($1.placement!=="preview"&&$1.placement!=="mini_preview")return null;',
             },

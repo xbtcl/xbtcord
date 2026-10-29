@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { Card } from "@components/Card";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Link } from "@components/Link";
 import { GUILD_ID, INVITE_KEY, RAW_SKU_ID } from "@plugins/decor/lib/constants";
@@ -11,17 +12,19 @@ import { useCurrentUserDecorationsStore } from "@plugins/decor/lib/stores/Curren
 import { cl, DecorationModalClasses, requireAvatarDecorationModal, requireCreateStickerModal } from "@plugins/decor/ui";
 import { AvatarDecorationModalPreview } from "@plugins/decor/ui/components";
 import { openInviteModal } from "@utils/discord";
+import { t } from "@utils/i18n";
 import { Margins } from "@utils/margins";
-import { filters, findComponentByCodeLazy, mapMangledModuleLazy } from "@webpack";
+import { findComponentByCodeLazy } from "@webpack";
 import { closeAllModals, FluxDispatcher, Forms, GuildStore, Modal, NavigationRouter, openModal, Text, TextInput, useEffect, useMemo, UserStore, useState } from "@webpack/common";
 import { RenderModalProps } from "@xbtcord/discord-types";
 
 const FileUpload = findComponentByCodeLazy(".currentTarget.files", "lineClamp:1");
 
-const { HelpMessage, HelpMessageTypes } = mapMangledModuleLazy('POSITIVE="positive', {
-    HelpMessageTypes: filters.byProps("POSITIVE", "WARNING", "INFO"),
-    HelpMessage: filters.byCode("messageType:")
-});
+/*
+ * Discord's HelpMessage notice is gone - no build carries the POSITIVE/WARNING/INFO enum it
+ * was found by any more - so both notices in this modal render through Xbtcord's own Card,
+ * which has the same info and warning looks and does not depend on Discord's internals.
+ */
 
 function useObjectURL(object: Blob | MediaSource | null) {
     const [url, setUrl] = useState<string | null>(null);
@@ -60,7 +63,7 @@ function CreateDecorationModal(props: RenderModalProps) {
     return <Modal
         {...props}
         size="lg"
-        title="Create Decoration"
+        title={t("Create Decoration")}
         actions={[
             {
                 text: "Cancel",
@@ -81,39 +84,35 @@ function CreateDecorationModal(props: RenderModalProps) {
     >
         <div className={cl("create-decoration-modal-content", DecorationModalClasses.modal)}>
             <ErrorBoundary>
-                <HelpMessage messageType={HelpMessageTypes.WARNING}>
-                    Make sure your decoration does not violate <Link
+                <Card variant="warning" defaultPadding>
+                    {t("Make sure your decoration does not violate")}{" "}<Link
                         href="https://github.com/decor-discord/.github/blob/main/GUIDELINES.md"
                     >
-                        the guidelines
-                    </Link> before submitting it.
-                </HelpMessage>
+                        {t("the guidelines")}</Link>{" "}{t("before submitting it.")}</Card>
                 <div className={cl("create-decoration-modal-form-preview-container")}>
                     <div className={cl("create-decoration-modal-form")}>
                         {error !== null && <Text color="text-danger" variant="text-xs/normal">{error.message}</Text>}
                         <section>
-                            <Forms.FormTitle tag="h5">File</Forms.FormTitle>
+                            <Forms.FormTitle tag="h5">{t("File")}</Forms.FormTitle>
                             <FileUpload
                                 filename={file?.name}
-                                placeholder="Choose a file"
-                                buttonText="Browse"
+                                placeholder={t("Choose a file")}
+                                buttonText={t("Browse")}
                                 filters={[{ name: "Decoration file", extensions: ["png", "apng"] }]}
                                 onFileSelect={setFile}
                             />
                             <Forms.FormText className={Margins.top8}>
-                                File should be APNG or PNG.
-                            </Forms.FormText>
+                                {t("File should be APNG or PNG.")}</Forms.FormText>
                         </section>
                         <section>
-                            <Forms.FormTitle tag="h5">Name</Forms.FormTitle>
+                            <Forms.FormTitle tag="h5">{t("Name")}</Forms.FormTitle>
                             <TextInput
-                                placeholder="Companion Cube"
+                                placeholder={t("Companion Cube")}
                                 value={name}
                                 onChange={setName}
                             />
                             <Forms.FormText className={Margins.top8}>
-                                This name will be used when referring to this decoration.
-                            </Forms.FormText>
+                                {t("This name will be used when referring to this decoration.")}</Forms.FormText>
                         </section>
                     </div>
                     <div>
@@ -123,8 +122,8 @@ function CreateDecorationModal(props: RenderModalProps) {
                         />
                     </div>
                 </div>
-                <HelpMessage messageType={HelpMessageTypes.INFO} className={Margins.bottom8}>
-                    To receive updates on your decoration's review, join <Link
+                <Card variant="info" defaultPadding className={Margins.bottom8}>
+                    {t("To receive updates on your decoration's review, join")}{" "}<Link
                         href={`https://discord.gg/${INVITE_KEY}`}
                         onClick={async e => {
                             e.preventDefault();
@@ -141,9 +140,7 @@ function CreateDecorationModal(props: RenderModalProps) {
                             }
                         }}
                     >
-                        Decor's Discord server
-                    </Link> and allow direct messages.
-                </HelpMessage>
+                        {t("Decor's Discord server")}</Link>{" "}{t("and allow direct messages.")}</Card>
             </ErrorBoundary>
         </div>
     </Modal>;

@@ -167,7 +167,9 @@ export default definePlugin({
             replacement: [
                 // Voice channel rows (guild sidebar)
                 {
-                    match: /(?<=this.getTooltipText\(\),.{0,100})iconClassName:/,
+                    // Discord wrapped the row in a verification popout, which put iconClassName
+                    // roughly 460 characters past the tooltip call instead of within 100.
+                    match: /(?<=this.getTooltipText\(\),.{0,600})iconClassName:/,
                     replace: "draggable:!0,onDragStart:e=>$self.onChannelDragStart(e,{id:this?.props?.channel?.id,guild_id:this?.props?.channel?.guild_id}),$&"
                 },
                 // Voice channel rows (guild sidebar fallback - li wrapper)

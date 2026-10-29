@@ -543,8 +543,18 @@ function patchFactory(moduleId: PropertyKey, originalFactory: AnyModuleFactory):
             return code.replace(match, replace);
         });
 
+        /*
+         * Rolling back has to return to the last factory that worked, not the original one.
+         *
+         * Resetting to originalFactory kept `code` correct but swapped the running factory for
+         * the unpatched one, so a replacement that errored silently threw away every earlier
+         * plugin's successful patch on the same module - nothing logged for those, they just
+         * stopped applying. The next successful replacement would rebuild from `code` and
+         * restore them, which is why it only showed up when the failure was the last change
+         * made to a module.
+         */
         const previousCode = code;
-        const previousFactory = originalFactory;
+        const previousFactory = patchedFactory;
         let markedAsPatched = false;
 
         // We change all patch.replacement to array in PluginManager
@@ -558,7 +568,7 @@ function patchFactory(moduleId: PropertyKey, originalFactory: AnyModuleFactory):
             }
 
             const lastCode = code;
-            const lastFactory = originalFactory;
+            const lastFactory = patchedFactory;
 
             try {
                 const [newCode, totalTime] = executePatch(replacement.match, replacement.replace as string);

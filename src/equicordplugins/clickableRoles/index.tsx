@@ -160,22 +160,27 @@ export default definePlugin({
         {
             find: 'tutorialId:"whos-online"',
             replacement: {
-                match: /\((function\(\i\)\{let\{id:.*?#{intl::CHANNEL_MEMBERS_A11Y_LABEL}.*?\}\))\}\);/,
-                replace: "($self.wrapRoleGroup($1}));",
+                /*
+                 * The member list section header used to be an inline render function, so the
+                 * old patch wrapped that function. It is now a component handed to jsx with a
+                 * `section-` key, so the component itself is swapped for a wrapper that renders
+                 * the original inside it - same result, and no dependency on how Discord
+                 * happens to write the function body.
+                 */
+                match: /(\i\.\i),\{(?=\.\.\.\i,key:`section-)/g,
+                replace: "$self.RoleGroup,{Original:$1,",
             },
         },
     ],
 
-    wrapRoleGroup(originalFn: (props: { id: string; guildId: string; }) => React.ReactNode) {
-        return (props: { id: string; guildId: string; }) => {
-            const result = originalFn(props);
-            if (!GuildRoleStore.getRole(props.guildId, props.id)) return result;
-            return (
-                <WrappedClickableRole roleId={props.id} guildId={props.guildId}>
-                    {result}
-                </WrappedClickableRole>
-            );
-        };
+    RoleGroup({ Original, ...props }: { Original: React.ComponentType<{ id: string; guildId: string; }>; id: string; guildId: string; }) {
+        const result = <Original {...props} />;
+        if (!GuildRoleStore.getRole(props.guildId, props.id)) return result;
+        return (
+            <WrappedClickableRole roleId={props.id} guildId={props.guildId}>
+                {result}
+            </WrappedClickableRole>
+        );
     },
 
     wrapRolePill(props: { role: Role; guildId: string; }, renderOriginal: () => React.ReactNode) {

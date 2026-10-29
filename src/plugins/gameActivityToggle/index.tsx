@@ -103,7 +103,8 @@ export default definePlugin({
         {
             find: "#{intl::USER_PROFILE_ACCOUNT_POPOUT_BUTTON_A11Y_LABEL}",
             replacement: {
-                match: /children:\[(?=.{0,25}?accountContainerRef)/,
+                // UserAreaAPI spreads its own buttons in at the same spot first, so allow for that.
+                match: /children:\[(?=(?:\.\.\.[^,]{0,100},)?.{0,25}?accountContainerRef)/,
                 replace: "children:[$self.GameActivityToggleButton(arguments[0]),"
             }
         }

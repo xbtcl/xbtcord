@@ -41,10 +41,10 @@ export default definePlugin({
     settings,
     patches: [
         {
-            find: ".getDesktopType()===",
+            find: '"NotificationStore"',
             replacement: [
                 {
-                    match: /(\i\.\i\.getDesktopType\(\)===\i\.\i\.NEVER)\)/,
+                    match: /\i\.\i\.getDesktopType\(\)===\i\.\i\.NEVER\)/,
                     replace: "$&if(!$self.isPrivateChannelRead(arguments[0]?.message))return;else "
                 },
                 {

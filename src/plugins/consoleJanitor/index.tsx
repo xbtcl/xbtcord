@@ -8,6 +8,7 @@ import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { SettingsSection } from "@components/settings/tabs/plugins/components/Common";
 import { Devs } from "@utils/constants";
+import { t } from "@utils/i18n";
 import definePlugin, { defineDefault, OptionType, StartAt } from "@utils/types";
 import { Checkbox, Text } from "@webpack/common";
 
@@ -57,7 +58,7 @@ function AllowLevelSetting({ settingKey }: AllowLevelSettingProps) {
 
 const AllowLevelSettings = ErrorBoundary.wrap(() => {
     return (
-        <SettingsSection name="Filter List" id="filterList" description="Always allow loggers of these types">
+        <SettingsSection name="Filter List" id="filterList" description={t("Always allow loggers of these types")}>
             <div style={{ display: "flex", flexDirection: "row" }}>
                 {Object.keys(settings.store.allowLevel).map(key => (
                     <AllowLevelSetting key={key} settingKey={key as keyof AllowLevels} />
@@ -71,7 +72,7 @@ const settings = definePluginSettings({
     disableLoggers: {
         type: OptionType.BOOLEAN,
         description: "Disables Discords loggers",
-        default: false,
+        default: true,
         restartNeeded: true
     },
     disableSpotifyLogger: {
@@ -109,6 +110,7 @@ export default definePlugin({
     description: "Disables annoying console messages/errors",
     authors: [Devs.Nuckyz, Devs.sadan],
     tags: ["Developers", "Console", "Utility"],
+    enabledByDefault: true,
     settings,
 
     startAt: StartAt.Init,
@@ -125,13 +127,6 @@ export default definePlugin({
     },
 
     patches: [
-        {
-            find: "https://github.com/highlightjs/highlight.js/issues/2277",
-            replacement: {
-                match: /\(console.log\(`Deprecated.+?`\),/,
-                replace: "("
-            }
-        },
         {
             find: 'The "interpolate" function is deprecated in v10 (use "to" instead)',
             replacement: {
@@ -208,6 +203,13 @@ export default definePlugin({
             replacement: {
                 match: /(?<=&&)(?=console)/,
                 replace: "$self.shouldLog(arguments[0],arguments[1])&&"
+            }
+        },
+        {
+            find: "Cannot find the corresponding SKU to the user's premium type ",
+            replacement: {
+                match: /\i\.warn\(`Cannot find the corresponding SKU to the user's premium type \$\{[^`]+\.premiumType\}`\),/,
+                replace: ""
             }
         },
         {

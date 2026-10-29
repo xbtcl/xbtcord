@@ -7,6 +7,7 @@
 import { definePluginSettings } from "@api/Settings";
 import { Card } from "@components/Card";
 import { XbtcordDevs } from "@utils/constants";
+import { t } from "@utils/i18n";
 import definePlugin, { OptionType } from "@utils/types";
 import { UserStore } from "@webpack/common";
 
@@ -56,8 +57,7 @@ export default definePlugin({
     authors: [XbtcordDevs.Drag, XbtcordDevs.neoarz],
     settingsAboutComponent: () => (
         <Card variant="warning" defaultPadding>
-            We can't guarantee this plugin won't get you warned or banned.
-        </Card>
+            {t("We can't guarantee this plugin won't get you warned or banned.")}</Card>
     ),
     settings: settings,
     patches: [
@@ -72,15 +72,6 @@ export default definePlugin({
                     match: /(?<="GatewaySocket"\)\}\),properties:)(\i)/,
                     replace: "{...$1,...$self.getPlatform(true)}"
                 },
-            ]
-        },
-        {
-            find: '"2025-01-virtual-currency-rollout"',
-            replacement: [
-                {
-                    match: /(?<=\}\),)(\i)/g,
-                    replace: "$1=e=>({enabled:true}),_xbtcord_$1"
-                }
             ]
         },
     ],

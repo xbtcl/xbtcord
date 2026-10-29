@@ -103,10 +103,38 @@ const ToastsExports = mapMangledModuleLazy(".currentToastMap.has(", {
 export function createToast(message: string, type: string, options?: ToastOptions): ToastData {
     return {
         message,
+        content: message,
         id: Toasts.genId(),
         type,
-        options
-    };
+        options: {
+            ...options,
+            component: options?.component ?? message
+        }
+    } as any;
+}
+
+const TypeToVariant: Record<string, string> = {
+    [ToastType.SUCCESS]: "success",
+    [ToastType.FAILURE]: "critical",
+};
+
+/**
+ * Discord's toasts now take `{ text, variant, position, duration }` and render nothing at all for the
+ * `{ message, type, options }` shape every plugin builds - the toast still queues, it just draws empty.
+ * The old fields are left in place so older Discord builds keep working. Ported from endcord.
+ */
+function toDiscordToast(toast: any) {
+    if (!toast || typeof toast !== "object" || typeof toast.text === "string" || toast.__dangerouslyRenderContent) return toast;
+
+    const { message, type, options } = toast;
+    const converted: any = { ...toast, text: message, variant: TypeToVariant[type] ?? "default" };
+    if (options?.duration != null) converted.duration = options.duration;
+    if (options?.position != null) converted.position = options.position === ToastPosition.BOTTOM ? "bottom" : "top";
+
+    const { component } = options ?? {};
+    if (component != null && typeof component !== "string") converted.__dangerouslyRenderContent = () => component;
+
+    return converted;
 }
 
 export const Toasts = {
@@ -114,15 +142,30 @@ export const Toasts = {
     Position: ToastPosition,
     genId: () => (Math.random() || Math.random()).toString(36).slice(2),
 
-    show: ToastsExports.showToast,
+    show: (toast: any) => ToastsExports.showToast(toDiscordToast(toast)),
     pop: ToastsExports.popToast,
     create: createToast,
 };
 
+/** Toast variants used by plugins written for other client mods, mapped to Discord's toast types. */
+const VariantToType: Record<string, string> = {
+    success: ToastType.SUCCESS,
+    positive: ToastType.SUCCESS,
+    critical: ToastType.FAILURE,
+    danger: ToastType.FAILURE,
+    error: ToastType.FAILURE,
+    link: ToastType.LINK,
+};
+
 /**
- * Show a simple toast. If you need more options, use Toasts.show manually
+ * Show a simple toast. If you need more options, use Toasts.show manually.
+ * Also accepts `{ text, variant }`, the form many community plugins use.
  */
-export function showToast(message: string, type = ToastType.MESSAGE, options?: ToastOptions) {
+export function showToast(message: string | { text: string; variant?: string; }, type = ToastType.MESSAGE, options?: ToastOptions) {
+    if (typeof message === "object" && message !== null) {
+        type = VariantToType[message.variant ?? ""] ?? ToastType.MESSAGE;
+        message = String(message.text);
+    }
     Toasts.show(Toasts.create(message, type, options));
 }
 
@@ -149,12 +192,15 @@ export const NavigationRouter: t.NavigationRouter = mapMangledModuleLazy("transi
     forward: filters.byCode("goForward()"),
 });
 export const ChannelRouter: t.ChannelRouter = mapMangledModuleLazy('"Thread must have a parent ID."', {
-    transitionToChannel: filters.byCode(".preload"),
+    transitionToChannel: filters.byCode(".openTextInVoiceIfVoiceChannel"),
     transitionToThread: filters.byCode('"Thread must have a parent ID."')
 });
 
-export let SettingsRouter: any;
-waitFor(["openUserSettings", "USER_SETTINGS_MODAL_KEY"], m => SettingsRouter = m);
+// Discord stopped exporting USER_SETTINGS_MODAL_KEY next to openUserSettings, so the old
+// two-prop lookup never resolved and every "open settings" button did nothing.
+export const SettingsRouter: any = mapMangledModuleLazy('type:"USER_SETTINGS_MODAL_OPEN"', {
+    openUserSettings: filters.byCode('type:"USER_SETTINGS_MODAL_OPEN"')
+});
 
 export const PermissionsBits: t.PermissionsBits = findLazy(m => typeof m.ADMINISTRATOR === "bigint");
 
@@ -168,7 +214,11 @@ export const { zustandPersist } = mapMangledModuleLazy(".onRehydrateStorage)?", 
 
 export const MessageActions = findByPropsLazy("editMessage", "sendMessage");
 export const MessageCache = findByPropsLazy("clearCache", "_channelMessages");
-export const UserProfileActions = findByPropsLazy("openUserProfileModal", "closeUserProfileModal");
+// The profile modal actions no longer live together in one exported object, so the opener is
+// found by the action it dispatches. Nothing in this codebase calls closeUserProfileModal.
+export const UserProfileActions = {
+    openUserProfileModal: findByCodeLazy('type:"USER_PROFILE_MODAL_OPEN"')
+};
 export const InviteActions = findByPropsLazy("resolveInvite");
 export const ChannelActionCreators = findByPropsLazy("openPrivateChannel");
 
@@ -178,7 +228,7 @@ export const ExpressionPickerStore: t.ExpressionPickerStore = mapMangledModuleLa
     openExpressionPicker: filters.byCode(/setState\({activeView:(?:(?!null)\i),activeViewType:/),
     closeExpressionPicker: filters.byCode("setState({activeView:null"),
     toggleMultiExpressionPicker: filters.byCode(".EMOJI,"),
-    toggleExpressionPicker: filters.byCode(/getState\(\)\.activeView===\i\?\i\(\):\i\(/),
+    toggleExpressionPicker: filters.byCode(/\i\.activeView===\i&&\i\.activeViewType===\i&&/),
     setExpressionPickerView: filters.byCode(/setState\({activeView:\i,lastActiveView:/),
     setSearchQuery: filters.byCode("searchQuery:"),
     useExpressionPickerStore: filters.byCode(/\(\i,\i=\i\)=>/)

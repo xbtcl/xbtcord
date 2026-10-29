@@ -1388,17 +1388,35 @@ export default definePlugin({
             }
         },
         {
-            find: "=!1,canUsePremiumCustomization:",
+            /*
+             * Discord stopped reading premiumType inline wherever a profile preview is built,
+             * so the old anchor ("=!1,canUsePremiumCustomization:") is gone. Every preview now
+             * asks the profile itself through this getter, which makes it the one place to
+             * answer "yes, customisation is unlocked" for the profiles this plugin fakes.
+             */
+            find: "get canUsePremiumProfileCustomization(){",
             replacement: {
-                match: /(\i)\.premiumType/,
-                replace: "$self.premiumTypeHook($1)||$&"
+                match: /(get canUsePremiumProfileCustomization\(\)\{return \i\.\i\.isPremiumAtLeast\()this\.premiumType/,
+                replace: "$1($self.premiumTypeHook(this)||this.premiumType)"
             }
         },
+        /*
+         * The three below rewrite a component's props on arguments[0], just before Discord
+         * destructures them, instead of matching a prop at its call site.
+         *
+         * Call sites keep shuffling prop order - the user area avatar now gets voiceDb before
+         * currentUser, which is what broke the old lookahead - but the destructuring at the top
+         * of the component is stable. It is also what Declutter hooks on the avatar, and two
+         * plugins inserting a statement before the same `let` both apply in either order,
+         * where reassigning the parameter would not: these modules are strict, so a
+         * reassigned parameter and arguments[0] stop being the same object.
+         */
         {
-            find: ".WIDGETS_RTC_UPSELL_COACHMARK)",
+            // Your avatar in the user area, bottom left (it used to be found through the RTC upsell)
+            find: "#{intl::USER_PROFILE_ACCOUNT_POPOUT_BUTTON_A11Y_LABEL}",
             replacement: {
-                match: /currentUser:(\i)(?=.{0,200}voiceDb)/,
-                replace: "currentUser:$self.fakeCurrentUser($1)"
+                match: /let\{ref:\i,speaking:\i,(?:playingSoundboard:\i,)?voiceDb:/,
+                replace: "arguments[0].currentUser=$self.fakeCurrentUser(arguments[0].currentUser);$&"
             }
         },
         {
@@ -1408,20 +1426,6 @@ export default definePlugin({
                 match: /(?<=currentUser:\i,user:)(\i)/,
                 replace: "$self.fakeCurrentUser($1)"
             }
-        },
-        {
-            find: "obfuscatedEmail",
-            noWarn: true,
-            replacement: [
-                {
-                    match: /obfuscatedEmail:(\i)/,
-                    replace: "obfuscatedEmail:$self.fakeObfuscatedEmail($1)"
-                },
-                {
-                    match: /obfuscatedPhone:(\i)/,
-                    replace: "obfuscatedPhone:$self.fakeObfuscatedPhone($1)"
-                }
-            ]
         },
         {
             find: "isHoveringOrFocusing",
@@ -1434,39 +1438,34 @@ export default definePlugin({
             ]
         },
         {
-            find: "AccountPanel",
-            replacement: [
-                {
-                    match: /user:([a-zA-Z0-9_]+),/,
-                    replace: "user:$self.fakeCurrentUser($1),"
-                }
-            ]
+            /*
+             * The popout from clicking your avatar in the user area.
+             *
+             * This used to be `find: "AccountPanel"`, a string that no longer appears in
+             * Discord's own code at all. It kept matching only because AccountPanelServerProfile's
+             * injected $self reference - Xbtcord.Plugins.plugins["AccountPanelServerProfile"] -
+             * contains those words, so it rewrote the first `user:` in that module, which is a
+             * destructuring target, and the module failed to compile.
+             */
+            find: 'layout:"ACCOUNT_POPOUT"',
+            replacement: {
+                match: /let\{currentUser:\i,onClose:\i,setPopoutRef:/,
+                replace: "arguments[0].currentUser=$self.fakeCurrentUser(arguments[0].currentUser);$&"
+            }
         },
         {
-            find: "UserAccountSettings",
-            replacement: [
-                {
-                    match: /user:([a-zA-Z0-9_]+),/,
-                    replace: "user:$self.fakeCurrentUser($1),"
-                },
-                {
-                    match: /email:([^,}]+),/,
-                    replace: "email:$self.fakeObfuscatedEmail($1),"
-                }
-            ]
-        },
-        {
-            find: "getObfuscatedEmail",
-            replacement: [
-                {
-                    match: /obfuscatedEmail:([^,}]+)/g,
-                    replace: "obfuscatedEmail:$self.fakeObfuscatedEmail($1)"
-                },
-                {
-                    match: /obfuscatedPhone:([^,}]+)/g,
-                    replace: "obfuscatedPhone:$self.fakeObfuscatedPhone($1)"
-                }
-            ]
+            /*
+             * Email and phone in My Account. Discord no longer receives these pre-obfuscated;
+             * it gets the real values and censors them in the client with a Reveal toggle. So
+             * the fake goes in whole and Discord's own censoring and reveal apply to it - it
+             * looks exactly like a real one would. This replaces three patches whose anchors
+             * (obfuscatedEmail, getObfuscatedEmail, UserAccountSettings) are gone entirely.
+             */
+            find: "revealLabel:",
+            replacement: {
+                match: /let\{text:\i,censor:\i,revealLabel:/,
+                replace: "arguments[0].text=$self.fakeRevealText(arguments[0].text);$&"
+            }
         }
     ],
 
@@ -1670,19 +1669,18 @@ export default definePlugin({
         }
     },
 
-    fakeObfuscatedEmail(real: string | null) {
-        if (!isEnabled || !storedData.email || !real) return real;
-        const fake = storedData.email;
-        const atIdx = fake.indexOf("@");
-        if (atIdx <= 1) return fake;
-        return fake[0] + "***" + fake.slice(atIdx - 1);
-    },
-
-    fakeObfuscatedPhone(real: string | null) {
-        if (!isEnabled || !storedData.phone || !real) return real;
-        const fake = storedData.phone;
-        if (fake.length < 4) return fake;
-        return "***-***-" + fake.slice(-4);
+    /**
+     * Swaps the email or phone number My Account is about to show for the faked one.
+     *
+     * Discord censors these itself now (`****@domain`, or all but the last four digits) and
+     * reveals them on demand, so this hands over the fake uncensored and lets that happen as
+     * normal. The same component shows both, and only an email has an @ in it.
+     */
+    fakeRevealText(real: string | null) {
+        if (!isEnabled || !real) return real;
+        if (real.includes("@")) return storedData.email || real;
+        if (/^\+?[\d\s().-]{6,}$/.test(real)) return storedData.phone || real;
+        return real;
     },
 
     patchBannerUrl({ displayProfile }: any) {
