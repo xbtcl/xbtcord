@@ -1,4 +1,9 @@
-/* Works around a very strange issue where *something* (electron?) will inject body { app-region: drag } when using online themes */
+/*
+ * Works around a very strange issue where *something* (electron?) will inject body { app-region: drag } when using online themes.
+ * Reset it rather than forcing no-drag: app-region is inherited in current Electron, so no-drag here spread to every element and
+ * any full-window layer later in the page cancelled Discord's title bar, leaving the window impossible to drag. `none` is not
+ * accepted as a value, `initial` is.
+ */
 body {
-    app-region: no-drag;
+    app-region: initial;
 }

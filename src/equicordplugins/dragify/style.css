@@ -3,6 +3,9 @@
     inset: 0;
     pointer-events: none;
     z-index: 9999;
+
+    /* This layer covers the whole window at all times; if it inherits no-drag from a theme it cancels Discord's title bar */
+    app-region: initial;
 }
 
 .vc-dragify-ghost {
